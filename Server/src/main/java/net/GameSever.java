@@ -22,6 +22,11 @@ public class GameSever {
         Message message = (Message)ojs.readObject();
         System.out.println(message.message);
         ojs.close();
+
+        ObjectOutputStream oos = new ObjectOutputStream(socket.getOutputStream());
+        oos.writeObject(new Message());
+
+
         socket.close();
     }
 

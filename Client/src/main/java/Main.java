@@ -1,7 +1,7 @@
-import net.GameClient;
-import net.message.Message;
+import net.Client;
 
 import java.io.IOException;
+import java.util.Scanner;
 
 /**
  * @author Anselm
@@ -11,6 +11,12 @@ import java.io.IOException;
 
 public class Main {
     public static void main(String[] args) throws IOException {
-        GameClient.getGameclient().sendMessage(new Message());
+        Client.run();
+        Client.queue.add("ss");
+        while (true){
+            Scanner sc = new Scanner(System.in);
+            String s = sc.nextLine();
+            Client.queue.add(s);
+        }
     }
 }
