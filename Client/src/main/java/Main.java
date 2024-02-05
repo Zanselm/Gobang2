@@ -1,4 +1,7 @@
+import com.google.gson.Gson;
+import entity.User;
 import net.Client;
+import net.message.*;
 
 import java.io.IOException;
 import java.util.Scanner;
@@ -10,13 +13,10 @@ import java.util.Scanner;
  */
 
 public class Main {
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) throws IOException, InterruptedException {
         Client.run();
-        Client.queue.add("ss");
-        while (true){
-            Scanner sc = new Scanner(System.in);
-            String s = sc.nextLine();
-            Client.queue.add(s);
-        }
+        Gson gson = new Gson();
+        User user2 = new User(15,"xyf","","12344564",2,4,7);
+        Client.addMessage(gson.toJson(new UpdateMessage(user2)));
     }
 }

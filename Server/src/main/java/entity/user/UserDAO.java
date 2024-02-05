@@ -9,68 +9,97 @@ import java.sql.*;
  */
 
 public class UserDAO {
+    Connection conn;
+    User user;
 
-    public static void main(String[] args) throws Exception {
-        UserDAO userDAO = new UserDAO();
-        userDAO.insertPlayer(new User(0,"乔改平","女","1234566",0,0,0));
-    }
-    private final String url = "jdbc:mysql://150.158.45.98:3306/userdb";
-    private final String user = "userdb";
-    private final String password = "root";
-
-    private Connection getConnection() {
-        Connection conn;
-        try {
-            Class.forName("com.mysql.cj.jdbc.Driver");
-            conn = DriverManager.getConnection(url, user, password);
-        } catch (SQLException | ClassNotFoundException e) {
-            throw new RuntimeException(e);
-        }
-        return conn;
+    public UserDAO(Connection conn,User user) {
+        this.conn = conn;
+        this.user = user;
     }
 
-    public void insertPlayer(User user) throws Exception {
-
-        Class.forName("com.mysql.cj.jdbc.Driver");
-        Connection conn = DriverManager.getConnection(url, this.user, password);
-
+    public int insert() throws SQLException {
 //        从连接中获取执行对象
         String sql = "insert into user(name, sex,win,lose,password,avatar) value(?,?,?,?,?,?);";
         PreparedStatement pstmt = conn.prepareStatement(sql);
 
 //        设置参数 依次对应sql里的问号
-        pstmt.setString(1, user.getName());
-        pstmt.setString(2, user.getSex());
-        pstmt.setInt(3, user.getWin());   //Mysql里char对应的Java类型为String
-        pstmt.setInt(4, user.getLose());
-        pstmt.setString(5, user.getPassword());
-        pstmt.setInt(6, user.getAvatar());
+        set(user, pstmt);
+        int i = pstmt.executeUpdate();
+
+//        释放
+        pstmt.close();
+        return i;
+    }
+
+    public int delete() throws SQLException {
+//        从连接中获取执行对象
+        String sql = "delete from user where id =?";
+        PreparedStatement pstmt = conn.prepareStatement(sql);
+
+//        设置参数 依次对应sql里的问号
+        pstmt.setInt(1, user.getId());
 
 //         执行sql
-        ResultSet resultSet;
-        try {
-//            开始事务
-            conn.setAutoCommit(false);
-            pstmt.executeUpdate();
-//            通过数据库自增来获取用户ID
-            sql = "select last_insert_id()";
-            resultSet = pstmt.executeQuery(sql);
-            while (resultSet.next()) {
-                int id = resultSet.getInt(1);
-                user.setId(id);
-            }
-//            结束事务
-            conn.commit();
-        } catch (SQLException e) {
-//            如果报错 回滚
-            conn.rollback();
-            throw new RuntimeException(e);
-        }
+        int i = pstmt.executeUpdate();
+
+//        释放
+        pstmt.close();
+        return i;
+    }
+
+    public User query() throws SQLException {
+//        从连接中获取执行对象
+        String sql = "select * from user where  name = ?";
+        PreparedStatement pstmt = conn.prepareStatement(sql);
+
+//        设置参数
+        pstmt.setString(1, user.getName());
+
+//         执行sql
+        ResultSet resultSet = pstmt.executeQuery();
+
+//        获取User
+        if (!resultSet.next()){return null;}
+        User severUser = new User();
+        severUser.setId(resultSet.getInt("id"));
+        severUser.setName(resultSet.getNString("name"));
+        severUser.setSex(resultSet.getString("sex"));
+        severUser.setWin(resultSet.getInt("win"));
+        severUser.setLose(resultSet.getInt("lose"));
+        severUser.setPassword(resultSet.getString("password"));
+        severUser.setAvatar(resultSet.getInt("avatar"));
 
 //        释放
         resultSet.close();
         pstmt.close();
-        conn.close();
 
+        return severUser;
     }
+
+    public int update() throws SQLException {
+//        从连接中获取执行对象
+        String sql = "update user set name =?,sex=?,win=?,lose=?,password=?,avatar=? where id =?;";
+        PreparedStatement pstmt = conn.prepareStatement(sql);
+
+//        设置参数 依次对应sql里的问号
+        set(user, pstmt);
+        pstmt.setInt(7, user.getId());
+
+//         执行sql
+        int i = pstmt.executeUpdate();
+
+//        释放
+        pstmt.close();
+        return i;
+    }
+
+    private static void set(User user, PreparedStatement pstmt) throws SQLException {
+        pstmt.setString(1, user.getName());
+        pstmt.setString(2, user.getSex());
+        pstmt.setInt(3, user.getWin());
+        pstmt.setInt(4, user.getLose());
+        pstmt.setString(5, user.getPassword());
+        pstmt.setInt(6, user.getAvatar());
+    }
+
 }

@@ -16,18 +16,12 @@ import java.net.Socket;
 
 public class GameSever {
     public static void main(String[] args) throws IOException, ClassNotFoundException {
-        ServerSocket serverSocket = new ServerSocket(5500);
+        ServerSocket serverSocket = new ServerSocket(8888);
         Socket socket = serverSocket.accept();
-        ObjectInputStream ojs  = new ObjectInputStream(socket.getInputStream());
-        Message message = (Message)ojs.readObject();
-        System.out.println(message.message);
-        ojs.close();
-
-        ObjectOutputStream oos = new ObjectOutputStream(socket.getOutputStream());
-        oos.writeObject(new Message());
+        Thread thread = new Thread(new ConnectThread(socket));
+        thread.start();
 
 
-        socket.close();
     }
 
 

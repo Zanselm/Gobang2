@@ -11,39 +11,48 @@ import java.util.concurrent.ArrayBlockingQueue;
  */
 
 public class Client {
+    private static  Client client = new Client();
+    private static Socket socket = null;
+    private static ArrayBlockingQueue<String> queue = new ArrayBlockingQueue<>(5);
 
-    static Socket socket = null;
-    public static ArrayBlockingQueue<String> queue = new ArrayBlockingQueue<>(10);
+    private Client() {
+    }
+    public static Client getInstance(){
+        return client;
+    }
 
     public static void run(){
         try {
+//            连接服务器
             try {
                 socket = new Socket("127.0.0.1", 8888);
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
-
-            Runnable r = send(socket);
-            Runnable r2 = accept(socket);
-            Thread t1 = new Thread(r);
-            Thread t2 = new Thread(r2);
-            t1.start();
-            t2.start();
+//            启动接受和发送线程
+            Thread send = new Thread(send());
+            Thread accept = new Thread(accept());
+            send.start();
+            accept.start();
+//            初始化控制器
+            ClientControl.init();
 
         } catch (IOException e) {
 
             e.printStackTrace();
         }
     }
-    private static Runnable accept(Socket socket) throws IOException {
+
+    public static void addMessage(String message){
+        queue.add(message);
+    }
+    private static Runnable accept() throws IOException {
         BufferedReader br = new BufferedReader(new InputStreamReader(socket.getInputStream()));
         return () -> {
             // 接受发送的信息
             while (true) {
-                String str;
                 try {
-                    str = br.readLine();
-                    System.out.println("接受者receiver:" + str);
+                    System.out.println(br.readLine());
                 } catch (IOException e) {
                     e.printStackTrace();
                     break;
@@ -53,12 +62,11 @@ public class Client {
     }
 
 
-    private static Runnable send(Socket socket) throws IOException {
+    private static Runnable send() throws IOException {
         PrintWriter pw = new PrintWriter(socket.getOutputStream());
         return () -> {
             while (true) {
                 // 发送信息
-
                 try {
                     String msg;
                     if (((msg = queue.take()) != null)){
