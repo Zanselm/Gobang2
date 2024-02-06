@@ -68,6 +68,7 @@ public class Message{
     public String toString() {
         return "Message{" +
                 "type=" + type +
+                ", messageName='" + messageName + '\'' +
                 ", state=" + state +
                 ", messageObject='" + messageObject + '\'' +
                 ", message='" + message + '\'' +

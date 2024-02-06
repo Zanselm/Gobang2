@@ -9,19 +9,22 @@ import net.message.Message;
  * description
  */
 
-public class ClientControl {
-    public static Client client;
+public class ClientMapper {
 
-    private ClientControl() {
+    private static int LoginControl;
+
+
+    private ClientMapper() {
     }
 
-    public static void init(){
-        client = Client.getInstance();
-    }
 
-    public static void analyse(String netMessage){
+    public static void acceptMessage(String netMessage){
         Message message = new Gson().fromJson(netMessage,Message.class);
+        int type = analyse(message);
         String messageType = message.getMessageName();
+    }
 
+    private static int analyse(Message message) {
+        return 0;
     }
 }

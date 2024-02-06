@@ -1,12 +1,9 @@
 package net;
 
-import com.google.gson.Gson;
-import entity.user.User;
-import entity.user.UserDAO;
+import org.jetbrains.annotations.NotNull;
 
 import java.io.*;
 import java.net.Socket;
-import java.util.Scanner;
 import java.util.concurrent.ArrayBlockingQueue;
 
 /**
@@ -16,66 +13,81 @@ import java.util.concurrent.ArrayBlockingQueue;
  */
 
 public class ConnectThread implements Runnable{
-    Socket socket;
-    ServerControl serverControl;
-    public ArrayBlockingQueue<String> queue = new ArrayBlockingQueue<>(5);
+    private Socket socket;
+    private NetMapper netMapper;
+    private boolean sign = true;
+    private final ArrayBlockingQueue<String> queue = new ArrayBlockingQueue<>(5);
+    private BufferedReader br;
+    private PrintWriter pw;
 
     private ConnectThread() {
     }
 
     public ConnectThread(Socket socket) {
         this.socket = socket;
-        serverControl = new ServerControl(this);
+        netMapper = new NetMapper(this);
     }
 
     @Override
     public void run(){
+            try {
+                Thread accept = new Thread(accept());
+                Thread send = new Thread(send());
+                accept.start();
+                send.start();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+    }
+    public void shutdown(){
         try {
-            Thread accept = new Thread(accept());
-            Thread send = new Thread(send());
-            accept.start();
-            send.start();
+            Thread.currentThread().interrupt();
+            br.close();
+            pw.close();
+            if (socket!=null){
+                socket.close();
+            }
+            queue.add("exit");
+            sign = false;
         } catch (IOException e) {
-            e.printStackTrace();
+            throw new RuntimeException(e);
         }
     }
     public void addMessage(String message){
         queue.add(message);
     }
 
-    private Runnable send() throws IOException {
-        PrintWriter pw = new PrintWriter(socket.getOutputStream());
+    private @NotNull Runnable send() throws IOException {
+        pw = new PrintWriter(socket.getOutputStream());
         return () -> {
             // 返回信息
-            while (true) {
+            while (sign) {
                 try {
-                    String msg;
-                    if ((msg = queue.take()) != null) {
-                        pw.println(msg);
-                        pw.flush();
-                    }
+                    String msg = queue.take();
+                    if (msg.equals("exit")) {return;}
+                    pw.println(msg);
+                    pw.flush();
                 } catch (InterruptedException e) {
-                    throw new RuntimeException(e);
+                    shutdown();
+                    e.printStackTrace();
                 }
 
             }
         };
     }
 
-    private Runnable accept() throws IOException {
-        BufferedReader br = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+    private @NotNull Runnable accept() throws IOException {
+        br = new BufferedReader(new InputStreamReader(socket.getInputStream()));
         return () -> {
-            while (true) {
+            while (sign) {
                 // 接受信息
                 String str;
                 try {
                     str = br.readLine();
-                    serverControl.analyse(str);
-                } catch (IOException e) {
-                    e.printStackTrace();
-                    break;
+                    netMapper.acceptMessage(str);
                 } catch (Exception e) {
-                    throw new RuntimeException(e);
+                    shutdown();
+                    e.printStackTrace();
                 }
             }
         };
