@@ -1,5 +1,7 @@
 package net;
 
+import com.google.gson.Gson;
+import net.message.Message;
 import utils.MessagePrinter;
 
 import java.io.*;
@@ -18,6 +20,7 @@ public class Client {
     private static BufferedReader br;
     private static PrintWriter pw;
     private static final ArrayBlockingQueue<String> queue = new ArrayBlockingQueue<>(5);
+    private static final Gson gson = new Gson();
 
     private Client() {
     }
@@ -64,6 +67,10 @@ public class Client {
     public static void addMessage(String message) {
         queue.add(message);
     }
+    public static void addMessage(Message message) {
+        String m = gson.toJson(message);
+        queue.add(m);
+    }
 
     private static Runnable accept() throws IOException {
         br = new BufferedReader(new InputStreamReader(socket.getInputStream()));
@@ -107,5 +114,9 @@ public class Client {
             }
         };
     }
+    public static boolean isSocketExist(){
+        return socket != null;
+    }
+
 }
 
