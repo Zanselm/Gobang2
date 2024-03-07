@@ -42,7 +42,7 @@ public class ZRadioButton extends JRadioButton{
     }
     private void resize(){
         int width = getHeight();
-        finalHook = ImageResizer.resize(hook,width);
-        finalBlankness = ImageResizer.resize(blankness,width);
+        finalHook = ImageResizer.resize(hook,width,ImageResizer.WIDTH);
+        finalBlankness = ImageResizer.resize(blankness,width,ImageResizer.WIDTH);
     }
 }

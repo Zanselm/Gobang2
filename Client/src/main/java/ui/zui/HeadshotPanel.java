@@ -10,7 +10,7 @@ import java.awt.*;
 /**
  * @author Anselm
  * @date 2024/2/20 17 33
- * description
+ * description 头像面板
  */
 
 public class HeadshotPanel extends JPanel {
@@ -18,48 +18,75 @@ public class HeadshotPanel extends JPanel {
     static ImageIcon[] headshotsGirl;
     public static final boolean BOY = true;
     public static final boolean GIRL = false;
-    int imageNumber;
-    boolean sex;
-    JLabel headshot;
-    ArrowButton leftButton;
-    ArrowButton rightButton;
+    public static final int BUTTON = 0;
+    public static final int SIDE = 1;
+    public static final int NOT = 2;
+    private int imageNumber;
+    private boolean sex;
+    private final int width;
+    private JLabel headshot;
+    private ArrowButton leftButton;
+    private ArrowButton rightButton;
+    private final int arrowLocation;
 
     static {
         headshotsBoy = new ImageIcon[10];
         headshotsGirl = new ImageIcon[10];
     }
 
-    public HeadshotPanel(int x, int y, int width) {
-        init(x, y, width);
+    /**
+     * @param x 横坐标
+     * @param y 纵坐标
+     * @param width 头像框宽
+     * @param arrowLocation 箭头按钮位置
+     *                      SIDE 两边；
+     *                      BUTTON 底部；
+     *                      NOT 无箭头按钮；；
+     */
+    public HeadshotPanel(int x, int y, int width,int arrowLocation) {
+        this.width = width;
         sex = BOY;
         imageNumber = 0;
-        setImage();
-        setVisible(true);
+        this.arrowLocation = arrowLocation;
+        init(x, y);
     }
 
 
-    public HeadshotPanel(int x, int y, int width, int imageNumber, boolean sex) {
-        init(x, y, width);
+    public HeadshotPanel(int x, int y, int width, int imageNumber, boolean sex,int arrowLocation) {
+        this.width = width;
         this.sex = sex;
         this.imageNumber = imageNumber;
-        setImage();
-        setVisible(true);
+        this.arrowLocation = arrowLocation;
+        init(x, y);
     }
 
-    private void init(int x, int y, int width) {
-        setBounds(x, y, width, (int) (width + width * 0.4));
+    private void init(int x, int y) {
+        setBounds(x-(int) (width * 0.4), y, (int) (width + width * 0.8), (int) (width + width * 0.4));
         setOpaque(true);
         setBackground(new Color(0, 0, 0, 0));
         setLayout(null);
         addArrowButton();
         headshot = new JLabel();
-        headshot.setBounds(0, 0, width, width);
+        headshot.setBounds((int) (width * 0.4), 0, width, width);
         add(headshot);
+        setImage();
+        setVisible(true);
     }
 
     private void addArrowButton() {
-        leftButton = ArrowButton.getLeftButton(0, getHeight() - (int) (getWidth() * 0.3), (int) (getWidth() * 0.3), (int) (getWidth() * 0.3), this);
-        rightButton = ArrowButton.getRightButton((int) (getWidth() * 0.66), getHeight() - (int) (getWidth() * 0.3), (int) (getWidth() * 0.3), (int) (getWidth() * 0.3), this);
+        if (arrowLocation == NOT){return;}
+        if (arrowLocation == BUTTON){
+            leftButton = ArrowButton.getLeftButton((int) (width * 0.4), getHeight() - (int) (width * 0.3)
+                    , (int) (width * 0.3), (int) (width * 0.3), this);
+            rightButton = ArrowButton.getRightButton((int) (width * 0.66)+(int) (width * 0.4)
+                    , getHeight() - (int) (width * 0.3), (int) (width * 0.3), (int) (width * 0.3), this);
+        }
+        if (arrowLocation == SIDE){
+            leftButton = ArrowButton.getLeftButton(0, (int) (width * 0.3), (int) (width * 0.3), (int) (width * 0.3)
+                    , this);
+            rightButton = ArrowButton.getRightButton(width+(int) (width * 0.5), (int) (width * 0.3), (int) (width * 0.3)
+                    , (int) (width * 0.3), this);
+        }
         add(leftButton);
         add(rightButton);
     }
@@ -69,17 +96,19 @@ public class HeadshotPanel extends JPanel {
             if (headshotsBoy[imageNumber] == null) {
                 headshotsBoy[imageNumber] = ImageLoader.load("images/headshot/boy_" + imageNumber + ".png");
             }
-            headshot.setIcon(ImageResizer.resize(headshotsBoy[imageNumber], getWidth()));
+            headshot.setIcon(ImageResizer.resize(headshotsBoy[imageNumber], getWidth(),ImageResizer.WIDTH));
         } else {
             if (headshotsGirl[imageNumber] == null) {
                 headshotsGirl[imageNumber] = ImageLoader.load("images/headshot/girl_" + imageNumber + ".png");
             }
-            headshot.setIcon(ImageResizer.resize(headshotsGirl[imageNumber], getWidth()));
+            headshot.setIcon(ImageResizer.resize(headshotsGirl[imageNumber], getWidth(),ImageResizer.WIDTH));
         }
     }
 
     public void setImage(int imageNumber, boolean sex) {
         if (imageNumber < 0 || imageNumber > 9) imageNumber = 0;
+        this.imageNumber = imageNumber;
+        this.sex = sex;
         setImage();
     }
 
@@ -95,10 +124,22 @@ public class HeadshotPanel extends JPanel {
         setImage();
     }
 
-    private void changeSex(boolean sex) {
+    public void changeSex(boolean sex) {
         this.sex = sex;
         imageNumber = 0;
         setImage();
+    }
+
+    public int getImageNumber() {
+        return imageNumber;
+    }
+
+    public String getSex() {
+        if (sex == BOY){
+            return "男";
+        }else {
+            return "女";
+        }
     }
 
     public static class ArrowButton extends JButton {
@@ -132,13 +173,13 @@ public class HeadshotPanel extends JPanel {
 
         public static @NotNull HeadshotPanel.ArrowButton getLeftButton(int x, int y, int width, int high, HeadshotPanel headshotPanel) {
             ArrowButton arrowButton = new ArrowButton(x, y, width, high, LEFT, headshotPanel);
-            arrowButton.setIcon(ImageResizer.resize(left, high));
+            arrowButton.setIcon(ImageResizer.resize(left, high,ImageResizer.HIGH));
             return arrowButton;
         }
 
         public static @NotNull HeadshotPanel.ArrowButton getRightButton(int x, int y, int width, int high, HeadshotPanel headshotPanel) {
             ArrowButton arrowButton = new ArrowButton(x, y, width, high, RIGHT, headshotPanel);
-            arrowButton.setIcon(ImageResizer.resize(right, high));
+            arrowButton.setIcon(ImageResizer.resize(right, high,ImageResizer.HIGH));
             return arrowButton;
         }
 
