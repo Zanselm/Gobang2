@@ -3,6 +3,7 @@ import entity.User;
 import net.Client;
 import net.message.*;
 import ui.LoginFrame;
+import ui.RegisterFrame;
 
 import java.io.IOException;
 import java.util.Objects;
@@ -19,7 +20,8 @@ public class ClientMain {
 //        System.setProperty("sun.java2d.noddraw", "true");
 //        System.setProperty("java.awt.im.style","on-the-spot");
         Client.run();
-        LoginFrame.showLoginFrame();
+        new RegisterFrame();
+//        LoginFrame.showLoginFrame();
 //        Gson gson = new Gson();
 //        User user2 = new User(15,"xyf","","12344564",2,4,7);
 //        Client.addMessage(gson.toJson(new RegisterMessage(user2)));

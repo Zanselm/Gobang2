@@ -1,12 +1,14 @@
 package net.message;
 
+import utils.MessagePrinter;
+
 /**
  * @author Anselm
  * @date 2024/2/4 13 06
  * description
  */
 
-public class Message{
+public class Message {
     private int type;
     private String messageName;
     private int state;
@@ -16,7 +18,7 @@ public class Message{
     public Message() {
     }
 
-    public Message(int type,String messageName, int state, String messageObject, String message) {
+    public Message(int type, String messageName, int state, String messageObject, String message) {
         this.type = type;
         this.messageName = messageName;
         this.state = state;
@@ -64,14 +66,18 @@ public class Message{
         this.message = message;
     }
 
+    //    @Override
+//    public String toString() {
+//        return "Message{" +
+//                "type=" + type +
+//                ", messageName='" + messageName + '\'' +
+//                ", state=" + state +
+//                ", messageObject='" + messageObject + '\'' +
+//                ", message='" + message + '\'' +
+//                '}';
+//    }
     @Override
     public String toString() {
-        return "Message{" +
-                "type=" + type +
-                ", messageName='" + messageName + '\'' +
-                ", state=" + state +
-                ", messageObject='" + messageObject + '\'' +
-                ", message='" + message + '\'' +
-                '}';
+        return MessagePrinter.toString(this);
     }
 }

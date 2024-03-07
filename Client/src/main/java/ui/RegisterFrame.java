@@ -1,7 +1,9 @@
 package ui;
 
+import entity.User;
 import net.Client;
 import net.message.Message;
+import net.message.RegisterMessage;
 import org.jetbrains.annotations.NotNull;
 import ui.zui.*;
 import utils.FontLoader;
@@ -11,6 +13,7 @@ import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.net.URL;
+import java.util.Arrays;
 import java.util.Objects;
 
 /**
@@ -196,13 +199,27 @@ public class RegisterFrame extends JFrame {
                 super.mouseClicked(e);
                 if (check()){
                     if (Client.isSocketExist()){
-                        Client.addMessage(new Message());
+                        Client.addMessage(new RegisterMessage(getUser()));
                     }else {
                         System.out.println("服务器不存在，请重启客户端或联系管理员");
+                        System.out.println(new RegisterMessage(getUser()));
                     }
                 }else{
                     System.out.println("请完善信息");
                 }
+            }
+
+            @NotNull
+            private User getUser() {
+                String name = new String(nameField.getPassword());
+                String sex;
+                String password = new String(passwordField.getPassword());
+                if (man.isSelected()){
+                    sex = "男";
+                }else {
+                    sex = "女";
+                }
+                return new User(0,name,sex,password,0,0,headshotPanel.getImageNumber());
             }
         });
     }
