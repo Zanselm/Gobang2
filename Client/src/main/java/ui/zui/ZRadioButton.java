@@ -22,9 +22,9 @@ public class ZRadioButton extends JRadioButton{
     ImageIcon finalBlankness;
     static {
         font = FontLoader.getFont();
-        URL hookURL = Objects.requireNonNull(ZButton.class.getClassLoader().getResource("images/hook.png"));
+        URL hookURL = Objects.requireNonNull(ZMainButton.class.getClassLoader().getResource("images/hook.png"));
         hook = new ImageIcon(hookURL);
-        URL blanknessURL = Objects.requireNonNull(ZButton.class.getClassLoader().getResource("images/blankness.png"));
+        URL blanknessURL = Objects.requireNonNull(ZMainButton.class.getClassLoader().getResource("images/blankness.png"));
         blankness = new ImageIcon(blanknessURL);
     }
     private ZRadioButton(){}

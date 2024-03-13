@@ -2,7 +2,10 @@ package ui;
 
 import entity.User;
 import net.Client;
+import net.message.ByeMessage;
+import net.message.ForwardMessage;
 import net.message.LoginMessage;
+import net.message.Message;
 import ui.zui.*;
 import utils.FontLoader;
 
@@ -20,17 +23,21 @@ import java.util.Objects;
  */
 
 public class LoginFrame extends JFrame {
-    private static final LoginFrame loginFrame =  new LoginFrame();
+    private static LoginFrame loginFrame;
     private ZPasswordField accountField;
     private ZPasswordField passwordField;
-    private ZButton loginButton;
+    private ZMainButton loginButton;
     private ExitButton exitButton;
+    private CheckLabel accountCheck;
+
     public static void main(String[] args) {
-        LoginFrame.showLoginFrame();
+        LoginFrame.getLoginFrame();
     }
-    public static void showLoginFrame(){
-    }
-    public static JFrame getLoginFrame(){
+
+    public static LoginFrame getLoginFrame(){
+        if (loginFrame == null){
+            loginFrame = new LoginFrame();
+        }
         return loginFrame;
     }
     private LoginFrame() throws HeadlessException {
@@ -38,8 +45,64 @@ public class LoginFrame extends JFrame {
         addTextField();
         addLoginButton();
         addExitButton();
+        addRegister();
+
+
+
+        ZButton button = new ZButton(100, 100, 50, ZButton.LOGIN);
+        button.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                super.mouseClicked(e);
+                Client.addMessage(new ForwardMessage(accountField.getContent()));
+            }
+        });
+        add(button);
+
         addBackground();
         setVisible(true);
+    }
+
+    public static void successRegister(){
+        RegisterFrame registerFrame = RegisterFrame.getRegisterFrame();
+        registerFrame.setVisible(false);
+        loginFrame.setLocation(registerFrame.getLocation());
+        loginFrame.setVisible(true);
+        loginFrame.accountField.setText(registerFrame.getNameField().getContent());
+        loginFrame.passwordField.setText(registerFrame.getPasswordField().getContent());
+    }
+
+    private void addRegister() {
+        ZButton register = new ZButton(200, 100, 30, ZButton.REGISTER);
+        add(register);
+        JLabel jLabel = new JLabel();
+        jLabel.setBounds(200,130,40,20);
+        add(jLabel);
+        register.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                super.mouseClicked(e);
+                toRegisterFrame();
+            }
+
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                super.mouseEntered(e);
+                jLabel.setText("注册");
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+                super.mouseExited(e);
+                jLabel.setText("");
+            }
+        });
+    }
+
+    private void toRegisterFrame() {
+        RegisterFrame.getRegisterFrame().setBounds(getBounds());
+        RegisterFrame.getRegisterFrame().setVisible(true);
+        setVisible(false);
     }
 
     private void addBackground() {
@@ -53,7 +116,7 @@ public class LoginFrame extends JFrame {
 
 
     private void addLoginButton() {
-        loginButton = new ZButton(getWidth() / 2 - 60, 330, 200, 144, "登录");
+        loginButton = new ZMainButton(getWidth() / 2 - 60, 330, 200, 144, "登录");
         addLoginListener();
         add(loginButton);
     }
@@ -64,30 +127,39 @@ public class LoginFrame extends JFrame {
             public void mouseClicked(MouseEvent e) {
                 super.mouseClicked(e);
                 if (!examine()){
-                    System.out.println("请检查您的输入");
+                    accountCheck.setText("请检查您的输入");
                     java.awt.Toolkit.getDefaultToolkit().beep();
                     return;
                 }
                 if (Client.isSocketExist()){
+                    accountCheck.clean();
                     User loginUser = new User(0, new String(accountField.getPassword()),null,new String(passwordField.getPassword()),0,0,0);
                     Client.addMessage(new LoginMessage(loginUser));
                 }else {
+                    accountCheck.clean();
                     System.out.println("未连接服务器");
                     java.awt.Toolkit.getDefaultToolkit().beep();
                 }
             }
 
             private boolean examine() {
-                boolean sign = switch (new String(accountField.getPassword())) {
+                boolean sign = switch (accountField.getContent()) {
                     case "", "请输入您的账号" -> false;
                     default -> true;
                 };
-                if (new String(passwordField.getPassword()).isEmpty()){
+                if (accountField.getContent().isEmpty()){
                     sign = false;
                 }
                 return sign;
             }
         });
+    }
+
+    public void LoginFailed(String text){
+        accountCheck.setText(text);
+    }
+    public void LoginSuccessful(){
+        System.out.println("登录成功");
     }
 
     private void addExitButton() {
@@ -101,6 +173,9 @@ public class LoginFrame extends JFrame {
             @Override
             public void mouseClicked(MouseEvent e) {
                 super.mouseClicked(e);
+                if (Client.isSocketExist()) {
+                    Client.addMessage(new ByeMessage());
+                }
                 System.exit(0);
             }
         });
@@ -110,8 +185,10 @@ public class LoginFrame extends JFrame {
         accountField = new ZPasswordField("请输入您的账号", 350, 200, 300, 50);
         accountField.showPassword();
         passwordField = new ZPasswordField("", 350, 290, 300, 50);
+        accountCheck = new CheckLabel(650,220,200,20);
         add(accountField);
         add(passwordField);
+        add(accountCheck);
 
         EyeButton eyeButton = new EyeButton(passwordField,670,310,40);
         add(eyeButton);
@@ -132,5 +209,4 @@ public class LoginFrame extends JFrame {
         Font font = FontLoader.getFont();
         this.setFont(font);
     }
-
 }

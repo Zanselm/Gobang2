@@ -7,4 +7,13 @@ package entity.room;
  */
 
 public class Room {
+    int ID;
+
+    public int getID() {
+        return ID;
+    }
+
+    public void setID(int ID) {
+        this.ID = ID;
+    }
 }

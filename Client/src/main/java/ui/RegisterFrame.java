@@ -2,7 +2,7 @@ package ui;
 
 import entity.User;
 import net.Client;
-import net.message.Message;
+import net.message.ByeMessage;
 import net.message.RegisterMessage;
 import org.jetbrains.annotations.NotNull;
 import ui.zui.*;
@@ -13,7 +13,6 @@ import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.net.URL;
-import java.util.Arrays;
 import java.util.Objects;
 
 /**
@@ -24,43 +23,89 @@ import java.util.Objects;
 
 public class RegisterFrame extends JFrame {
     public static void main(String[] args) {
-        new RegisterFrame();
+        getRegisterFrame();
     }
-    Font font;
-    ZButton registerButton;
-    ExitButton exitButton;
-    ZPasswordField nameField;
-    ZPasswordField passwordField;
-    ZPasswordField repeatField;
-    ZRadioButton man;
-    ZRadioButton woman;
-    CheckLabel nameCheck;
-    CheckLabel sexCheck;
-    CheckLabel passwordCheck;
-    CheckLabel repeatCheck;
+
+    private static RegisterFrame registerFrame;
+    private Font font;
+    private ZMainButton registerButton;
+    private ExitButton exitButton;
+    private ZPasswordField nameField;
+    private ZPasswordField passwordField;
+    private ZPasswordField repeatField;
+    private ZRadioButton man;
+    private ZRadioButton woman;
+    private CheckLabel nameCheck;
+    private CheckLabel sexCheck;
+    private CheckLabel passwordCheck;
+    private CheckLabel repeatCheck;
     HeadshotPanel headshotPanel;
-    public RegisterFrame() {
+
+    private RegisterFrame() {
         init();
 
         addHeadshotPanel();
         addText();
         addSexGroup();
-        addLoginButton();
+        addRegisterButton();
         addExitButton();
+        addLogin();
 
         addBackground();
         setVisible(true);
     }
 
+    private void addLogin() {
+        ZButton register = new ZButton(200, 100, 30, ZButton.LOGIN);
+        add(register);
+        JLabel jLabel = new JLabel();
+        jLabel.setBounds(200,130,40,20);
+        add(jLabel);
+        register.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                super.mouseClicked(e);
+                toLoginFrame();
+            }
+
+            @Override
+            public void mouseEntered(MouseEvent e) {
+                super.mouseEntered(e);
+                jLabel.setText("登录");
+            }
+
+            @Override
+            public void mouseExited(MouseEvent e) {
+                super.mouseExited(e);
+                jLabel.setText("");
+            }
+        });
+    }
+
+    private void toLoginFrame() {
+        LoginFrame.getLoginFrame().setBounds(getBounds());
+        LoginFrame.getLoginFrame().setVisible(true);
+        setVisible(false);
+
+
+    }
+
+    public static RegisterFrame getRegisterFrame() {
+        if (registerFrame == null) {
+            registerFrame = new RegisterFrame();
+        }
+        return registerFrame;
+    }
+
     private void addHeadshotPanel() {
-        headshotPanel = new HeadshotPanel(600,200,150,HeadshotPanel.SIDE);
+        headshotPanel = new HeadshotPanel(600, 200, 150, HeadshotPanel.SIDE);
         add(headshotPanel);
     }
 
     private void addSexGroup() {
         ButtonGroup sexGroup = new ButtonGroup();
-        man = new ZRadioButton(270,210,80,35,"男");
-        woman = new ZRadioButton(360,210,80,35,"女");
+        man = new ZRadioButton(270, 210, 80, 35, "男");
+        woman = new ZRadioButton(360, 210, 80, 35, "女");
         sexGroup.add(man);
         sexGroup.add(woman);
         add(man);
@@ -79,21 +124,21 @@ public class RegisterFrame extends JFrame {
         JLabel repeat = new JLabel("重复密码");
         JLabel headshot = new JLabel("头像");
 
-        title.setBounds(getWidth() / 2-100, 60, 300, 70);
+        title.setBounds(getWidth() / 2 - 100, 60, 300, 70);
         name.setBounds(200, 150, 300, 50);
         sex.setBounds(200, 200, 300, 50);
         password.setBounds(200, 250, 300, 50);
         repeat.setBounds(200, 300, 300, 50);
         headshot.setBounds(650, 150, 300, 50);
 
-        nameField = new ZPasswordField("",270, 150, 180, 50);
-        passwordField = new ZPasswordField("",270, 250, 180, 50);
-        repeatField = new ZPasswordField("",330, 300, 120, 50);
+        nameField = new ZPasswordField("", 270, 150, 180, 50);
+        passwordField = new ZPasswordField("", 270, 250, 180, 50);
+        repeatField = new ZPasswordField("", 330, 300, 120, 50);
 
-        nameCheck = new CheckLabel(450, 150, 200, 50,"");
-        sexCheck = new CheckLabel(450, 200, 200, 50,"");
-        passwordCheck = new CheckLabel(450, 250, 200, 50,"");
-        repeatCheck = new CheckLabel(450, 300, 200, 50,"");
+        nameCheck = new CheckLabel(450, 150, 200, 50);
+        sexCheck = new CheckLabel(450, 200, 200, 50);
+        passwordCheck = new CheckLabel(450, 250, 200, 50);
+        repeatCheck = new CheckLabel(450, 300, 200, 50);
 
         title.setFont(font.deriveFont(60f));
         name.setFont(font);
@@ -124,34 +169,37 @@ public class RegisterFrame extends JFrame {
     private void init() {
         font = FontLoader.getFont();
         setLayout(null);
-        setBounds(500,500,995,522);
+        setBounds(500, 500, 995, 522);
         this.setUndecorated(true);
         this.setBackground(new Color(0, 0, 0, 0));
         setResizable(false);
         setLocationRelativeTo(null);
         PositionDraggingListener.addPositionDraggingListener(this);
     }
+
     private void addBackground() {
         URL loginBackground = Objects.requireNonNull(
                 LoginFrame.class.getClassLoader().getResource("images/registerBackground.png"));
         ImageIcon loginBackgroundIcon = new ImageIcon(loginBackground);
         JLabel label = new JLabel(loginBackgroundIcon);
-        label.setBounds(0,0,getWidth(),getHeight());
+        label.setBounds(0, 0, getWidth(), getHeight());
         add(label);
     }
-    private void addLoginButton() {
-        registerButton = new ZButton(getWidth() / 2 - 60, 330, 200, 144, "注册");
+
+    private void addRegisterButton() {
+        registerButton = new ZMainButton(getWidth() / 2 - 60, 330, 200, 144, "注册");
         addRegisterButtonListener();
         add(registerButton);
     }
-    private boolean check(){
+
+    private boolean check() {
         return nameCheck() & sexCheck() & passwordCheck() & repeatCheck();
     }
 
     private boolean repeatCheck() {
         String password = new String(passwordField.getPassword());
         String repeat = new String(repeatField.getPassword());
-        if (repeat.equals(password)){
+        if (repeat.equals(password)) {
             repeatCheck.clean();
             return true;
         }
@@ -161,7 +209,7 @@ public class RegisterFrame extends JFrame {
 
     private boolean passwordCheck() {
         String password = new String(passwordField.getPassword());
-        if (password.length()<6){
+        if (password.length() < 6) {
             passwordCheck.setText("密码长度大于6");
             return false;
         }
@@ -170,7 +218,7 @@ public class RegisterFrame extends JFrame {
     }
 
     private boolean sexCheck() {
-        if (man.isSelected() || woman.isSelected()){
+        if (man.isSelected() || woman.isSelected()) {
             sexCheck.clean();
             return true;
         }
@@ -180,11 +228,11 @@ public class RegisterFrame extends JFrame {
 
     private boolean nameCheck() {
         String name = new String(nameField.getPassword());
-        if (name.length()<4||name.length()>10){
-            nameCheck.setText("姓名长度需在4-10之间");
+        if (name.length() < 3 || name.length() > 10) {
+            nameCheck.setText("姓名长度需在3-10之间");
             return false;
         }
-        if (name.charAt(0) == '_'){
+        if (name.charAt(0) == '_') {
             nameCheck.setText("请勿以下划线开头");
             return false;
         }
@@ -197,14 +245,13 @@ public class RegisterFrame extends JFrame {
             @Override
             public void mouseClicked(MouseEvent e) {
                 super.mouseClicked(e);
-                if (check()){
-                    if (Client.isSocketExist()){
+                if (check()) {
+                    if (Client.isSocketExist()) {
                         Client.addMessage(new RegisterMessage(getUser()));
-                    }else {
+                    } else {
                         System.out.println("服务器不存在，请重启客户端或联系管理员");
-                        System.out.println(new RegisterMessage(getUser()));
                     }
-                }else{
+                } else {
                     System.out.println("请完善信息");
                 }
             }
@@ -214,17 +261,18 @@ public class RegisterFrame extends JFrame {
                 String name = new String(nameField.getPassword());
                 String sex;
                 String password = new String(passwordField.getPassword());
-                if (man.isSelected()){
+                if (man.isSelected()) {
                     sex = "男";
-                }else {
+                } else {
                     sex = "女";
                 }
-                return new User(0,name,sex,password,0,0,headshotPanel.getImageNumber());
+                return new User(0, name, sex, password, 0, 0, headshotPanel.getImageNumber());
             }
         });
     }
+
     private void addExitButton() {
-        exitButton = new ExitButton(830,60,50,50);
+        exitButton = new ExitButton(830, 60, 50, 50);
         addExitListener();
         add(exitButton);
     }
@@ -234,35 +282,30 @@ public class RegisterFrame extends JFrame {
             @Override
             public void mouseClicked(MouseEvent e) {
                 super.mouseClicked(e);
+                if (Client.isSocketExist()) {
+                    Client.addMessage(new ByeMessage());
+                }
                 System.exit(0);
             }
         });
     }
-    private static class CheckLabel extends JLabel{
-        public CheckLabel(){
-            super();
-            setForeground(Color.red);
-        }
-        public CheckLabel(int x,int y,int width,int length,String text){
-            super();
-            setText(text);
-            setBounds(x,y,width,length);
-            setForeground(Color.red);
-        }
-        public void setFontSize(int fontSize){
-            setFont(new Font(getFont().getFontName(),getFont().getStyle(),fontSize));
-        }
-        public void clean(){
-            setText("");
-        }
 
-        @Override
-        public void setText(@NotNull String text) {
-            if (text.isEmpty()){
-                super.setText(text);
-            }else {
-                super.setText("X "+text);
-            }
-        }
+    public void duplicateUsername() {
+        nameCheck.setText("用户名重复");
     }
+
+    public void success() {
+        nameCheck.clean();
+        LoginFrame.successRegister();
+    }
+
+    public ZPasswordField getNameField() {
+        return nameField;
+    }
+
+    public ZPasswordField getPasswordField() {
+        return passwordField;
+    }
+
+
 }

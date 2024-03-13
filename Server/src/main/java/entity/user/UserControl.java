@@ -4,9 +4,11 @@ import com.google.gson.Gson;
 import constant.MessageConstant;
 import exception.MessageTypeException;
 import net.ConnectThread;
+import net.Transmitter;
 import net.message.LoginResponse;
 import net.message.Message;
 import net.message.RegisterResponse;
+import org.jetbrains.annotations.NotNull;
 
 import java.sql.SQLException;
 
@@ -33,7 +35,7 @@ public class UserControl implements MessageConstant{
         this.userServer = new UserServer();
     }
 
-    public void acceptMessage(Message message){
+    public void acceptMessage(@NotNull Message message){
         User user = gson.fromJson(message.getMessage(),User.class);
         int type = analyse(message);
         switch (type){
@@ -45,7 +47,7 @@ public class UserControl implements MessageConstant{
         }
     }
 
-    private int analyse(Message message) {
+    private int analyse(@NotNull Message message) {
         String messageName = message.getMessageName();
         if("RegisterMessage".equals(messageName)){return REGISTER;}
         if ("DeleteMessage".equals(messageName)){return DELETE;}
@@ -78,9 +80,14 @@ public class UserControl implements MessageConstant{
         try {
             User severUser = userServer.login(user);
             if (severUser != null) {
-                connectThread.addMessage(gson.toJson(new LoginResponse(OK,severUser)));
+                if (Transmitter.online(severUser,connectThread)){
+                    connectThread.addMessage(gson.toJson(new LoginResponse(OK,severUser)));
+                    connectThread.setUser(severUser);
+                }else {
+                    connectThread.addMessage(gson.toJson(new LoginResponse(CLIENT_ERROR, "重复登录")));
+                }
             }else {
-                connectThread.addMessage(gson.toJson(new LoginResponse(CLIENT_ERROR, null)));
+                connectThread.addMessage(gson.toJson(new LoginResponse(CLIENT_ERROR, "密码或用户名错误")));
             }
         } catch (SQLException e) {
             throw new RuntimeException(e);

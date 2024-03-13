@@ -1,4 +1,4 @@
-package domain.domain;
+package domain;
 
 /**
  * @author Anselm
@@ -6,5 +6,5 @@ package domain.domain;
  * description
  */
 
-public class Piece {
+public class Player {
 }

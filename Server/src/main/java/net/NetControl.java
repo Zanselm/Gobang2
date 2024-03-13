@@ -17,6 +17,7 @@ public class NetControl {
     private static final int ERROR = -1;
     private static final int HELLO = 0;
     private static final int BYE = 1;
+    private static final int FORWARD = 2;
     private NetControl() {
     }
 
@@ -28,6 +29,7 @@ public class NetControl {
         switch (type){
             case HELLO -> hello(message);
             case BYE -> shutdown();
+            case FORWARD -> forward(message);
             case ERROR -> throw new MessageTypeException();
         }
     }
@@ -38,11 +40,16 @@ public class NetControl {
 
     private void shutdown(){
         connectThread.shutdown();
+        Transmitter.offline(connectThread);
+    }
+    private void forward(Message message){
+        Transmitter.forward(message);
     }
     private int analyse(Message message) {
         String messageName = message.getMessageName();
         if("HelloMessage".equals(messageName)){return HELLO;}
         if("ByeMessage".equals(messageName)){return BYE;}
+        if("ForwardMessage".equals(messageName)){return FORWARD;}
         return ERROR;
     }
 }

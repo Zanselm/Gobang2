@@ -1,7 +1,13 @@
 package net;
 
 import com.google.gson.Gson;
+import constant.MessageConstant;
 import net.message.Message;
+import net.message.RegisterResponse;
+import ui.LoginFrame;
+import ui.RegisterFrame;
+
+import javax.swing.*;
 
 /**
  * @author Anselm
@@ -9,19 +15,47 @@ import net.message.Message;
  * description
  */
 
-public class ClientMapper {
+public class ClientMapper implements MessageConstant{
+    private static final ClientMapper clientMapper = new ClientMapper();
 
     private static int LoginControl;
-
 
     private ClientMapper() {
     }
 
+    public static ClientMapper getClientMapper() {
+        return clientMapper;
+    }
 
-    public static void acceptMessage(String netMessage){
+    public void acceptMessage(String netMessage){
         Message message = new Gson().fromJson(netMessage,Message.class);
         int type = analyse(message);
         String messageType = message.getMessageName();
+        System.out.println(message);
+        register(message);
+        login(message);
+    }
+
+    private static void register(Message message) {
+        if (message.getMessageName().equals("RegisterResponse")){
+            if (message.getState() == OK){
+                RegisterFrame.getRegisterFrame().success();
+            }
+            if (message.getState() == CLIENT_ERROR){
+                RegisterFrame.getRegisterFrame().duplicateUsername();
+            }
+        }
+    }
+
+    private void login(Message message) {
+        if (message.getMessageName().equals("LoginResponse")){
+            if (message.getState() == OK){
+                LoginFrame.getLoginFrame().LoginSuccessful();
+            }
+            if (message.getState() == CLIENT_ERROR){
+                LoginFrame.getLoginFrame().LoginFailed(message.getMessage());
+            }
+        }
     }
 
     private static int analyse(Message message) {

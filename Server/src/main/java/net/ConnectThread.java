@@ -1,5 +1,6 @@
 package net;
 
+import entity.user.User;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.*;
@@ -19,6 +20,7 @@ public class ConnectThread implements Runnable{
     private final ArrayBlockingQueue<String> queue = new ArrayBlockingQueue<>(5);
     private BufferedReader br;
     private PrintWriter pw;
+    private User user;
 
     private ConnectThread() {
     }
@@ -55,6 +57,12 @@ public class ConnectThread implements Runnable{
     }
     public void addMessage(String message){
         queue.add(message);
+    }
+    public void setUser(User user){
+        this.user = user;
+    }
+    public User getUser(){
+        return user;
     }
 
     private @NotNull Runnable send() throws IOException {

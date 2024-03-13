@@ -84,7 +84,8 @@ public class Client {
                         return;
                     }
 //                    应放入Mapper
-                    MessagePrinter.print(msg);
+//                    MessagePrinter.print(msg);
+                    ClientMapper.getClientMapper().acceptMessage(msg);
                 } catch (IOException e) {
                     shutdown();
                     e.printStackTrace();

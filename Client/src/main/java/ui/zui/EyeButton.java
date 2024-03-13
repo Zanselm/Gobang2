@@ -23,8 +23,8 @@ public class EyeButton extends JButton {
     ImageIcon finalVisible;
     ImageIcon finalInvisible;
     static {
-        URL visibleURL = Objects.requireNonNull(ZButton.class.getClassLoader().getResource("images/password_visible.png"));
-        URL inVisibleURL = Objects.requireNonNull(ZButton.class.getClassLoader().getResource("images/password_invisible.png"));
+        URL visibleURL = Objects.requireNonNull(ZMainButton.class.getClassLoader().getResource("images/password_visible.png"));
+        URL inVisibleURL = Objects.requireNonNull(ZMainButton.class.getClassLoader().getResource("images/password_invisible.png"));
         visible = new ImageIcon(visibleURL);
         invisible = new ImageIcon(inVisibleURL);
     }

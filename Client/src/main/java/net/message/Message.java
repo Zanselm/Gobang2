@@ -66,16 +66,6 @@ public class Message {
         this.message = message;
     }
 
-    //    @Override
-//    public String toString() {
-//        return "Message{" +
-//                "type=" + type +
-//                ", messageName='" + messageName + '\'' +
-//                ", state=" + state +
-//                ", messageObject='" + messageObject + '\'' +
-//                ", message='" + message + '\'' +
-//                '}';
-//    }
     @Override
     public String toString() {
         return MessagePrinter.toString(this);

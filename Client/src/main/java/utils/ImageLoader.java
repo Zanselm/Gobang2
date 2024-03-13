@@ -1,7 +1,7 @@
 package utils;
 
 import org.jetbrains.annotations.NotNull;
-import ui.zui.ZButton;
+import ui.zui.ZMainButton;
 
 import javax.swing.*;
 import java.net.URL;
@@ -16,7 +16,7 @@ import java.util.Objects;
 public class ImageLoader {
     private ImageLoader() {}
     public static @NotNull ImageIcon load(String path){
-        URL URL = Objects.requireNonNull(ZButton.class.getClassLoader().getResource(path));
+        URL URL = Objects.requireNonNull(ZMainButton.class.getClassLoader().getResource(path));
         return new ImageIcon(URL);
     }
 

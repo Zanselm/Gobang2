@@ -66,5 +66,6 @@ public class NetMapper implements MessageConstant {
         controlMap.put("UpdateMessage",USER_CONTROL);
         controlMap.put("HelloMessage",SERVER_CONTROL);
         controlMap.put("ByeMessage",SERVER_CONTROL);
+        controlMap.put("ForwardMessage",SERVER_CONTROL);
     }
 }

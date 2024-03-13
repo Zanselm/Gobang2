@@ -113,14 +113,14 @@ public class HeadshotPanel extends JPanel {
     }
 
     private void leftImage() {
-        imageNumber++;
-        if (imageNumber > 9) imageNumber = 0;
+        imageNumber--;
+        if (imageNumber < 0) imageNumber = 9;
         setImage();
     }
 
     private void rightImage() {
-        imageNumber--;
-        if (imageNumber < 0) imageNumber = 9;
+        imageNumber++;
+        if (imageNumber > 9) imageNumber = 0;
         setImage();
     }
 
