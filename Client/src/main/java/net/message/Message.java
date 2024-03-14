@@ -1,5 +1,6 @@
 package net.message;
 
+import constant.MessageConstant;
 import utils.MessagePrinter;
 
 /**
@@ -8,21 +9,38 @@ import utils.MessagePrinter;
  * description
  */
 
-public class Message {
+public class Message implements MessageConstant {
     private int type;
     private String messageName;
     private int state;
-    private String messageObject;
+    private int sender;
+    private int receiver;
+    private String messageObjectType;
+    private int messageSize;
     private String message;
 
     public Message() {
     }
 
-    public Message(int type, String messageName, int state, String messageObject, String message) {
+    public Message(int type, String messageName, int state, String messageObjectType, String message) {
         this.type = type;
         this.messageName = messageName;
         this.state = state;
-        this.messageObject = messageObject;
+        this.messageObjectType = messageObjectType;
+        this.message = message;
+
+        this.messageSize = UNKNOWN;
+    }
+
+
+    public Message(int type, String messageName, int state, int sender, int receiver, String messageObjectType, int messageSize, String message) {
+        this.type = type;
+        this.messageName = messageName;
+        this.state = state;
+        this.sender = sender;
+        this.receiver = receiver;
+        this.messageObjectType = messageObjectType;
+        this.messageSize = messageSize;
         this.message = message;
     }
 
@@ -50,12 +68,36 @@ public class Message {
         this.state = state;
     }
 
-    public String getMessageObject() {
-        return messageObject;
+    public int getSender() {
+        return sender;
     }
 
-    public void setMessageObject(String messageObject) {
-        this.messageObject = messageObject;
+    public void setSender(int sender) {
+        this.sender = sender;
+    }
+
+    public int getReceiver() {
+        return receiver;
+    }
+
+    public void setReceiver(int receiver) {
+        this.receiver = receiver;
+    }
+
+    public String getMessageObjectType() {
+        return messageObjectType;
+    }
+
+    public void setMessageObjectType(String messageObjectType) {
+        this.messageObjectType = messageObjectType;
+    }
+
+    public int getMessageSize() {
+        return messageSize;
+    }
+
+    public void setMessageSize(int messageSize) {
+        this.messageSize = messageSize;
     }
 
     public String getMessage() {

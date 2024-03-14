@@ -29,7 +29,8 @@ public class Client {
         try {
 //            连接服务器
             try {
-                socket = new Socket("127.0.0.1", 8888);
+                socket = new Socket("127.0.0.1", 7777);
+//                socket = new Socket("150.158.45.98",7777);
             } catch (IOException e) {
                 System.out.println("连接失败，服务器可能未启动");
                 return;

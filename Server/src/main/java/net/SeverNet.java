@@ -20,7 +20,7 @@ public class SeverNet {
 
     public static void run(){
         pool = Executors.newFixedThreadPool(2);
-        try (ServerSocket serverSocket = new ServerSocket(8888)) {
+        try (ServerSocket serverSocket = new ServerSocket(7777)) {
             while (sign){
                 Socket socket = serverSocket.accept();
                 pool.submit(new Thread(new ConnectThread(socket)));
