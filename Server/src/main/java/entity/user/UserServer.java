@@ -47,8 +47,8 @@ public class UserServer {
 
     @Test
     public void test2() throws Exception {
-        System.out.println(login(new User(0, "wb", "男", "32165644", 0, 0, 0)));
-        System.out.println(login(new User(0, "wkx", "男", "32165644", 0, 0, 0)));
+        System.out.println(login(new User(0, "wb", "男", "32165644", 0, 0, 0)).getName());
+        System.out.println(login(new User(0, "wkx", "男", "32165644", 0, 0, 0)).getName());
     }
     public User login(User user) throws SQLException {
         Connection conn = getConnection();
@@ -61,7 +61,21 @@ public class UserServer {
             return serverUser;
         }
     }
+    @Test
+    public void test5() throws Exception {
+        System.out.println(getUser(new User(4, "", "", "", 0, 0, 0)).getName());
+    }
+    public User getUser (User user) throws SQLException{
+        Connection conn = getConnection();
 
+        try (conn) {
+            UserDAO userDAO = new UserDAO(conn, user);
+            User serverUser;
+            if ((serverUser = userDAO.query()) == null) {return null;}
+            serverUser.setPassword("");
+            return serverUser;
+        }
+    }
     @Test
     public void test3() throws Exception {
         System.out.println(update(new User(14, "wb", "男", "00000", 0, 0, 0)));

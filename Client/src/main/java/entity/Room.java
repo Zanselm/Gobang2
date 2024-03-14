@@ -10,15 +10,16 @@ public class Room {
     private int ID;
     private String name;
     private String introductory;
-    private User userL;
-    private User userR;
+    private int userL;
+    private int userR;
     private int gameType;
     private int whoFirst;
+    private boolean observable;
 
     public Room() {
     }
 
-    public Room(int ID, String name, String introductory, User userL, User userR, int gameType, int whoFirst) {
+    public Room(int ID, String name, String introductory, int userL, int userR, int gameType, int whoFirst, boolean observable) {
         this.ID = ID;
         this.name = name;
         this.introductory = introductory;
@@ -26,6 +27,7 @@ public class Room {
         this.userR = userR;
         this.gameType = gameType;
         this.whoFirst = whoFirst;
+        this.observable = observable;
     }
 
     public int getID() {
@@ -52,19 +54,19 @@ public class Room {
         this.introductory = introductory;
     }
 
-    public User getUserL() {
+    public int getUserL() {
         return userL;
     }
 
-    public void setUserL(User userL) {
+    public void setUserL(int userL) {
         this.userL = userL;
     }
 
-    public User getUserR() {
+    public int getUserR() {
         return userR;
     }
 
-    public void setUserR(User userR) {
+    public void setUserR(int userR) {
         this.userR = userR;
     }
 
@@ -84,16 +86,11 @@ public class Room {
         this.whoFirst = whoFirst;
     }
 
-    @Override
-    public String toString() {
-        return "Room{" +
-                "ID=" + ID +
-                ", name='" + name + '\'' +
-                ", introductory='" + introductory + '\'' +
-                ", userL=" + userL +
-                ", userR=" + userR +
-                ", gameType=" + gameType +
-                ", whoFirst=" + whoFirst +
-                '}';
+    public boolean isObservable() {
+        return observable;
+    }
+
+    public void setObservable(boolean observable) {
+        this.observable = observable;
     }
 }

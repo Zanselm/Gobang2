@@ -2,6 +2,7 @@ package net.message;
 
 import constant.MessageConstant;
 
+
 /**
  * @author Anselm
  * @date 2024/2/6 10 36
@@ -11,6 +12,7 @@ import constant.MessageConstant;
 public class ByeMessage extends Message implements MessageConstant {
 
     public ByeMessage() {
-        super(INFORM, "ByeMessage", NO, "String", "Bye");
+        super(INFORM, "ByeMessage", NO,0,SERVER
+                ,"String",UNKNOWN, "Bye");
     }
 }

@@ -39,7 +39,7 @@ public class MessagePrinter implements MessageConstant {
                 "type=" + typeMap.get(message.getType()) +
                 ", messageName='" + message.getMessageName() + '\'' +
                 ", state=" + stateMap.get(message.getState()) +
-                ", messageObject='" + message.getMessageObject() + '\'' +
+                ", messageObject='" + message.getMessageObjectType() + '\'' +
                 ", message='" + message.getMessage() + '\'' +
                 '}';
 

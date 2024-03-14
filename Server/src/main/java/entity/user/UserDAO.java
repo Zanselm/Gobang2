@@ -1,5 +1,7 @@
 package entity.user;
 
+import org.jetbrains.annotations.NotNull;
+
 import java.sql.*;
 
 /**
@@ -49,11 +51,23 @@ public class UserDAO {
 
     public User query() throws SQLException {
 //        从连接中获取执行对象
-        String sql = "select * from user where  name = ?";
-        PreparedStatement pstmt = conn.prepareStatement(sql);
+        int id = user.getId();
+        PreparedStatement pstmt;
+        if (id == 0){
+            String sql = "select * from user where  name = ?";
+            pstmt = conn.prepareStatement(sql);
+
+        } else {
+            String sql = " select * from user where  id = ?";
+            pstmt = conn.prepareStatement(sql);
+        }
 
 //        设置参数
-        pstmt.setString(1, user.getName());
+        if (id == 0){
+            pstmt.setString(1, user.getName());
+        }else{
+            pstmt.setInt(1, id);
+        }
 
 //         执行sql
         ResultSet resultSet = pstmt.executeQuery();
@@ -93,7 +107,7 @@ public class UserDAO {
         return i;
     }
 
-    private static void set(User user, PreparedStatement pstmt) throws SQLException {
+    private static void set(User user, @NotNull PreparedStatement pstmt) throws SQLException {
         pstmt.setString(1, user.getName());
         pstmt.setString(2, user.getSex());
         pstmt.setInt(3, user.getWin());
