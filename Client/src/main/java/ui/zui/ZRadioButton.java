@@ -29,7 +29,8 @@ public class ZRadioButton extends JRadioButton{
     }
     private ZRadioButton(){}
     public ZRadioButton(int x, int y, int width, int height, String text){
-        setFont(font.deriveFont(30f));
+        setName(text);
+        setFont(font.deriveFont((float) (height*0.9)));
         setText(text);
         setOpaque(true);
         setBackground(new Color(0, 0, 0, 0));

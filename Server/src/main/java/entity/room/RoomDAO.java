@@ -1,6 +1,5 @@
 package entity.room;
 
-import entity.user.User;
 import org.jetbrains.annotations.NotNull;
 
 import java.sql.Connection;
@@ -66,15 +65,7 @@ public class RoomDAO {
 
 //        获取User
         if (!resultSet.next()){return null;}
-        Room serverRoom = new Room();
-        serverRoom.setID(resultSet.getInt("id"));
-        serverRoom.setName(resultSet.getString("name"));
-        serverRoom.setIntroductory(resultSet.getString("introductory"));
-        serverRoom.setUserL(resultSet.getInt("user_l"));
-        serverRoom.setUserR(resultSet.getInt("user_r"));
-        serverRoom.setGameType(resultSet.getInt("game_type"));
-        serverRoom.setWhoFirst(resultSet.getInt("who_first"));
-        serverRoom.setObservable(resultSet.getBoolean("observable"));
+        Room serverRoom = get(resultSet);
 
 //        释放
         resultSet.close();
@@ -99,6 +90,40 @@ public class RoomDAO {
 //        释放
         pstmt.close();
         return i;
+    }
+    private int queryRoomNumber() throws SQLException {
+        String sql = "select count(*) from room";
+        PreparedStatement pstmt = conn.prepareStatement(sql);
+        ResultSet resultSet = pstmt.executeQuery();
+        resultSet.next();
+        return resultSet.getInt(1);
+    }
+    public Room[] getAll() throws SQLException{
+        Room[] rooms = new Room[queryRoomNumber()];
+        String sql = "select * from room";
+        PreparedStatement pstmt = conn.prepareStatement(sql);
+
+        ResultSet resultSet = pstmt.executeQuery();
+
+        int i = 0;
+        while (resultSet.next()){
+            rooms[i] = get(resultSet);
+            i++;
+        }
+        return rooms;
+    }
+
+    private static @NotNull Room get(@NotNull ResultSet resultSet) throws SQLException {
+        Room serverRoom = new Room();
+        serverRoom.setID(resultSet.getInt("id"));
+        serverRoom.setName(resultSet.getString("name"));
+        serverRoom.setIntroductory(resultSet.getString("introductory"));
+        serverRoom.setUserL(resultSet.getInt("user_l"));
+        serverRoom.setUserR(resultSet.getInt("user_r"));
+        serverRoom.setGameType(resultSet.getInt("game_type"));
+        serverRoom.setWhoFirst(resultSet.getInt("who_first"));
+        serverRoom.setObservable(resultSet.getBoolean("observable"));
+        return serverRoom;
     }
 
     private static void set(@NotNull Room room, @NotNull PreparedStatement pstmt) throws SQLException {

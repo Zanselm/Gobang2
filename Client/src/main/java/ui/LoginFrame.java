@@ -49,15 +49,15 @@ public class LoginFrame extends JFrame {
 
 
 
-        ZButton button = new ZButton(100, 100, 50, ZButton.LOGIN);
-        button.addMouseListener(new MouseAdapter() {
-            @Override
-            public void mouseClicked(MouseEvent e) {
-                super.mouseClicked(e);
-                Client.addMessage(new ForwardMessage(accountField.getContent()));
-            }
-        });
-        add(button);
+//        ZButton button = new ZButton(100, 100, 50, ZButton.LOGIN);
+//        button.addMouseListener(new MouseAdapter() {
+//            @Override
+//            public void mouseClicked(MouseEvent e) {
+//                super.mouseClicked(e);
+//                Client.addMessage(new ForwardMessage(accountField.getContent()));
+//            }
+//        });
+//        add(button);
 
         addBackground();
         setVisible(true);
@@ -116,7 +116,7 @@ public class LoginFrame extends JFrame {
 
 
     private void addLoginButton() {
-        loginButton = new ZMainButton(getWidth() / 2 - 60, 330, 200, 144, "登录");
+        loginButton = new ZMainButton(getWidth() / 2 - 60, 360, 170, 100, "登录");
         addLoginListener();
         add(loginButton);
     }

@@ -1,10 +1,12 @@
 package ui.zui;
 
-import utils.FontLoader;
 import utils.ImageLoader;
 import utils.ImageResizer;
 
 import javax.swing.*;
+import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 /**
  * @author Anselm
@@ -40,7 +42,7 @@ public class ZButton extends JButton {
 
     private void init(int x, int y, int width ,int type) {
         setBounds(x, y, width, width);
-        setOpaque(false);
+//        setOpaque(false);
         setContentAreaFilled(false);
         setFocusPainted(false);
         setBorder(null);
@@ -51,6 +53,7 @@ public class ZButton extends JButton {
             case SETTING ->setIcon(ImageResizer.resize(settingImageIcon,width,ImageResizer.WIDTH));
             case LOGIN -> setIcon(ImageResizer.resize(loginImageIcon,width,ImageResizer.WIDTH));
         }
+
     }
 
 }

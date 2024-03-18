@@ -76,4 +76,27 @@ public class RoomSever {
             roomDAO.update();
         }
     }
+    @Test
+    public void test5() throws Exception {
+        Room[] allRoom = getAllRoom();
+        System.out.println(allRoom.length);
+        for (Room room:allRoom){
+            System.out.println("‘’‘");
+            System.out.println(room.getName());
+        }
+    }
+//    public int getRoomNumber() throws SQLException {
+//        Connection conn = getConnection();
+//        try (conn) {
+//            RoomDAO roomDAO = new RoomDAO(conn,null);
+//            return roomDAO.queryRoomNumber();
+//        }
+//    }
+    public Room[] getAllRoom() throws SQLException{
+        Connection conn = getConnection();
+        try (conn) {
+            RoomDAO roomDAO = new RoomDAO(conn,null);
+            return roomDAO.getAll();
+        }
+    }
 }

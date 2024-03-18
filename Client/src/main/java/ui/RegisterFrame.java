@@ -187,7 +187,7 @@ public class RegisterFrame extends JFrame {
     }
 
     private void addRegisterButton() {
-        registerButton = new ZMainButton(getWidth() / 2 - 60, 330, 200, 144, "注册");
+        registerButton = new ZMainButton(getWidth() / 2 - 60, 350, 150, 100, "注册");
         addRegisterButtonListener();
         add(registerButton);
     }

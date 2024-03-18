@@ -17,6 +17,7 @@ import java.util.Scanner;
 
 public class ClientMain {
     public static void main(String[] args) throws IOException, InterruptedException {
+        System.setProperty("sun.java2d.noddraw", "true");
         Client.run();
 //        RegisterFrame.getRegisterFrame();
 

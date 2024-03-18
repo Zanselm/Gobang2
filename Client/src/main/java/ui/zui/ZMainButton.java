@@ -26,7 +26,7 @@ public class ZMainButton extends JButton {
     static {
         font = FontLoader.getFont();
         buttonBlack = ImageLoader.load("images/button_black.png");
-        buttonWhite = ImageLoader.load("images/button_white.png");
+        buttonWhite = ImageLoader.load("images/blankness.png");
     }
 
     public ZMainButton(int x, int y, int width, int height, String text) {
@@ -63,7 +63,8 @@ public class ZMainButton extends JButton {
     private void addText(String text) {
         textLabel = new JLabel(text);
         textLabel.setForeground(Color.black);
-        Font font1 = font.deriveFont(50f);
+        Font font1 = font.deriveFont((float) (getHeight()/2*0.9));
+//        Font font1 = font.deriveFont(50f);
         textLabel.setFont(font1);
         textLabel.setBounds(getWidth() / 6, 0, getWidth(), getHeight());
         add(textLabel);
