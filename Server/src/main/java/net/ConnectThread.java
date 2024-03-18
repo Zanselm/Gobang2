@@ -94,6 +94,9 @@ public class ConnectThread implements Runnable{
                     str = br.readLine();
                     netMapper.acceptMessage(str);
                 } catch (Exception e) {
+                    if (user!=null){
+                        Transmitter.offline(user);
+                    }
                     shutdown();
                     e.printStackTrace();
                 }

@@ -2,8 +2,11 @@ package net;
 
 import com.google.gson.Gson;
 import constant.MessageConstant;
+import entity.Room;
+import net.message.LoginResponse;
 import net.message.Message;
 import net.message.RegisterResponse;
+import ui.GameLobbyFrame;
 import ui.LoginFrame;
 import ui.RegisterFrame;
 
@@ -34,6 +37,13 @@ public class ClientMapper implements MessageConstant{
         System.out.println(message);
         register(message);
         login(message);
+        lobby(message);
+    }
+
+    private void lobby(Message message) {
+        if (message.getMessageName().equals("GetRoomsResponse")){
+            GameLobbyFrame.getGameLobbyFrame().addRooms(message);
+        }
     }
 
     private static void register(Message message) {
@@ -50,7 +60,7 @@ public class ClientMapper implements MessageConstant{
     private void login(Message message) {
         if (message.getMessageName().equals("LoginResponse")){
             if (message.getState() == OK){
-                LoginFrame.getLoginFrame().LoginSuccessful();
+                LoginFrame.getLoginFrame().LoginSuccessful(message);
             }
             if (message.getState() == CLIENT_ERROR){
                 LoginFrame.getLoginFrame().LoginFailed(message.getMessage());

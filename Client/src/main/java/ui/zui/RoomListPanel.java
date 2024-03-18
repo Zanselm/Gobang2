@@ -8,6 +8,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.*;
 import java.util.ArrayList;
+import java.util.Collection;
 
 
 /**
@@ -35,9 +36,6 @@ public class RoomListPanel extends JPanel {
         setLayout(new GridLayout(rows, 1));
         roomInformationPanels = new ArrayList<>();
         addListener();
-        for (int i = 0; i < 20; i++) {
-            addRoom(new Room(i,String.valueOf(i),String.valueOf(i*3),0,0,0,0,false));
-        }
     }
     public void addRoom(Room room){
         roomInformationPanels.add(new RoomInformationPanel(room,this));
@@ -117,7 +115,7 @@ public class RoomListPanel extends JPanel {
             setLayout(new GridLayout(1,4));
             setBackground(new Color(0,0,0,0));
             JLabel id = new JLabel("ID:"+String.valueOf(room.getID()));
-            JLabel introduction = new JLabel("房间名： "+room.getIntroductory());
+            JLabel introduction = new JLabel("房间名： "+room.getName());
             JLabel gameType = new JLabel("游戏类型： "+String.valueOf(room.getGameType()));
             JLabel first = new JLabel("先着： "+String.valueOf(room.getWhoFirst()));
             add(id);

@@ -1,10 +1,14 @@
 package ui;
 
+import entity.Room;
 import net.Client;
+import net.LocalUser;
+import net.message.CreateRoomMessage;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import ui.zui.*;
 import utils.FontLoader;
+import utils.MyGson;
 
 import javax.swing.*;
 import java.awt.*;
@@ -25,7 +29,7 @@ public class RoomCreateFrame extends JFrame {
     private static RoomCreateFrame roomCreateFrame;
     private ExitButton exitButton;
     private ZMainButton createButton;
-    private boolean isClientExist = Client.isSocketExist();
+    private final boolean isClientExist = Client.isSocketExist();
     ZTextField nameField;
     ZTextField instructionField;
     ButtonGroup gameType;
@@ -136,9 +140,8 @@ public class RoomCreateFrame extends JFrame {
                 ZRadioButton gameTypeButton = getSelectedButton(gameType);
                 ZRadioButton whoFirstButton = getSelectedButton(whoFirst);
                 ZRadioButton observableButton = getSelectedButton(observable);
-                System.out.println(gameTypeButton.getName());
-                System.out.println(whoFirstButton.getName());
-                System.out.println(observableButton.getName());
+                Client.addMessage(MyGson.toJson(new CreateRoomMessage(MyGson.toJson(new Room(0,nameField.getText()
+                        ,instructionField.getText(), LocalUser.getUserID(),0,0,0,false)))));
             }
 
             private @Nullable ZRadioButton getSelectedButton(ButtonGroup buttonGroup) {

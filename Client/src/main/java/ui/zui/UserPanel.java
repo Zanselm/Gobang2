@@ -30,7 +30,7 @@ public class UserPanel extends JPanel {
         headshotPanel = new HeadshotPanel(0,0,getHeight(),0,HeadshotPanel.GIRL,HeadshotPanel.NOT);
 
         userInformationPanel = new JPanel(new GridLayout(2,1));
-        userInformationPanel.setBounds(getHeight()+getHeight()/5,0,getWidth()-getHeight()-getHeight()/5,getHeight());
+        userInformationPanel.setBounds(getHeight()+getHeight()/4,0,getWidth()-getHeight()-getHeight()/4,getHeight());
         userInformationPanel.setBackground(new Color(0,0,0,0));
 
         JLabel name = new JLabel("姓名： "+ user.getName());

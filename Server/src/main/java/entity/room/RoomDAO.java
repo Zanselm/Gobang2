@@ -53,12 +53,24 @@ public class RoomDAO {
     }
 
     public Room query() throws SQLException {
-//        从连接中获取执行对象
-        String sql = "select * from room where  id = ?";
-        PreparedStatement pstmt = conn.prepareStatement(sql);
+        //        从连接中获取执行对象
+        int id = room.getID();
+        PreparedStatement pstmt;
+        if (id == 0){
+            String sql = "select * from room where  name = ?";
+            pstmt = conn.prepareStatement(sql);
+
+        } else {
+            String sql = " select * from room where  id = ?";
+            pstmt = conn.prepareStatement(sql);
+        }
 
 //        设置参数
-        pstmt.setInt(1,room.getID());
+        if (id == 0){
+            pstmt.setString(1, room.getName());
+        }else{
+            pstmt.setInt(1, id);
+        }
 
 //         执行sql
         ResultSet resultSet = pstmt.executeQuery();

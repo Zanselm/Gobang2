@@ -93,6 +93,7 @@ public class RegisterFrame extends JFrame {
     public static RegisterFrame getRegisterFrame() {
         if (registerFrame == null) {
             registerFrame = new RegisterFrame();
+            registerFrame.setVisible(false);
         }
         return registerFrame;
     }

@@ -35,7 +35,7 @@ public class NetMapper implements MessageConstant {
     public NetMapper(ConnectThread connectThread) {
         this.connectThread = connectThread;
         this.userControl = new UserControl(connectThread);
-        this.roomControl = new RoomControl();
+        this.roomControl = new RoomControl(connectThread);
         this.netControl = new NetControl(connectThread);
     }
 
@@ -46,11 +46,13 @@ public class NetMapper implements MessageConstant {
         switch (type){
             case USER_CONTROL -> userControl.acceptMessage(message);
             case SERVER_CONTROL -> netControl.acceptMessage(message);
+            case ROOM_CONTROL -> roomControl.acceptMessage(message);
             case ERROR -> throw new MessageTypeException();
         }
     }
     private int analyse(Message message){
         try {
+            System.out.println(message.getMessageName());
             return controlMap.get(message.getMessageName());
         } catch (Exception e) {
             return ERROR;
@@ -64,6 +66,10 @@ public class NetMapper implements MessageConstant {
         controlMap.put("DeleteMessage",USER_CONTROL);
         controlMap.put("LoginMessage",USER_CONTROL);
         controlMap.put("UpdateMessage",USER_CONTROL);
+
+        controlMap.put("CreateRoomMessage",ROOM_CONTROL);
+        controlMap.put("GetRoomsMessage",ROOM_CONTROL);
+
         controlMap.put("HelloMessage",SERVER_CONTROL);
         controlMap.put("ByeMessage",SERVER_CONTROL);
         controlMap.put("ForwardMessage",SERVER_CONTROL);

@@ -1,9 +1,12 @@
 import com.google.gson.Gson;
+import entity.Room;
 import entity.User;
 import net.Client;
 import net.message.*;
+import ui.GameLobbyFrame;
 import ui.LoginFrame;
 import ui.RegisterFrame;
+import utils.MyGson;
 
 import java.io.IOException;
 import java.util.Objects;
@@ -19,9 +22,10 @@ public class ClientMain {
     public static void main(String[] args) throws IOException, InterruptedException {
         System.setProperty("sun.java2d.noddraw", "true");
         Client.run();
-//        RegisterFrame.getRegisterFrame();
-
         LoginFrame.getLoginFrame();
+//        System.out.println(MyGson.toJson(new Room(0, "132", "13", 0, 0, 0, 0, true)));
+//        Client.addMessage(new CreateRoomMessage(MyGson.toJson(new Room(0,"121","13",0,0,0,0,true))));
+
 
     }
 }

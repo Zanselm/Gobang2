@@ -1,11 +1,11 @@
 package ui;
 
+import com.google.gson.Gson;
 import entity.User;
 import net.Client;
-import net.message.ByeMessage;
-import net.message.ForwardMessage;
-import net.message.LoginMessage;
-import net.message.Message;
+import net.LocalUser;
+import net.message.*;
+import org.jetbrains.annotations.NotNull;
 import ui.zui.*;
 import utils.FontLoader;
 
@@ -158,8 +158,14 @@ public class LoginFrame extends JFrame {
     public void LoginFailed(String text){
         accountCheck.setText(text);
     }
-    public void LoginSuccessful(){
-        System.out.println("登录成功");
+    public void LoginSuccessful(@NotNull Message message){
+        Gson gson = new Gson();
+        LocalUser.online(gson.fromJson(message.getMessage(), User.class));
+        GameLobbyFrame.getGameLobbyFrame().setVisible(true);
+        setVisible(false);
+        RegisterFrame.getRegisterFrame().dispose();
+        loginFrame = null;
+        dispose();
     }
 
     private void addExitButton() {

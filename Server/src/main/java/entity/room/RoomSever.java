@@ -30,11 +30,16 @@ public class RoomSever {
     public void test() throws Exception {
         addRoom(new Room(0,"房间名","简介",6,11,1,2,true));
     }
-    public void addRoom(Room room) throws SQLException {
+    public boolean addRoom(Room room) throws SQLException {
         Connection conn = getConnection();
         try (conn) {
             RoomDAO roomDAO = new RoomDAO(conn,room);
-            roomDAO.insert();
+            if (roomDAO.query() == null){
+                roomDAO.insert();
+                return true;
+            } else {
+                return false;
+            }
         }
     }
     @Test
