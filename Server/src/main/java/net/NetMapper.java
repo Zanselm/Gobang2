@@ -21,7 +21,7 @@ public class NetMapper implements MessageConstant {
     RoomControl roomControl;
     NetControl netControl;
     static HashMap<String,Integer> controlMap = new HashMap<>();
-    static final int ERROR = -1;
+    static final int UN_KNOW = -1;
     static final int USER_CONTROL = 1;
     static final int ROOM_CONTROL = 2;
     static final int SERVER_CONTROL = 3;
@@ -43,19 +43,33 @@ public class NetMapper implements MessageConstant {
         Gson gson = new Gson();
         Message message = gson.fromJson(netMessage, Message.class);
         int type =analyse(message);
-        switch (type){
-            case USER_CONTROL -> userControl.acceptMessage(message);
-            case SERVER_CONTROL -> netControl.acceptMessage(message);
-            case ROOM_CONTROL -> roomControl.acceptMessage(message);
-            case ERROR -> throw new MessageTypeException();
+        try {
+            switch (type){
+                case USER_CONTROL -> userControl.acceptMessage(message);
+                case SERVER_CONTROL -> netControl.acceptMessage(message);
+                case ROOM_CONTROL -> roomControl.acceptMessage(message);
+                case UN_KNOW -> forward(message);
+            }
+        } catch (MessageTypeException e) {
+            throw new RuntimeException(e);
+        }
+
+    }
+
+    private void forward(Message message) {
+        if (message.getType() == MessageConstant.FORWARD){
+            Transmitter.forward(message);
+        }else {
+            throw new MessageTypeException();
         }
     }
+
     private int analyse(Message message){
         try {
             System.out.println(message.getMessageName());
             return controlMap.get(message.getMessageName());
         } catch (Exception e) {
-            return ERROR;
+            return UN_KNOW;
         }
     }
 
@@ -69,6 +83,7 @@ public class NetMapper implements MessageConstant {
 
         controlMap.put("CreateRoomMessage",ROOM_CONTROL);
         controlMap.put("GetRoomsMessage",ROOM_CONTROL);
+        controlMap.put("EnterRoomMessage",ROOM_CONTROL);
 
         controlMap.put("HelloMessage",SERVER_CONTROL);
         controlMap.put("ByeMessage",SERVER_CONTROL);

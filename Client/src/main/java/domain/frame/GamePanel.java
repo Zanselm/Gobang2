@@ -29,6 +29,7 @@ public class GamePanel extends JPanel implements GameConstant {
     private int gameType = CONSOLE_GAME_AI;     //游戏类型
     private AI ai;  //AI
     private MusicPlayer musicPlayerBlack;//音乐播放器
+    private GameFrame gameFrame;
 
     Image imageBlack = new ImageIcon(Objects.requireNonNull(GamePanel.class.getResource("/images/blake.png"))).getImage();
     Image imageWhite = new ImageIcon(Objects.requireNonNull(GamePanel.class.getResource("/images/white.png"))).getImage();
@@ -38,8 +39,10 @@ public class GamePanel extends JPanel implements GameConstant {
         Init();
         addListener();
     }
-    public GamePanel(int gameType) {
+    public GamePanel(int gameType,int whoSign,GameFrame gameFrame) {
         this.gameType = gameType;
+        this.whoSign = whoSign;
+        this.gameFrame = gameFrame;
         Init();
         addListener();
     }
@@ -55,6 +58,7 @@ public class GamePanel extends JPanel implements GameConstant {
 
         setCursor(new Cursor(Cursor.HAND_CURSOR));
         setBounds(0, 0, SPACING * 16, SPACING * 16);
+
         if (gameType == CONSOLE_GAME_AI) {
             if (whoSign == WHITE){
                 ai = new AI(BLACK, chessboard);
@@ -67,6 +71,13 @@ public class GamePanel extends JPanel implements GameConstant {
             }
 
         }
+
+        if (gameType == CONSOLE_GAME_TWO_PLAYER) {
+            if (whoSign == WHITE){
+                whoSign = BLACK;
+            }
+        }
+
     }
 
     private void addListener() {
@@ -113,12 +124,12 @@ public class GamePanel extends JPanel implements GameConstant {
 
                 if (isVictory()){
                     JOptionPane.showConfirmDialog(null, "你胜利了！", "胜利", JOptionPane.DEFAULT_OPTION);
-                    System.exit(0);
+                    gameFrame.dispose();
                 }else {
                     ai.scan();
                     if (isVictory()){
                         JOptionPane.showConfirmDialog(null, "AI胜利！", "失败", JOptionPane.DEFAULT_OPTION);
-                        System.exit(0);
+                        gameFrame.dispose();
                     }
                 }
         }
@@ -150,7 +161,7 @@ public class GamePanel extends JPanel implements GameConstant {
                 JOptionPane.showConfirmDialog(null, "黑方胜利！", "胜利", JOptionPane.DEFAULT_OPTION);
             }
             //消息对话框
-            System.exit(0);
+//            gameFrame.dispose();
         }
     }
 

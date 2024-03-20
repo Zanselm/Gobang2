@@ -9,6 +9,7 @@ import net.message.Message;
 import org.jetbrains.annotations.NotNull;
 import org.junit.Test;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.Set;
@@ -21,7 +22,7 @@ import java.util.Set;
 
 public class Transmitter implements MessageConstant {
     private static final HashMap<Integer,ConnectThread> loggedAccountMap = new HashMap<>();
-    private static final HashMap<Integer,ConnectThread[]>  roomMap =  new HashMap<>();
+    private static final HashMap<Integer, ArrayList<Integer>>  roomMap =  new HashMap<>();
     public static boolean online(@NotNull User user, ConnectThread connectThread){
         Set<Integer> IDs = loggedAccountMap.keySet();
         if (IDs.contains(user.getId())){return false;}
@@ -43,32 +44,12 @@ public class Transmitter implements MessageConstant {
             loggedAccountMap.remove(connectThread.getUser().getId());
         }
     }
-    public static boolean enterRoom(@NotNull Room room, ConnectThread  connectThread){
-        Set<Integer> roomIDs = roomMap.keySet();
-        int ID = room.getID();
-        if (roomIDs.contains(ID)) {
-            ConnectThread[] connectThreads = roomMap.get(ID);
-            if (connectThreads[0] == null){
-                connectThreads[0] = connectThread;
-                return true;
-            }
-            if (connectThreads[1] == null){
-                connectThreads[1] = connectThread;
-                return true;
-            }
-            return false;
-        }else {
-            ConnectThread[] connectThreads = new ConnectThread[2];
-            connectThreads[0] = connectThread;
-            roomMap.put(ID,connectThreads);
-            return true;
-        }
-    }
-    public static void leaveRoom(){
-    }
+
     public static void forward(@NotNull Message message){
         if (message.getReceiver() == ALL_USER){
             loggedAccountMap.forEach((k,v)-> v.addMessage(new Gson().toJson(message)));
+        }else {
+            loggedAccountMap.get(message.getReceiver()).addMessage(message);
         }
     }
 

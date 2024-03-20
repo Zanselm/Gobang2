@@ -1,6 +1,8 @@
 package ui;
 
 import constant.GameConstant;
+import domain.frame.GameFrame;
+import domain.frame.GamePanel;
 import entity.Room;
 import net.Client;
 import net.LocalUser;
@@ -19,6 +21,7 @@ import java.net.URL;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Objects;
+import java.util.Random;
 
 /**
  * @author Anselm
@@ -153,9 +156,16 @@ public class RoomCreateFrame extends JFrame implements GameConstant {
                 Room room = new Room(0, nameField.getText(), instructionField.getText(), LocalUser.getUserID()
                         , 0, result.gameTypeNum(), result.whoFirstNum(), result.observableBoolean());
                 if (isClientExist){
-                    Client.addMessage(MyGson.toJson(new CreateRoomMessage(MyGson.toJson(room))));
+                    if (room.getGameType() == ONLINE_GAME_TWO_PLAYER){
+                        Client.addMessage(MyGson.toJson(new CreateRoomMessage(MyGson.toJson(room))));
+                    }else {
+                        new GameFrame(room.getGameType(),room.getWhoFirst());
+                        dispose();
+                    }
                 }else {
+                    new GameFrame(room.getGameType(),room.getWhoFirst());
                     System.out.println("本地游戏房间消息："+MyGson.toJson(room));
+                    dispose();
                 }
             }
 
@@ -171,6 +181,9 @@ public class RoomCreateFrame extends JFrame implements GameConstant {
                 Integer whoFirstNum = null;
                 if (whoFirstButton != null) {
                     whoFirstNum = roomMap.get(whoFirstButton.getName());
+                    if (whoFirstNum == RANDOM){
+                        whoFirstNum = new Random().nextInt(3,5);
+                    }
                 }
                 Integer observableNum = null;
                 boolean observableBoolean;

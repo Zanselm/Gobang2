@@ -5,7 +5,7 @@ import entity.User;
 import net.Client;
 import net.LocalUser;
 import net.message.ByeMessage;
-import net.message.CreateRoomMessage;
+import net.message.EnterRoomMessage;
 import net.message.GetRoomsMessage;
 import net.message.Message;
 import ui.zui.*;
@@ -18,6 +18,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.net.URL;
 import java.util.Objects;
+import java.util.Optional;
 
 /**
  * @author Anselm
@@ -33,6 +34,8 @@ public class GameLobbyFrame extends JFrame {
     private RoomListPanel roomListPanel;
     private ZMainButton createRoomButton;
     private ZMainButton enterRoomButton;
+    private ZTextField textField;
+
 
     static {
         font = FontLoader.getFont();
@@ -52,6 +55,9 @@ public class GameLobbyFrame extends JFrame {
     private GameLobbyFrame() throws HeadlessException {
         init();
 
+        textField = new ZTextField(this,100,100,100,20,"1");
+        add(textField);
+
         addExitButton();
         addSettingButton();
         addTitle();
@@ -67,8 +73,23 @@ public class GameLobbyFrame extends JFrame {
     }
 
     private void addEnterRoomButton() {
-        createRoomButton = new ZMainButton(750,450,300,120,"进入房间");
-        add(createRoomButton);
+        enterRoomButton = new ZMainButton(750,450,300,120,"进入房间");
+        enterRoomButton.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                super.mouseClicked(e);
+                RoomListPanel.RoomInformationPanel selectedRIP = roomListPanel.getSelectedRIP();
+                if (selectedRIP == null){
+                    System.out.println("Room = NULL");
+                }else {
+                    Room room = selectedRIP.getRoom();
+                    room.setUserR(LocalUser.getUserID());
+                    System.out.println(MyGson.toJson(room));
+                    Client.addMessage(new EnterRoomMessage(room));
+                }
+            }
+        });
+        add(enterRoomButton);
     }
 
     private void addCreateRoomButton() {
@@ -99,7 +120,8 @@ public class GameLobbyFrame extends JFrame {
             @Override
             public void mouseClicked(MouseEvent e) {
                 super.mouseClicked(e);
-                roomListPanel.addRoom(new Room());
+//                roomListPanel.addRoom(new Room(Integer.parseInt(textField.getText()),textField.getText(),"",0,0,0,0,true));
+                roomListPanel.removeRoom(new Room(Integer.parseInt(textField.getText()),textField.getText(),"",0,0,0,0,true));
             }
         });
     }

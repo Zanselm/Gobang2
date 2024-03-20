@@ -2,6 +2,7 @@ package net;
 
 import com.google.gson.Gson;
 import constant.MessageConstant;
+import domain.frame.GameFrame;
 import entity.Room;
 import net.message.LoginResponse;
 import net.message.Message;
@@ -9,6 +10,8 @@ import net.message.RegisterResponse;
 import ui.GameLobbyFrame;
 import ui.LoginFrame;
 import ui.RegisterFrame;
+import ui.RoomCreateFrame;
+import utils.MyGson;
 
 import javax.swing.*;
 
@@ -46,6 +49,15 @@ public class ClientMapper implements MessageConstant{
         }
         if (message.getMessageName().equals("AlterRoomMessage")){
             GameLobbyFrame.getGameLobbyFrame().addRoom(message);
+        }
+        if (message.getMessageName().equals("CreateRoomResponse")){
+            if (message.getState()==MessageConstant.OK){
+                RoomCreateFrame.getRoomCreateFrame().dispose();
+                Room room = MyGson.fromJson(message.getMessage(),Room.class);
+                new GameFrame(room.getGameType(),room.getWhoFirst());
+            }else {
+                System.out.println("房间名重复");
+            }
         }
     }
 

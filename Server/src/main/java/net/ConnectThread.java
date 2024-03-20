@@ -1,6 +1,8 @@
 package net;
 
+import com.google.gson.Gson;
 import entity.user.User;
+import net.message.Message;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.*;
@@ -57,6 +59,9 @@ public class ConnectThread implements Runnable{
     }
     public void addMessage(String message){
         queue.add(message);
+    }
+    public void addMessage(Message message){
+        queue.add(new Gson().toJson(message));
     }
     public void setUser(User user){
         this.user = user;

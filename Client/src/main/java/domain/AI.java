@@ -18,6 +18,7 @@ public class AI extends Player implements GameConstant {
     private int[][] weightBoardBlack;
 
     public AI( int pieceType, Chessboard chessboard) {
+        this.setName("AI");
         if (pieceType == WHITE || pieceType == BLACK) {
             this.setPieceType(pieceType);
         } else {
@@ -159,8 +160,8 @@ public class AI extends Player implements GameConstant {
 //        printWightBoard(weightBoardWhite);
 //        System.out.println(getMaxPiece(weightBoardBlack));
 //        System.out.println();
-        printWightBoard(weightBoardBlack);
-        printWightBoard(weightBoardWhite);
+//        printWightBoard(weightBoardBlack);
+//        printWightBoard(weightBoardWhite);
 //        System.out.println(getSumWights(weightBoardBlack));
     }
 

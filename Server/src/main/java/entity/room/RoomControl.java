@@ -23,6 +23,7 @@ public class RoomControl implements MessageConstant {
     private static final Gson gson = new Gson();
     private static final int CREATE = 0;
     private static final int GET_ROOMS = 1;
+    private static final int ENTER_ROOM = 2;
 
     private RoomControl() {
     }
@@ -39,14 +40,18 @@ public class RoomControl implements MessageConstant {
         switch (type){
             case CREATE -> create(room);
             case GET_ROOMS -> getRooms();
+            case ENTER_ROOM -> enterRoom(room);
             case -1 -> throw new MessageTypeException();
         }
     }
+
+
 
     private int analyse(@NotNull Message message) {
         String messageName = message.getMessageName();
         if("CreateRoomMessage".equals(messageName)){return CREATE;}
         if("GetRoomsMessage".equals(messageName)){return GET_ROOMS;}
+        if("EnterRoomMessage".equals(messageName)){return ENTER_ROOM;}
         return -1;
     }
     private void getRooms() {
@@ -72,5 +77,12 @@ public class RoomControl implements MessageConstant {
             throw new RuntimeException(e);
         }
     }
-
+    private void enterRoom(Room room) {
+        try {
+            roomSever.update(room);
+            Transmitter.forward(new AlterRoomMessage(room));
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
 }

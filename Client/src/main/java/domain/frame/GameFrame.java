@@ -1,18 +1,24 @@
 package domain.frame;
 
 import constant.GameConstant;
+import ui.LoginFrame;
+import ui.zui.PositionDraggingListener;
 import utils.MusicPlayer;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.net.URL;
 import java.util.Objects;
+import java.util.Random;
 
 public class GameFrame extends JFrame implements GameConstant {
     int gameType;
+    int whoFirst;
     public static void main(String[] args) {
-        new GameFrame(CONSOLE_GAME_AI);
+//        new GameFrame(CONSOLE_GAME_AI,BLACK);
+        new GameFrame(CONSOLE_GAME_TWO_PLAYER,WHITE);
     }
 
     private GamePanel gamePanel;
@@ -25,20 +31,30 @@ public class GameFrame extends JFrame implements GameConstant {
         addListener();
         this.setVisible(true);
     }
-    public GameFrame(int gameType) {
+    public GameFrame(int gameType,int whoFirst) {
         this.gameType = gameType;
+        if (whoFirst == OUR){
+            this.whoFirst = BLACK;
+        }
+        if (whoFirst == OTHER_SIDE){
+            this.whoFirst = WHITE;
+        }
+        if (whoFirst == RANDOM){
+            this.whoFirst = new Random().nextInt(1,3);
+        }
         initFrame();
         addMusic();
         addGamePanel();
         addListener();
+        addBackground();
         this.setVisible(true);
     }
 
     private void addListener() {
         addWindowListener(new WindowAdapter() {
             @Override
-            public void windowClosing(WindowEvent e) {
-                super.windowClosing(e);
+            public void windowClosed(WindowEvent e) {
+                super.windowClosed(e);
                 try {
                     musicPlayer.close();
                     gamePanel.getMusicPlayer().close();
@@ -56,32 +72,30 @@ public class GameFrame extends JFrame implements GameConstant {
         musicPlayer.playLoop();
     }
     private void addGamePanel() {
-        gamePanel = new GamePanel(gameType);
-        gamePanel.setLocation(0,0);
+        gamePanel = new GamePanel(gameType,whoFirst,this);
+        gamePanel.setLocation(450,180);
         this.add(gamePanel);
     }
 
     private void initFrame(){
         this.setTitle("五子棋");
-        this.setSize(955,680);
+        this.setSize(1564,1000);
         this.setLocationRelativeTo(null);
+        this.setUndecorated(true);
+        this.setBackground(new Color(0, 0, 0, 0));
         this.setLayout(null);
         this.setResizable(false);
+        this.setLocation(getX(),getY()-50);
+//        this.setAlwaysOnTop(true);
         this.setDefaultCloseOperation(WindowConstants.DISPOSE_ON_CLOSE);
+        PositionDraggingListener.addPositionDraggingListener(this);
     }
-    private static class InfoPanel extends JPanel{
-
-        @Override
-        protected void paintComponent(Graphics g){
-            super.paintComponent(g);
-            Image gobangimage = new ImageIcon(Objects.requireNonNull(GameFrame.class.getResource("/frame/resources/images/gobang.png"))).getImage();
-            g.drawImage(gobangimage,0,0,100,37,null);
-
-            try {
-                Thread.sleep(100);
-            } catch (InterruptedException e) {
-                throw new RuntimeException(e);
-            }
-        }
+    private void addBackground() {
+        URL loginBackground = Objects.requireNonNull(
+                LoginFrame.class.getClassLoader().getResource("images/game_background.png"));
+        ImageIcon loginBackgroundIcon = new ImageIcon(loginBackground);
+        JLabel label = new JLabel(loginBackgroundIcon);
+        label.setBounds(0,0,getWidth(),getHeight());
+        add(label);
     }
 }
