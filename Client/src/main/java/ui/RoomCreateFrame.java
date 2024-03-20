@@ -1,5 +1,6 @@
 package ui;
 
+import constant.GameConstant;
 import entity.Room;
 import net.Client;
 import net.LocalUser;
@@ -16,6 +17,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.net.URL;
 import java.util.Enumeration;
+import java.util.HashMap;
 import java.util.Objects;
 
 /**
@@ -24,7 +26,7 @@ import java.util.Objects;
  * description
  */
 
-public class RoomCreateFrame extends JFrame {
+public class RoomCreateFrame extends JFrame implements GameConstant {
     private static final Font font;
     private static RoomCreateFrame roomCreateFrame;
     private ExitButton exitButton;
@@ -35,10 +37,20 @@ public class RoomCreateFrame extends JFrame {
     ButtonGroup gameType;
     ButtonGroup whoFirst;
     ButtonGroup observable;
+    static HashMap<String, Integer> roomMap;
 
     static {
-        System.setProperty("sun.java2d.noddraw", "true");
         font = FontLoader.getFont();
+        roomMap = new HashMap<>();
+        roomMap.put("联网", ONLINE_GAME_TWO_PLAYER);
+        roomMap.put("本地AI", CONSOLE_GAME_AI);
+        roomMap.put("本地双人", CONSOLE_GAME_TWO_PLAYER);
+        roomMap.put("我方", OUR);
+        roomMap.put("对方", OTHER_SIDE);
+        roomMap.put("随机", RANDOM);
+        roomMap.put("可以", CAN);
+        roomMap.put("不可以", CANT);
+
     }
 
     public static void main(String[] args) {
@@ -68,9 +80,9 @@ public class RoomCreateFrame extends JFrame {
         int start_Y = 120;
         int start_X = 200;
         int interval;
-        if (isClientExist){
+        if (isClientExist) {
             interval = 40;
-        }else {
+        } else {
             interval = 50;
         }
         int width = 100;
@@ -78,7 +90,7 @@ public class RoomCreateFrame extends JFrame {
         add(new ZLabel(start_X, start_Y + interval, width, 20, "简介语："));
         add(new ZLabel(start_X, start_Y + interval * 2, width, 20, "类型："));
         add(new ZLabel(start_X, start_Y + interval * 3, width, 20, "先手："));
-        if (isClientExist){
+        if (isClientExist) {
             add(new ZLabel(start_X, start_Y + interval * 4, width, 20, "观战："));
         }
 
@@ -91,9 +103,9 @@ public class RoomCreateFrame extends JFrame {
         ZRadioButton online = new ZRadioButton(start_X + 50, start_Y + interval * 2, width, 20, "联网");
         ZRadioButton offlineAI = new ZRadioButton(start_X + 120, start_Y + interval * 2, width, 20, "本地AI");
         ZRadioButton offlineTwoPlayer = new ZRadioButton(start_X + 210, start_Y + interval * 2, width + 20, 20, "本地双人");
-        if (isClientExist){
+        if (isClientExist) {
             gameType.add(online);
-        }else {
+        } else {
             offlineAI.setLocation(start_X + 50, start_Y + interval * 2);
             offlineTwoPlayer.setLocation(start_X + 140, start_Y + interval * 2);
         }
@@ -115,7 +127,7 @@ public class RoomCreateFrame extends JFrame {
         ZRadioButton no = new ZRadioButton(start_X + 120, start_Y + interval * 4, width, 20, "不可以");
         observable.add(yes);
         observable.add(no);
-        if (isClientExist){
+        if (isClientExist) {
             add(observable);
         }
     }
@@ -124,7 +136,7 @@ public class RoomCreateFrame extends JFrame {
         boolean sign = true;
         Enumeration<AbstractButton> buttons = buttonGroup.getElements();
         while (buttons.hasMoreElements()) {
-            ZRadioButton button = (ZRadioButton)buttons.nextElement();
+            ZRadioButton button = (ZRadioButton) buttons.nextElement();
             add(button);
             button.setSelected(sign);
             sign = false;
@@ -137,18 +149,50 @@ public class RoomCreateFrame extends JFrame {
             @Override
             public void mouseClicked(MouseEvent e) {
                 super.mouseClicked(e);
+                get result = getResult();
+                Room room = new Room(0, nameField.getText(), instructionField.getText(), LocalUser.getUserID()
+                        , 0, result.gameTypeNum(), result.whoFirstNum(), result.observableBoolean());
+                if (isClientExist){
+                    Client.addMessage(MyGson.toJson(new CreateRoomMessage(MyGson.toJson(room))));
+                }else {
+                    System.out.println("本地游戏房间消息："+MyGson.toJson(room));
+                }
+            }
+
+            @NotNull
+            private get getResult() {
                 ZRadioButton gameTypeButton = getSelectedButton(gameType);
                 ZRadioButton whoFirstButton = getSelectedButton(whoFirst);
                 ZRadioButton observableButton = getSelectedButton(observable);
-                Client.addMessage(MyGson.toJson(new CreateRoomMessage(MyGson.toJson(new Room(0,nameField.getText()
-                        ,instructionField.getText(), LocalUser.getUserID(),0,0,0,false)))));
+                Integer gameTypeNum = null;
+                if (gameTypeButton != null) {
+                    gameTypeNum = roomMap.get(gameTypeButton.getName());
+                }
+                Integer whoFirstNum = null;
+                if (whoFirstButton != null) {
+                    whoFirstNum = roomMap.get(whoFirstButton.getName());
+                }
+                Integer observableNum = null;
+                boolean observableBoolean;
+                if (isClientExist){
+                    if (observableButton != null) {
+                        observableNum = roomMap.get(observableButton.getName());
+                    }
+                    observableBoolean = observableNum == CAN;
+                }else {
+                    observableBoolean = false;
+                }
+                return new get(gameTypeNum, whoFirstNum, observableBoolean);
             }
 
-            private @Nullable ZRadioButton getSelectedButton(ButtonGroup buttonGroup) {
+            private record get(Integer gameTypeNum, Integer whoFirstNum, boolean observableBoolean) {
+            }
+
+            private @Nullable ZRadioButton getSelectedButton(@NotNull ButtonGroup buttonGroup) {
                 Enumeration<AbstractButton> buttons = buttonGroup.getElements();
                 while (buttons.hasMoreElements()) {
-                    ZRadioButton button = (ZRadioButton)buttons.nextElement();
-                    if (button.isSelected()){
+                    ZRadioButton button = (ZRadioButton) buttons.nextElement();
+                    if (button.isSelected()) {
                         return button;
                     }
                 }

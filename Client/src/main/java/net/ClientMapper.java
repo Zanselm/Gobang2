@@ -44,6 +44,9 @@ public class ClientMapper implements MessageConstant{
         if (message.getMessageName().equals("GetRoomsResponse")){
             GameLobbyFrame.getGameLobbyFrame().addRooms(message);
         }
+        if (message.getMessageName().equals("AlterRoomMessage")){
+            GameLobbyFrame.getGameLobbyFrame().addRoom(message);
+        }
     }
 
     private static void register(Message message) {

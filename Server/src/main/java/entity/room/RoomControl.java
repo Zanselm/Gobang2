@@ -5,10 +5,8 @@ import constant.MessageConstant;
 import entity.user.User;
 import exception.MessageTypeException;
 import net.ConnectThread;
-import net.message.CreateRoomResponse;
-import net.message.GetRoomsResponse;
-import net.message.Message;
-import net.message.RegisterResponse;
+import net.Transmitter;
+import net.message.*;
 import org.jetbrains.annotations.NotNull;
 
 import java.sql.SQLException;
@@ -66,6 +64,7 @@ public class RoomControl implements MessageConstant {
             if (sign) {
                 Room severRoom = roomSever.getRoom(room);
                 connectThread.addMessage(gson.toJson(new CreateRoomResponse(OK,gson.toJson(severRoom))));
+                Transmitter.forward(new AlterRoomMessage(severRoom));
             }else {
                 connectThread.addMessage(gson.toJson(new CreateRoomResponse(CLIENT_ERROR, "房间名重复")));
             }

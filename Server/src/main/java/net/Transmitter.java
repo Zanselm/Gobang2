@@ -66,8 +66,10 @@ public class Transmitter implements MessageConstant {
     }
     public static void leaveRoom(){
     }
-    public static void forward(Message message){
-        loggedAccountMap.forEach((k,v)-> v.addMessage(new Gson().toJson(new LoginResponse(CLIENT_ERROR,message.getMessage()))));
+    public static void forward(@NotNull Message message){
+        if (message.getReceiver() == ALL_USER){
+            loggedAccountMap.forEach((k,v)-> v.addMessage(new Gson().toJson(message)));
+        }
     }
 
 }

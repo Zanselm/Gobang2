@@ -145,8 +145,8 @@ public class GameLobbyFrame extends JFrame {
             }
         });
     }
-    public void addRoom(Room room){
-        roomListPanel.addRoom(room);
+    public void addRoom(Message message){
+        roomListPanel.addRoom(MyGson.fromJson(message.getMessage(), Room.class));
     }
     public void addRooms(Message message){
         Room[] rooms = MyGson.fromJson(message.getMessage(), Room[].class);

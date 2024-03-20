@@ -47,7 +47,7 @@ public class MusicPlayer {
 
     public void setLoudness(float num) {
         FloatControl gainControl = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
-        gainControl.setValue(-num);
+        gainControl.setValue(num);
     }
 
     public void close() {
