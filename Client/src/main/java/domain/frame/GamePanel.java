@@ -28,7 +28,7 @@ public class GamePanel extends JPanel implements GameConstant {
     private Chessboard chessboard;  //棋盘
     private int gameType = CONSOLE_GAME_AI;     //游戏类型
     private AI ai;  //AI
-    private MusicPlayer musicPlayerBlack;//音乐播放器
+    private MusicPlayer musicPlayer;//音乐播放器
     private GameFrame gameFrame;
 
     Image imageBlack = new ImageIcon(Objects.requireNonNull(GamePanel.class.getResource("/images/blake.png"))).getImage();
@@ -50,11 +50,12 @@ public class GamePanel extends JPanel implements GameConstant {
     private void Init() {
         setChessboard(new Chessboard());
 //        setBorder(BorderFactory.createRaisedBevelBorder());
-        musicPlayerBlack = new MusicPlayer();
+        musicPlayer = new MusicPlayer();
 
 //        测试
-        musicPlayerBlack.load(GamePanel.class.getResourceAsStream("/audio/drop.wav"));
+        musicPlayer.load(GamePanel.class.getResourceAsStream("/audio/drop.wav"));
 
+        setBackground(new Color(0,0,0,0));
 
         setCursor(new Cursor(Cursor.HAND_CURSOR));
         setBounds(0, 0, SPACING * 16, SPACING * 16);
@@ -120,7 +121,7 @@ public class GamePanel extends JPanel implements GameConstant {
 
 //                musicPlayer.getClip().setFramePosition(0);
 //                musicPlayer.getClip().start();
-            musicPlayerBlack.play();
+            musicPlayer.play();
 
                 if (isVictory()){
                     JOptionPane.showConfirmDialog(null, "你胜利了！", "胜利", JOptionPane.DEFAULT_OPTION);
@@ -138,7 +139,7 @@ public class GamePanel extends JPanel implements GameConstant {
     private void twoPlayerLocal() {
         if (abscissa >= 0 && ordinate >= 0 && !isHavePiece()) {
             chessboard.addPiece(abscissa, ordinate, whoSign);
-            musicPlayerBlack.play();
+            musicPlayer.play();
 
 //          测试
 //            musicPlayer.getClip().setFramePosition(0);
@@ -171,7 +172,8 @@ public class GamePanel extends JPanel implements GameConstant {
         super.paintComponent(g);
 
 //        填色
-        g.setColor(new Color(244, 178, 102, 173));
+//        g.setColor(new Color(244, 178, 102, 173));
+        g.setColor(new Color(244, 178, 102, 50));
         g.fillRect(0, 0, 640, 640);
 
 //        画线
@@ -252,7 +254,7 @@ public class GamePanel extends JPanel implements GameConstant {
     }
 
     public MusicPlayer getMusicPlayer() {
-        return musicPlayerBlack;
+        return musicPlayer;
     }
 
     private boolean isHavePiece() {

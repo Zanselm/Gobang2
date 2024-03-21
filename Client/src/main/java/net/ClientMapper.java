@@ -41,6 +41,19 @@ public class ClientMapper implements MessageConstant{
         register(message);
         login(message);
         lobby(message);
+        game(message);
+    }
+
+    private void game(Message message) {
+        if (message.getMessageName().equals("EnterGameUserMessage")){
+            GameFrame.getGameFrame().playerEnterRoom(message);
+        }
+        if (message.getMessageName().equals("EnterRoomResponse")){
+            GameFrame.getGameFrame().playerEnterRoom(message);
+        }
+        if (message.getMessageName().equals("CompareNumMessage")){
+            GameFrame.getGameFrame().compareNum(message);
+        }
     }
 
     private void lobby(Message message) {
@@ -54,7 +67,8 @@ public class ClientMapper implements MessageConstant{
             if (message.getState()==MessageConstant.OK){
                 RoomCreateFrame.getRoomCreateFrame().dispose();
                 Room room = MyGson.fromJson(message.getMessage(),Room.class);
-                new GameFrame(room.getGameType(),room.getWhoFirst());
+//                new GameFrame(room.getGameType(),room.getWhoFirst());
+                new GameFrame(room);
             }else {
                 System.out.println("房间名重复");
             }

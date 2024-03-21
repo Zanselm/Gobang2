@@ -3,6 +3,7 @@ package net;
 import com.google.gson.Gson;
 import constant.MessageConstant;
 import entity.room.RoomControl;
+import entity.user.User;
 import entity.user.UserControl;
 import exception.MessageTypeException;
 import net.message.Message;
@@ -17,9 +18,9 @@ import java.util.HashMap;
 
 public class NetMapper implements MessageConstant {
     ConnectThread connectThread;
-    UserControl userControl;
-    RoomControl roomControl;
-    NetControl netControl;
+    public UserControl userControl;
+    public RoomControl roomControl;
+    public NetControl netControl;
     static HashMap<String,Integer> controlMap = new HashMap<>();
     static final int UN_KNOW = -1;
     static final int USER_CONTROL = 1;
@@ -72,8 +73,6 @@ public class NetMapper implements MessageConstant {
             return UN_KNOW;
         }
     }
-
-
 
     private static void initMap() {
         controlMap.put("RegisterMessage",USER_CONTROL);

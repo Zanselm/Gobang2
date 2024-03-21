@@ -63,7 +63,7 @@ public class UserServer {
     }
     @Test
     public void test5() throws Exception {
-        System.out.println(getUser(new User(4, "", "", "", 0, 0, 0)).getName());
+        System.out.println(getUser(new User(30, "", "", "", 0, 0, 0)).getName());
     }
     public User getUser (User user) throws SQLException{
         Connection conn = getConnection();
@@ -71,6 +71,7 @@ public class UserServer {
         try (conn) {
             UserDAO userDAO = new UserDAO(conn, user);
             User serverUser;
+            System.out.println(1);
             if ((serverUser = userDAO.query()) == null) {return null;}
             serverUser.setPassword("");
             return serverUser;

@@ -108,5 +108,9 @@ public class ConnectThread implements Runnable{
             }
         };
     }
+
+    public NetMapper getNetMapper() {
+        return netMapper;
+    }
 }
 

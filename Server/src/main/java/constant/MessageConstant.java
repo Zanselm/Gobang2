@@ -16,6 +16,7 @@ public interface MessageConstant {
     int NOT_LOGGED_IN_CLIENT = -1;
     int SERVER = -2;
     int ALL_USER = -3;
+    int CLIENT = -4;
 
 //    消息大小
     int UNKNOWN = -1;

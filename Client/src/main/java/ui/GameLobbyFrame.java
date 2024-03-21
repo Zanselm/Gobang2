@@ -1,5 +1,6 @@
 package ui;
 
+import domain.frame.GameFrame;
 import entity.Room;
 import entity.User;
 import net.Client;
@@ -86,6 +87,7 @@ public class GameLobbyFrame extends JFrame {
                     room.setUserR(LocalUser.getUserID());
                     System.out.println(MyGson.toJson(room));
                     Client.addMessage(new EnterRoomMessage(room));
+                    new GameFrame(room);
                 }
             }
         });

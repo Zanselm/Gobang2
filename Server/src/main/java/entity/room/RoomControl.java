@@ -79,8 +79,15 @@ public class RoomControl implements MessageConstant {
     }
     private void enterRoom(Room room) {
         try {
+//            更新房间信息并通知全部客户端
             roomSever.update(room);
             Transmitter.forward(new AlterRoomMessage(room));
+//            返回创建房间者的用户信息
+            User userL = connectThread.getNetMapper().userControl.getUser(room.getUserL());
+            connectThread.addMessage(new EnterRoomResponse(userL));
+//            告诉创建房间者进入房间者
+            User userR = connectThread.getNetMapper().userControl.getUser(room.getUserR());
+            Transmitter.forward(new EnterGameUserMessage(room.getUserL(),userR));
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }

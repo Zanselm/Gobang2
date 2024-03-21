@@ -28,6 +28,7 @@ public class UserControl implements MessageConstant{
     private static final int UPDATE = 3;
 
     private UserControl() {
+        this.userServer = new UserServer();
     }
 
     public UserControl(ConnectThread connectThread) {
@@ -99,5 +100,18 @@ public class UserControl implements MessageConstant{
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public User getUser(int userID) {
+        try {
+            return userServer.getUser(new User(userID, "", "", "", 0, 0, 0));
+        } catch (SQLException sqlException){
+            throw new RuntimeException(sqlException);
+        }
+    }
+
+    public static void main(String[] args) {
+        User user = new UserControl().getUser(30);
+        System.out.println(user.getName());
     }
 }
