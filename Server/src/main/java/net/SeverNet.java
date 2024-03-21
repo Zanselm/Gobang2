@@ -23,6 +23,8 @@ public class SeverNet {
         try (ServerSocket serverSocket = new ServerSocket(7777)) {
             while (sign){
                 Socket socket = serverSocket.accept();
+                // new Thread(new ConnectThread(socket)).start();
+                
                 pool.submit(new Thread(new ConnectThread(socket)));
             }
         } catch (IOException e) {

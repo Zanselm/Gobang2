@@ -113,4 +113,3 @@ public class ConnectThread implements Runnable{
         return netMapper;
     }
 }
-
