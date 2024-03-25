@@ -192,7 +192,7 @@ public class GamePanel extends JPanel implements GameConstant {
 
 //        填色
 //        g.setColor(new Color(244, 178, 102, 173));
-        g.setColor(new Color(244, 178, 102, 50));
+        g.setColor(new Color(244, 178, 102));
         g.fillRect(0, 0, 640, 640);
 
 //        画线

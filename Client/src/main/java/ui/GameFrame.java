@@ -19,6 +19,8 @@ import utils.MyGson;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.net.URL;
@@ -141,15 +143,20 @@ public class GameFrame extends JFrame implements GameConstant {
     }
 
     private void addExitButton() {
-        exitButton = new ExitButton(1450,100,80,80);
-        addExitListener();
+        exitButton = new ExitButton(1300,200,80,80);
+        exitButton.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mouseClicked(MouseEvent e) {
+                super.mouseClicked(e);
+                if (Client.isSocketExist()){
+                    gamePanel.lose();
+                    Client.addMessage(new GiveUpMessage(playerR.getId()));
+                }
+            }
+        });
         add(exitButton);
     }
 
-    private void addExitListener() {
-        gamePanel.lose();
-        Client.addMessage(new GiveUpMessage(playerR.getId()));
-    }
     private void addWaiting() {
         waiting = new JLabel("请等待玩家进入...",JLabel.CENTER);
         waiting.setFont(font.deriveFont(60f));

@@ -27,7 +27,11 @@ public class UserPanel extends JPanel {
     }
 
     private void addUerInformation() {
-        headshotPanel = new HeadshotPanel(0,0,getHeight(),0,HeadshotPanel.GIRL,HeadshotPanel.NOT);
+        if (user.getSex().equals("男")){
+            headshotPanel = new HeadshotPanel(0,0,getHeight(),user.getAvatar(),HeadshotPanel.BOY,HeadshotPanel.NOT);
+        }else {
+            headshotPanel = new HeadshotPanel(0,0,getHeight(),user.getAvatar(),HeadshotPanel.GIRL,HeadshotPanel.NOT);
+        }
 
         userInformationPanel = new JPanel(new GridLayout(2,1));
         userInformationPanel.setBounds(getHeight()+getHeight()/4,0,getWidth()-getHeight()-getHeight()/4,getHeight());

@@ -54,9 +54,6 @@ public class GameLobbyFrame extends JFrame {
     private GameLobbyFrame() throws HeadlessException {
         init();
 
-        textField = new ZTextField(this,100,100,100,20,"1");
-        add(textField);
-
         addExitButton();
         addSettingButton();
         addTitle();
@@ -120,8 +117,6 @@ public class GameLobbyFrame extends JFrame {
             @Override
             public void mouseClicked(MouseEvent e) {
                 super.mouseClicked(e);
-//                roomListPanel.addRoom(new Room(Integer.parseInt(textField.getText()),textField.getText(),"",0,0,0,0,true));
-                roomListPanel.removeRoom(new Room(Integer.parseInt(textField.getText()),textField.getText(),"",0,0,0,0,true));
             }
         });
     }
@@ -135,7 +130,7 @@ public class GameLobbyFrame extends JFrame {
 
     private void addUserInformation() {
         if (LocalUser.localUser == null){
-            add(new UserPanel(new User(), 200, 150, 700, 100));
+            add(new UserPanel(new User(0,"本地用户","男","",0,0,0), 200, 150, 700, 100));
         }else {
             add(new UserPanel(LocalUser.getLocalUser(), 200, 150, 700, 100));
         }

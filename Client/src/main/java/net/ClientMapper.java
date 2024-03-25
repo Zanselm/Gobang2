@@ -55,6 +55,7 @@ public class ClientMapper implements MessageConstant{
         }
         if (message.getMessageName().equals("VictoryMessage")){
             GameFrame.getGameFrame().lose();
+            System.out.println("输了");
         }
         if (message.getMessageName().equals("GiveUpMessage")){
             GameFrame.getGameFrame().victory();
