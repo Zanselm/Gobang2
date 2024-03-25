@@ -32,12 +32,6 @@
 	<!--build放在</dependencies>标签的后面，主要加入的是resources标签 -->
 	<!--resources标签可以告诉系统启动的时候能够读取到这些后缀的文件 -->
 	<build>
-		<plugins>
-			<plugin>
-				<groupId>org.springframework.boot</groupId>
-				<artifactId>spring-boot-maven-plugin</artifactId>
-			</plugin>
-		</plugins>
 		<resources>
 			<resource>
 				<directory>src/main/java</directory>

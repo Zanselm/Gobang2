@@ -103,7 +103,7 @@ public class ConnectThread implements Runnable{
                         Transmitter.offline(user);
                     }
                     shutdown();
-                    e.printStackTrace();
+//                    e.printStackTrace();
                 }
             }
         };

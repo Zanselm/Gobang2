@@ -1,14 +1,17 @@
-package domain.frame;
+package ui;
 
 import constant.GameConstant;
+import domain.Chessboard;
 import domain.Player;
 import entity.Room;
 import entity.User;
 import net.Client;
 import net.LocalUser;
 import net.message.CompareNumMessage;
+import net.message.GiveUpMessage;
 import net.message.Message;
-import ui.LoginFrame;
+import ui.zui.ExitButton;
+import ui.zui.GamePanel;
 import ui.zui.PositionDraggingListener;
 import utils.FontLoader;
 import utils.MusicPlayer;
@@ -27,9 +30,10 @@ public class GameFrame extends JFrame implements GameConstant {
     static GameFrame gameFrame;
     int gameType;
     int whoFirst;
-    Player playerLLocal;
-    Player playerR;
+    public Player playerLLocal;
+    public Player playerR;
     JLabel waiting;
+    private ExitButton exitButton;
     int number;
 
     public static void main(String[] args) {
@@ -49,6 +53,7 @@ public class GameFrame extends JFrame implements GameConstant {
         addMusic();
         addGamePanel();
         addListener();
+        addExitButton();
         this.setVisible(true);
     }
 
@@ -79,11 +84,14 @@ public class GameFrame extends JFrame implements GameConstant {
         }else {
             addGamePanel();
         }
+        addExitButton();
         addListener();
         addBackground();
         this.setVisible(true);
         this.setAlwaysOnTop(false);
     }
+
+
     public GameFrame(Room room){
         gameFrame = this;
         this.gameType = room.getGameType();
@@ -126,15 +134,26 @@ public class GameFrame extends JFrame implements GameConstant {
             addGamePanel();
         }
         addListener();
+        addExitButton();
         addBackground();
         this.setVisible(true);
         this.setAlwaysOnTop(false);
     }
 
+    private void addExitButton() {
+        exitButton = new ExitButton(1450,100,80,80);
+        addExitListener();
+        add(exitButton);
+    }
+
+    private void addExitListener() {
+        gamePanel.lose();
+        Client.addMessage(new GiveUpMessage(playerR.getId()));
+    }
     private void addWaiting() {
         waiting = new JLabel("请等待玩家进入...",JLabel.CENTER);
-        waiting.setFont(font.deriveFont(50f));
-        waiting.setBounds(450,500,680,60);
+        waiting.setFont(font.deriveFont(60f));
+        waiting.setBounds(450,500,680,75);
         add(waiting);
     }
 
@@ -192,7 +211,7 @@ public class GameFrame extends JFrame implements GameConstant {
         if (playerLLocal.getPieceType() == WHITE){
             pieceType = BLACK;
         }else if (playerLLocal.getPieceType() == BLACK){
-            pieceType = BLACK;
+            pieceType = WHITE;
         }else {
             pieceType = RANDOM;
         }
@@ -201,20 +220,37 @@ public class GameFrame extends JFrame implements GameConstant {
         gamePanel.setVisible(true);
         waiting.setVisible(false);
         if (pieceType == RANDOM){
+            System.out.println("发送数字"+number);
             Client.addMessage(new CompareNumMessage(number,playerR.getId()));
         }
     }
     public void compareNum(Message message){
         int otherSideNum = Integer.parseInt(message.getMessage());
+        System.out.println("收到数字"+otherSideNum+"本地数字"+number);
         if (otherSideNum<number){
             playerLLocal.setPieceType(GameConstant.BLACK);
+            System.out.println("黑");
+            gamePanel.setWhoSign(GameConstant.BLACK);
         }
         if (otherSideNum>number){
             playerLLocal.setPieceType(GameConstant.WHITE);
+            System.out.println("白");
+            gamePanel.setWhoSign(GameConstant.WHITE);
         }
         if (otherSideNum==number){
             number = new Random().nextInt();
             Client.addMessage(new CompareNumMessage(number,playerR.getId()));
         }
+    }
+    public void addPiece(Message message){
+        Chessboard.Piece piece = MyGson.fromJson(message.getMessage(), Chessboard.Piece.class);
+        gamePanel.addPiece(piece);
+    }
+    public void lose(){
+       gamePanel.lose();
+    }
+
+    public void victory() {
+        gamePanel.victory();
     }
 }

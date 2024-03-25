@@ -1,8 +1,12 @@
-package domain.frame;
+package ui.zui;
 
 import constant.GameConstant;
 import domain.AI;
 import domain.Chessboard;
+import ui.GameFrame;
+import net.Client;
+import net.message.AddPieceMessage;
+import net.message.VictoryMessage;
 import utils.MusicPlayer;
 import org.jetbrains.annotations.NotNull;
 
@@ -29,7 +33,7 @@ public class GamePanel extends JPanel implements GameConstant {
     private int gameType = CONSOLE_GAME_AI;     //游戏类型
     private AI ai;  //AI
     private MusicPlayer musicPlayer;//音乐播放器
-    private GameFrame gameFrame;
+    public GameFrame gameFrame;
 
     Image imageBlack = new ImageIcon(Objects.requireNonNull(GamePanel.class.getResource("/images/blake.png"))).getImage();
     Image imageWhite = new ImageIcon(Objects.requireNonNull(GamePanel.class.getResource("/images/white.png"))).getImage();
@@ -72,13 +76,16 @@ public class GamePanel extends JPanel implements GameConstant {
             }
 
         }
-
         if (gameType == CONSOLE_GAME_TWO_PLAYER) {
             if (whoSign == WHITE){
                 whoSign = BLACK;
             }
         }
-
+        if (gameType == ONLINE_GAME_TWO_PLAYER){
+            if (whoSign == WHITE){
+                isCanDrop = false;
+            }
+        }
     }
 
     private void addListener() {
@@ -113,6 +120,18 @@ public class GamePanel extends JPanel implements GameConstant {
     }
 
     private void twoPlayerOnline() {
+        if (abscissa >= 0 && ordinate >= 0 && !isHavePiece() && isCanDrop) {
+            chessboard.addPiece(abscissa, ordinate, whoSign);
+            musicPlayer.play();
+            isCanDrop = false;
+            Chessboard.Piece piece = new Chessboard.Piece(abscissa, ordinate, whoSign);
+            Client.addMessage(new AddPieceMessage(piece,gameFrame.playerR.getId()));
+            if (isVictory()){
+                JOptionPane.showConfirmDialog(null, "你胜利了！", "胜利", JOptionPane.DEFAULT_OPTION);
+                gameFrame.dispose();
+                Client.addMessage(new VictoryMessage(gameFrame.playerR.getId()));
+            }
+        }
     }
 
     private void aiLocal() {
@@ -227,6 +246,19 @@ public class GamePanel extends JPanel implements GameConstant {
             throw new RuntimeException(e);
         }
     }
+    public void addPiece(Chessboard.Piece piece){
+        chessboard.addPiece(piece.x,piece.y,piece.chessPieceType);
+        musicPlayer.play();
+        isCanDrop = true;
+    }
+    public void lose(){
+        JOptionPane.showConfirmDialog(null, "你输了！", "失败", JOptionPane.DEFAULT_OPTION);
+        gameFrame.dispose();
+    }
+    public void victory() {
+        JOptionPane.showConfirmDialog(null, "对方认输", "胜利", JOptionPane.DEFAULT_OPTION);
+        gameFrame.dispose();
+    }
 
 
     public int getAbscissa() {
@@ -267,6 +299,9 @@ public class GamePanel extends JPanel implements GameConstant {
 
     public void setWhoSign(int whoSign) {
         this.whoSign = whoSign;
+        if (whoSign == WHITE){
+            isCanDrop = false;
+        }
     }
 
     public boolean isCanDrop() {
@@ -285,13 +320,6 @@ public class GamePanel extends JPanel implements GameConstant {
         this.gameType = gameType;
     }
 
-    public AI getAi() {
-        return ai;
-    }
-
-    public void setAi(AI ai) {
-        this.ai = ai;
-    }
 
     private boolean isVictory() {
         ArrayList<Chessboard.Piece> pieceArrayList = chessboard.getPieceArrayList();

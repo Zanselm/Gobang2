@@ -1,8 +1,6 @@
 package ui;
 
 import constant.GameConstant;
-import domain.frame.GameFrame;
-import domain.frame.GamePanel;
 import entity.Room;
 import net.Client;
 import net.LocalUser;
@@ -21,7 +19,6 @@ import java.net.URL;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.Objects;
-import java.util.Random;
 
 /**
  * @author Anselm
@@ -181,9 +178,6 @@ public class RoomCreateFrame extends JFrame implements GameConstant {
                 Integer whoFirstNum = null;
                 if (whoFirstButton != null) {
                     whoFirstNum = roomMap.get(whoFirstButton.getName());
-                    if (whoFirstNum == RANDOM){
-                        whoFirstNum = new Random().nextInt(3,5);
-                    }
                 }
                 Integer observableNum = null;
                 boolean observableBoolean;

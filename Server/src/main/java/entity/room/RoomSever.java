@@ -3,6 +3,7 @@ package entity.room;
 import org.junit.Test;
 
 import java.sql.Connection;
+import java.sql.Driver;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
@@ -19,6 +20,7 @@ public class RoomSever {
     private Connection getConnection() {
         Connection conn;
         try {
+
             Class.forName("com.mysql.cj.jdbc.Driver");
             conn = DriverManager.getConnection(url, user, password);
         } catch (SQLException | ClassNotFoundException e) {

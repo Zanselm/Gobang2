@@ -11,12 +11,7 @@ public class Player extends User implements GameConstant {
 
     public Player(User user,int pieceType) {
         super(user.getId(),user.getName(),user.getSex(),"",user.getWin(), user.getLose(), user.getAvatar());
-        if (pieceType == WHITE || pieceType == BLACK) {
-            this.pieceType = pieceType;
-        } else {
-            throw new RuntimeException("错误的棋子类型，" +
-                    "应该为 1(BLACK）或 2(WHITE) 见 ChessPieceType");
-        }
+        this.pieceType = pieceType;
     }
     public int getPieceType() {
         return pieceType;

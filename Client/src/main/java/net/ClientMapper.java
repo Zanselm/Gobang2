@@ -2,18 +2,14 @@ package net;
 
 import com.google.gson.Gson;
 import constant.MessageConstant;
-import domain.frame.GameFrame;
+import ui.GameFrame;
 import entity.Room;
-import net.message.LoginResponse;
 import net.message.Message;
-import net.message.RegisterResponse;
 import ui.GameLobbyFrame;
 import ui.LoginFrame;
 import ui.RegisterFrame;
 import ui.RoomCreateFrame;
 import utils.MyGson;
-
-import javax.swing.*;
 
 /**
  * @author Anselm
@@ -53,6 +49,15 @@ public class ClientMapper implements MessageConstant{
         }
         if (message.getMessageName().equals("CompareNumMessage")){
             GameFrame.getGameFrame().compareNum(message);
+        }
+        if (message.getMessageName().equals("AddPieceMessage")){
+            GameFrame.getGameFrame().addPiece(message);
+        }
+        if (message.getMessageName().equals("VictoryMessage")){
+            GameFrame.getGameFrame().lose();
+        }
+        if (message.getMessageName().equals("GiveUpMessage")){
+            GameFrame.getGameFrame().victory();
         }
     }
 

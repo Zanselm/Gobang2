@@ -19,11 +19,11 @@ public class Chessboard implements GameConstant {
         public int y;
         public int chessPieceType;
 
-        public Piece() {
+        private Piece() {
 
         }
 
-        private Piece(int x, int y, int chessPieceType) {
+        public Piece(int x, int y, int chessPieceType) {
             this.x = x;
             this.y = y;
             this.chessPieceType = chessPieceType;
