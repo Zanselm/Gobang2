@@ -10,7 +10,7 @@ import net.LocalUser;
  */
 
 public class GetRoomsMessage extends Message implements MessageConstant {
-    public GetRoomsMessage(){
-        super(GET,"GetRoomsMessage",NO, LocalUser.getUserID(),SERVER,null,UNKNOWN, null);
+    public GetRoomsMessage() {
+        super(GET, "GetRoomsMessage", NO, LocalUser.getUserID(), SERVER, null, UNKNOWN, null);
     }
 }

@@ -3,7 +3,6 @@ package net;
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.HashMap;
 import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
@@ -18,13 +17,13 @@ public class SeverNet {
     private static ExecutorService pool;
 
 
-    public static void run(){
+    public static void run() {
         pool = Executors.newFixedThreadPool(2);
         try (ServerSocket serverSocket = new ServerSocket(7777)) {
-            while (sign){
+            while (sign) {
                 Socket socket = serverSocket.accept();
                 // new Thread(new ConnectThread(socket)).start();
-                
+
                 pool.submit(new Thread(new ConnectThread(socket)));
             }
         } catch (IOException e) {
@@ -34,7 +33,7 @@ public class SeverNet {
         }
     }
 
-    private static void shutdown(){
+    private static void shutdown() {
         sign = false;
         pool.shutdown();
     }

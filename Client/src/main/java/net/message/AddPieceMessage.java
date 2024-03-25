@@ -12,7 +12,7 @@ import utils.MyGson;
  */
 
 public class AddPieceMessage extends Message implements MessageConstant {
-    public AddPieceMessage(Chessboard.Piece piece, int ID){
-        super(FORWARD,"AddPieceMessage",NO, LocalUser.getUserID(),ID,"Piece",1, MyGson.toJson(piece));
+    public AddPieceMessage(Chessboard.Piece piece, int ID) {
+        super(FORWARD, "AddPieceMessage", NO, LocalUser.getUserID(), ID, "Piece", 1, MyGson.toJson(piece));
     }
 }

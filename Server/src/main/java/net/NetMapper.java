@@ -3,7 +3,6 @@ package net;
 import com.google.gson.Gson;
 import constant.MessageConstant;
 import entity.room.RoomControl;
-import entity.user.User;
 import entity.user.UserControl;
 import exception.MessageTypeException;
 import net.message.Message;
@@ -17,21 +16,23 @@ import java.util.HashMap;
  */
 
 public class NetMapper implements MessageConstant {
-    ConnectThread connectThread;
-    public UserControl userControl;
-    public RoomControl roomControl;
-    public NetControl netControl;
-    static HashMap<String,Integer> controlMap = new HashMap<>();
     static final int UN_KNOW = -1;
     static final int USER_CONTROL = 1;
     static final int ROOM_CONTROL = 2;
     static final int SERVER_CONTROL = 3;
+    static HashMap<String, Integer> controlMap = new HashMap<>();
 
     static {
         initMap();
     }
 
-    private NetMapper(){}
+    public UserControl userControl;
+    public RoomControl roomControl;
+    public NetControl netControl;
+    ConnectThread connectThread;
+
+    private NetMapper() {
+    }
 
     public NetMapper(ConnectThread connectThread) {
         this.connectThread = connectThread;
@@ -40,12 +41,27 @@ public class NetMapper implements MessageConstant {
         this.netControl = new NetControl(connectThread);
     }
 
-    public void acceptMessage(String netMessage){
+    private static void initMap() {
+        controlMap.put("RegisterMessage", USER_CONTROL);
+        controlMap.put("DeleteMessage", USER_CONTROL);
+        controlMap.put("LoginMessage", USER_CONTROL);
+        controlMap.put("UpdateMessage", USER_CONTROL);
+
+        controlMap.put("CreateRoomMessage", ROOM_CONTROL);
+        controlMap.put("GetRoomsMessage", ROOM_CONTROL);
+        controlMap.put("EnterRoomMessage", ROOM_CONTROL);
+
+        controlMap.put("HelloMessage", SERVER_CONTROL);
+        controlMap.put("ByeMessage", SERVER_CONTROL);
+        controlMap.put("ForwardMessage", SERVER_CONTROL);
+    }
+
+    public void acceptMessage(String netMessage) {
         Gson gson = new Gson();
         Message message = gson.fromJson(netMessage, Message.class);
-        int type =analyse(message);
+        int type = analyse(message);
         try {
-            switch (type){
+            switch (type) {
                 case USER_CONTROL -> userControl.acceptMessage(message);
                 case SERVER_CONTROL -> netControl.acceptMessage(message);
                 case ROOM_CONTROL -> roomControl.acceptMessage(message);
@@ -58,34 +74,19 @@ public class NetMapper implements MessageConstant {
     }
 
     private void forward(Message message) {
-        if (message.getType() == MessageConstant.FORWARD){
+        if (message.getType() == MessageConstant.FORWARD) {
             Transmitter.forward(message);
-        }else {
+        } else {
             throw new MessageTypeException();
         }
     }
 
-    private int analyse(Message message){
+    private int analyse(Message message) {
         try {
             System.out.println(message.getMessageName());
             return controlMap.get(message.getMessageName());
         } catch (Exception e) {
             return UN_KNOW;
         }
-    }
-
-    private static void initMap() {
-        controlMap.put("RegisterMessage",USER_CONTROL);
-        controlMap.put("DeleteMessage",USER_CONTROL);
-        controlMap.put("LoginMessage",USER_CONTROL);
-        controlMap.put("UpdateMessage",USER_CONTROL);
-
-        controlMap.put("CreateRoomMessage",ROOM_CONTROL);
-        controlMap.put("GetRoomsMessage",ROOM_CONTROL);
-        controlMap.put("EnterRoomMessage",ROOM_CONTROL);
-
-        controlMap.put("HelloMessage",SERVER_CONTROL);
-        controlMap.put("ByeMessage",SERVER_CONTROL);
-        controlMap.put("ForwardMessage",SERVER_CONTROL);
     }
 }

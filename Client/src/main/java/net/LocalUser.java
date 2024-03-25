@@ -2,8 +2,6 @@ package net;
 
 import entity.User;
 
-import java.lang.ref.PhantomReference;
-
 /**
  * @author Anselm
  * @date 2024/3/13 17 19
@@ -19,21 +17,25 @@ public class LocalUser extends User {
     private LocalUser(int id, String name, String sex, String password, int win, int lose, int avatar) {
         super(id, name, sex, password, win, lose, avatar);
     }
-    public static void online(User user){
-        if (localUser == null){
+
+    public static void online(User user) {
+        if (localUser == null) {
             localUser = user;
         } else {
             System.out.println("重复登录");
         }
     }
-    public static void offline(){
+
+    public static void offline() {
         localUser = null;
     }
-    public static User getLocalUser(){
+
+    public static User getLocalUser() {
         return localUser;
     }
-    public static int getUserID(){
-        if (localUser == null){
+
+    public static int getUserID() {
+        if (localUser == null) {
             return -1;
         }
         return localUser.getId();

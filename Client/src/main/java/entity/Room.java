@@ -1,6 +1,9 @@
 package entity;
 
-import lombok.*;
+import lombok.Data;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 
 /**
  * @author Anselm
@@ -21,8 +24,8 @@ public class Room {
     private int gameType;
     private int whoFirst;
     private boolean observable;
-    
-    
+
+
     public Room(int ID, String name, String introductory, int userL, int userR, int gameType, int whoFirst, boolean observable) {
         this.ID = ID;
         this.name = name;
@@ -35,5 +38,4 @@ public class Room {
     }
 
 
-    
 }

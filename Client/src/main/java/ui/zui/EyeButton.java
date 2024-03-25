@@ -17,17 +17,20 @@ import java.util.Objects;
 
 public class EyeButton extends JButton {
     static boolean VISIBLE = false;
-    ZPasswordField passwordField;
     static ImageIcon visible;
     static ImageIcon invisible;
-    ImageIcon finalVisible;
-    ImageIcon finalInvisible;
+
     static {
         URL visibleURL = Objects.requireNonNull(ZMainButton.class.getClassLoader().getResource("images/password_visible.png"));
         URL inVisibleURL = Objects.requireNonNull(ZMainButton.class.getClassLoader().getResource("images/password_invisible.png"));
         visible = new ImageIcon(visibleURL);
         invisible = new ImageIcon(inVisibleURL);
     }
+
+    ZPasswordField passwordField;
+    ImageIcon finalVisible;
+    ImageIcon finalInvisible;
+
     public EyeButton(ZPasswordField passwordField, int x, int y, int width) {
         this.passwordField = passwordField;
         init(x, y, width);
@@ -37,7 +40,7 @@ public class EyeButton extends JButton {
     }
 
     private void init(int x, int y, int width) {
-        setBounds(x, y, width, (int) (width *(375.0/655.0)));
+        setBounds(x, y, width, (int) (width * (375.0 / 655.0)));
         setOpaque(false);
         setContentAreaFilled(false);
         setFocusPainted(false);
@@ -49,7 +52,7 @@ public class EyeButton extends JButton {
             @Override
             public void mouseClicked(MouseEvent e) {
                 super.mouseClicked(e);
-                if (VISIBLE){
+                if (VISIBLE) {
                     setIcon(finalInvisible);
                     passwordField.hidePassword();
                     VISIBLE = false;
@@ -78,11 +81,11 @@ public class EyeButton extends JButton {
         Image visibleImage = visible.getImage();
         visibleImage = visibleImage.getScaledInstance(getWidth(), getHeight(), Image.SCALE_FAST);
         finalVisible = new ImageIcon(visibleImage);
-        finalVisible = ImageResizer.resize(visible,getWidth(),getHeight());
+        finalVisible = ImageResizer.resize(visible, getWidth(), getHeight());
 
         Image invisibleImage = invisible.getImage();
         invisibleImage = invisibleImage.getScaledInstance(getWidth(), getHeight(), Image.SCALE_FAST);
         finalInvisible = new ImageIcon(invisibleImage);
-        finalInvisible = ImageResizer.resize(invisible,getWidth(),getHeight());
+        finalInvisible = ImageResizer.resize(invisible, getWidth(), getHeight());
     }
 }

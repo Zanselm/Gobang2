@@ -14,9 +14,12 @@ import java.util.HashMap;
  */
 
 public class MessagePrinter implements MessageConstant {
-    private static final HashMap<Integer,String> typeMap = new HashMap<>();
-    private static final HashMap<Integer,String> stateMap = new HashMap<>();
-    static {init();}
+    private static final HashMap<Integer, String> typeMap = new HashMap<>();
+    private static final HashMap<Integer, String> stateMap = new HashMap<>();
+
+    static {
+        init();
+    }
 
     private MessagePrinter() {
     }
@@ -24,17 +27,21 @@ public class MessagePrinter implements MessageConstant {
     public static String toString(Message message) {
         return translation(message);
     }
-    public static String toString(String messageString){
+
+    public static String toString(String messageString) {
         Message message = new Gson().fromJson(messageString, Message.class);
-        return  translation(message);
+        return translation(message);
     }
-    public static void print(String message){
+
+    public static void print(String message) {
         System.out.println(toString(message));
     }
-    public static void print(Message message){
+
+    public static void print(Message message) {
         System.out.println(toString(message));
     }
-    private static String  translation(Message message){
+
+    private static String translation(Message message) {
         return "Message{" +
                 "type=" + typeMap.get(message.getType()) +
                 ", messageName='" + message.getMessageName() + '\'' +
@@ -46,12 +53,12 @@ public class MessagePrinter implements MessageConstant {
     }
 
     private static void init() {
-        typeMap.put(GET,"GET");
-        typeMap.put(INFORM,"INFORM");
-        typeMap.put(FORWARD,"FORWARD");
-        stateMap.put(NO,"NO");
-        stateMap.put(OK,"OK");
-        stateMap.put(CLIENT_ERROR,"CLIENT_ERROR");
-        stateMap.put(SEVER_ERROR,"SEVER_ERROR");
+        typeMap.put(GET, "GET");
+        typeMap.put(INFORM, "INFORM");
+        typeMap.put(FORWARD, "FORWARD");
+        stateMap.put(NO, "NO");
+        stateMap.put(OK, "OK");
+        stateMap.put(CLIENT_ERROR, "CLIENT_ERROR");
+        stateMap.put(SEVER_ERROR, "SEVER_ERROR");
     }
 }

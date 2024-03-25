@@ -1,9 +1,7 @@
 package net.message;
 
 import constant.MessageConstant;
-import domain.Chessboard;
 import net.LocalUser;
-import utils.MyGson;
 
 /**
  * @author Anselm
@@ -12,7 +10,7 @@ import utils.MyGson;
  */
 
 public class GiveUpMessage extends Message implements MessageConstant {
-    public GiveUpMessage(int ID){
-        super(FORWARD,"GiveUpMessage",NO, LocalUser.getUserID(),ID,"null",UNKNOWN,"null" );
+    public GiveUpMessage(int ID) {
+        super(FORWARD, "GiveUpMessage", NO, LocalUser.getUserID(), ID, "null", UNKNOWN, "null");
     }
 }

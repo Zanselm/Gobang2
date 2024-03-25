@@ -19,15 +19,16 @@ public class ZMainButton extends JButton {
     static Font font;
     static ImageIcon buttonBlack;
     static ImageIcon buttonWhite;
-    JLabel textLabel;
-    ImageIcon blackFinalIcon;
-    ImageIcon whiteFinalIcon;
 
     static {
         font = FontLoader.getFont();
         buttonBlack = ImageLoader.load("images/button_black.png");
         buttonWhite = ImageLoader.load("images/blankness.png");
     }
+
+    JLabel textLabel;
+    ImageIcon blackFinalIcon;
+    ImageIcon whiteFinalIcon;
 
     public ZMainButton(int x, int y, int width, int height, String text) {
         init(x, y, width, height);
@@ -63,7 +64,7 @@ public class ZMainButton extends JButton {
     private void addText(String text) {
         textLabel = new JLabel(text);
         textLabel.setForeground(Color.black);
-        Font font1 = font.deriveFont((float) (getHeight()/2*0.9));
+        Font font1 = font.deriveFont((float) (getHeight() / 2 * 0.9));
 //        Font font1 = font.deriveFont(50f);
         textLabel.setFont(font1);
         textLabel.setBounds(getWidth() / 6, 0, getWidth(), getHeight());
@@ -71,8 +72,8 @@ public class ZMainButton extends JButton {
     }
 
     private void resize() {
-        blackFinalIcon = ImageResizer.resize(buttonBlack,getWidth(),getHeight());
-        whiteFinalIcon = ImageResizer.resize(buttonWhite,getWidth(),getHeight());
+        blackFinalIcon = ImageResizer.resize(buttonBlack, getWidth(), getHeight());
+        whiteFinalIcon = ImageResizer.resize(buttonWhite, getWidth(), getHeight());
     }
 
     private void init(int x, int y, int width, int height) {

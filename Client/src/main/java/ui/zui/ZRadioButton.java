@@ -14,12 +14,11 @@ import java.util.Objects;
  * description
  */
 
-public class ZRadioButton extends JRadioButton{
+public class ZRadioButton extends JRadioButton {
     static Font font;
     static ImageIcon hook;
     static ImageIcon blankness;
-    ImageIcon finalHook;
-    ImageIcon finalBlankness;
+
     static {
         font = FontLoader.getFont();
         URL hookURL = Objects.requireNonNull(ZMainButton.class.getClassLoader().getResource("images/hook.png"));
@@ -27,23 +26,30 @@ public class ZRadioButton extends JRadioButton{
         URL blanknessURL = Objects.requireNonNull(ZMainButton.class.getClassLoader().getResource("images/blankness.png"));
         blankness = new ImageIcon(blanknessURL);
     }
-    private ZRadioButton(){}
-    public ZRadioButton(int x, int y, int width, int height, String text){
+
+    ImageIcon finalHook;
+    ImageIcon finalBlankness;
+
+    private ZRadioButton() {
+    }
+
+    public ZRadioButton(int x, int y, int width, int height, String text) {
         setName(text);
-        setFont(font.deriveFont((float) (height*0.9)));
+        setFont(font.deriveFont((float) (height * 0.9)));
         setText(text);
         setOpaque(true);
         setBackground(new Color(0, 0, 0, 0));
         setContentAreaFilled(false);
         setFocusPainted(false);
-        setBounds(x,y,width,height);
+        setBounds(x, y, width, height);
         resize();
         setIcon(finalBlankness);
         setSelectedIcon(finalHook);
     }
-    private void resize(){
+
+    private void resize() {
         int width = getHeight();
-        finalHook = ImageResizer.resize(hook,width,ImageResizer.WIDTH);
-        finalBlankness = ImageResizer.resize(blankness,width,ImageResizer.WIDTH);
+        finalHook = ImageResizer.resize(hook, width, ImageResizer.WIDTH);
+        finalBlankness = ImageResizer.resize(blankness, width, ImageResizer.WIDTH);
     }
 }

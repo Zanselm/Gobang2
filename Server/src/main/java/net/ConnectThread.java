@@ -5,7 +5,10 @@ import entity.user.User;
 import net.message.Message;
 import org.jetbrains.annotations.NotNull;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.concurrent.ArrayBlockingQueue;
 
@@ -15,11 +18,11 @@ import java.util.concurrent.ArrayBlockingQueue;
  * description
  */
 
-public class ConnectThread implements Runnable{
+public class ConnectThread implements Runnable {
+    private final ArrayBlockingQueue<String> queue = new ArrayBlockingQueue<>(5);
     private Socket socket;
     private NetMapper netMapper;
     private boolean sign = true;
-    private final ArrayBlockingQueue<String> queue = new ArrayBlockingQueue<>(5);
     private BufferedReader br;
     private PrintWriter pw;
     private User user;
@@ -33,22 +36,23 @@ public class ConnectThread implements Runnable{
     }
 
     @Override
-    public void run(){
-            try {
-                Thread accept = new Thread(accept());
-                Thread send = new Thread(send());
-                accept.start();
-                send.start();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
+    public void run() {
+        try {
+            Thread accept = new Thread(accept());
+            Thread send = new Thread(send());
+            accept.start();
+            send.start();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
-    public void shutdown(){
+
+    public void shutdown() {
         try {
             Thread.currentThread().interrupt();
             br.close();
             pw.close();
-            if (socket!=null){
+            if (socket != null) {
                 socket.close();
             }
             queue.add("exit");
@@ -57,17 +61,21 @@ public class ConnectThread implements Runnable{
             throw new RuntimeException(e);
         }
     }
-    public void addMessage(String message){
+
+    public void addMessage(String message) {
         queue.add(message);
     }
-    public void addMessage(Message message){
+
+    public void addMessage(Message message) {
         queue.add(new Gson().toJson(message));
     }
-    public void setUser(User user){
-        this.user = user;
-    }
-    public User getUser(){
+
+    public User getUser() {
         return user;
+    }
+
+    public void setUser(User user) {
+        this.user = user;
     }
 
     private @NotNull Runnable send() throws IOException {
@@ -77,7 +85,9 @@ public class ConnectThread implements Runnable{
             while (sign) {
                 try {
                     String msg = queue.take();
-                    if (msg.equals("exit")) {return;}
+                    if (msg.equals("exit")) {
+                        return;
+                    }
                     pw.println(msg);
                     pw.flush();
                 } catch (InterruptedException e) {
@@ -99,7 +109,7 @@ public class ConnectThread implements Runnable{
                     str = br.readLine();
                     netMapper.acceptMessage(str);
                 } catch (Exception e) {
-                    if (user!=null){
+                    if (user != null) {
                         Transmitter.offline(user);
                     }
                     shutdown();

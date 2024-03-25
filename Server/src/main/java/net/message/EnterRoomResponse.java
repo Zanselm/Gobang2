@@ -11,7 +11,7 @@ import entity.user.User;
  */
 
 public class EnterRoomResponse extends Message implements MessageConstant {
-    public EnterRoomResponse(User otherSideUser){
-        super(INFORM,"EnterRoomResponse",NO,SERVER ,CLIENT,"User",1,new Gson().toJson(otherSideUser));
+    public EnterRoomResponse(User otherSideUser) {
+        super(INFORM, "EnterRoomResponse", NO, SERVER, CLIENT, "User", 1, new Gson().toJson(otherSideUser));
     }
 }

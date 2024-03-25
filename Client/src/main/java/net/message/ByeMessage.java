@@ -2,7 +2,6 @@ package net.message;
 
 import constant.MessageConstant;
 import net.LocalUser;
-import net.message.Message;
 
 /**
  * @author Anselm
@@ -13,7 +12,7 @@ import net.message.Message;
 public class ByeMessage extends Message implements MessageConstant {
 
     public ByeMessage() {
-        super(INFORM, "ByeMessage", NO, LocalUser.getUserID(),SERVER
-                ,"String",UNKNOWN, "Bye");
+        super(INFORM, "ByeMessage", NO, LocalUser.getUserID(), SERVER
+                , "String", UNKNOWN, "Bye");
     }
 }

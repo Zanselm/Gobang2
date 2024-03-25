@@ -9,7 +9,7 @@ import constant.MessageConstant;
  */
 
 public class GetRoomsResponse extends Message implements MessageConstant {
-    public GetRoomsResponse(int length,String text){
-        super(INFORM,"GetRoomsResponse",OK, SERVER,0,"Room[]",length,text);
+    public GetRoomsResponse(int length, String text) {
+        super(INFORM, "GetRoomsResponse", OK, SERVER, 0, "Room[]", length, text);
     }
 }

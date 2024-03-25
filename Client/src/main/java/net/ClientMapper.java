@@ -2,13 +2,9 @@ package net;
 
 import com.google.gson.Gson;
 import constant.MessageConstant;
-import ui.GameFrame;
 import entity.Room;
 import net.message.Message;
-import ui.GameLobbyFrame;
-import ui.LoginFrame;
-import ui.RegisterFrame;
-import ui.RoomCreateFrame;
+import ui.*;
 import utils.MyGson;
 
 /**
@@ -17,7 +13,7 @@ import utils.MyGson;
  * description
  */
 
-public class ClientMapper implements MessageConstant{
+public class ClientMapper implements MessageConstant {
     private static final ClientMapper clientMapper = new ClientMapper();
 
     private static int LoginControl;
@@ -29,8 +25,23 @@ public class ClientMapper implements MessageConstant{
         return clientMapper;
     }
 
-    public void acceptMessage(String netMessage){
-        Message message = new Gson().fromJson(netMessage,Message.class);
+    private static void register(Message message) {
+        if (message.getMessageName().equals("RegisterResponse")) {
+            if (message.getState() == OK) {
+                RegisterFrame.getRegisterFrame().success();
+            }
+            if (message.getState() == CLIENT_ERROR) {
+                RegisterFrame.getRegisterFrame().duplicateUsername();
+            }
+        }
+    }
+
+    private static int analyse(Message message) {
+        return 0;
+    }
+
+    public void acceptMessage(String netMessage) {
+        Message message = new Gson().fromJson(netMessage, Message.class);
         int type = analyse(message);
         String messageType = message.getMessageName();
         System.out.println(message);
@@ -41,69 +52,54 @@ public class ClientMapper implements MessageConstant{
     }
 
     private void game(Message message) {
-        if (message.getMessageName().equals("EnterGameUserMessage")){
+        if (message.getMessageName().equals("EnterGameUserMessage")) {
             GameFrame.getGameFrame().playerEnterRoom(message);
         }
-        if (message.getMessageName().equals("EnterRoomResponse")){
+        if (message.getMessageName().equals("EnterRoomResponse")) {
             GameFrame.getGameFrame().playerEnterRoom(message);
         }
-        if (message.getMessageName().equals("CompareNumMessage")){
+        if (message.getMessageName().equals("CompareNumMessage")) {
             GameFrame.getGameFrame().compareNum(message);
         }
-        if (message.getMessageName().equals("AddPieceMessage")){
+        if (message.getMessageName().equals("AddPieceMessage")) {
             GameFrame.getGameFrame().addPiece(message);
         }
-        if (message.getMessageName().equals("VictoryMessage")){
+        if (message.getMessageName().equals("VictoryMessage")) {
             GameFrame.getGameFrame().lose();
             System.out.println("输了");
         }
-        if (message.getMessageName().equals("GiveUpMessage")){
+        if (message.getMessageName().equals("GiveUpMessage")) {
             GameFrame.getGameFrame().victory();
         }
     }
 
     private void lobby(Message message) {
-        if (message.getMessageName().equals("GetRoomsResponse")){
+        if (message.getMessageName().equals("GetRoomsResponse")) {
             GameLobbyFrame.getGameLobbyFrame().addRooms(message);
         }
-        if (message.getMessageName().equals("AlterRoomMessage")){
+        if (message.getMessageName().equals("AlterRoomMessage")) {
             GameLobbyFrame.getGameLobbyFrame().addRoom(message);
         }
-        if (message.getMessageName().equals("CreateRoomResponse")){
-            if (message.getState()==MessageConstant.OK){
+        if (message.getMessageName().equals("CreateRoomResponse")) {
+            if (message.getState() == MessageConstant.OK) {
                 RoomCreateFrame.getRoomCreateFrame().dispose();
-                Room room = MyGson.fromJson(message.getMessage(),Room.class);
+                Room room = MyGson.fromJson(message.getMessage(), Room.class);
 //                new GameFrame(room.getGameType(),room.getWhoFirst());
                 new GameFrame(room);
-            }else {
+            } else {
                 System.out.println("房间名重复");
             }
         }
     }
 
-    private static void register(Message message) {
-        if (message.getMessageName().equals("RegisterResponse")){
-            if (message.getState() == OK){
-                RegisterFrame.getRegisterFrame().success();
-            }
-            if (message.getState() == CLIENT_ERROR){
-                RegisterFrame.getRegisterFrame().duplicateUsername();
-            }
-        }
-    }
-
     private void login(Message message) {
-        if (message.getMessageName().equals("LoginResponse")){
-            if (message.getState() == OK){
+        if (message.getMessageName().equals("LoginResponse")) {
+            if (message.getState() == OK) {
                 LoginFrame.getLoginFrame().LoginSuccessful(message);
             }
-            if (message.getState() == CLIENT_ERROR){
+            if (message.getState() == CLIENT_ERROR) {
                 LoginFrame.getLoginFrame().LoginFailed(message.getMessage());
             }
         }
-    }
-
-    private static int analyse(Message message) {
-        return 0;
     }
 }

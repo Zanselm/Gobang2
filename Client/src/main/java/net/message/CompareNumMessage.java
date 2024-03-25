@@ -10,7 +10,7 @@ import net.LocalUser;
  */
 
 public class CompareNumMessage extends Message implements MessageConstant {
-    public CompareNumMessage(int number,int ID){
-        super(FORWARD,"CompareNumMessage",NO, LocalUser.getUserID(),ID,"int",1, String.valueOf(number));
+    public CompareNumMessage(int number, int ID) {
+        super(FORWARD, "CompareNumMessage", NO, LocalUser.getUserID(), ID, "int", 1, String.valueOf(number));
     }
 }

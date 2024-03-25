@@ -14,8 +14,10 @@ import java.util.Objects;
  */
 
 public class ImageLoader {
-    private ImageLoader() {}
-    public static @NotNull ImageIcon load(String path){
+    private ImageLoader() {
+    }
+
+    public static @NotNull ImageIcon load(String path) {
         URL URL = Objects.requireNonNull(ZMainButton.class.getClassLoader().getResource(path));
         return new ImageIcon(URL);
     }

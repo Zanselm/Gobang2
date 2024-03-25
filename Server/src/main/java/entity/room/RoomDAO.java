@@ -17,9 +17,32 @@ public class RoomDAO {
     Connection conn;
     Room room;
 
-    public RoomDAO(Connection conn,Room room) {
+    public RoomDAO(Connection conn, Room room) {
         this.conn = conn;
         this.room = room;
+    }
+
+    private static @NotNull Room get(@NotNull ResultSet resultSet) throws SQLException {
+        Room serverRoom = new Room();
+        serverRoom.setID(resultSet.getInt("id"));
+        serverRoom.setName(resultSet.getString("name"));
+        serverRoom.setIntroductory(resultSet.getString("introductory"));
+        serverRoom.setUserL(resultSet.getInt("user_l"));
+        serverRoom.setUserR(resultSet.getInt("user_r"));
+        serverRoom.setGameType(resultSet.getInt("game_type"));
+        serverRoom.setWhoFirst(resultSet.getInt("who_first"));
+        serverRoom.setObservable(resultSet.getBoolean("observable"));
+        return serverRoom;
+    }
+
+    private static void set(@NotNull Room room, @NotNull PreparedStatement pstmt) throws SQLException {
+        pstmt.setString(1, room.getName());
+        pstmt.setString(2, room.getIntroductory());
+        pstmt.setInt(3, room.getUserL());
+        pstmt.setInt(4, room.getUserR());
+        pstmt.setInt(5, room.getGameType());
+        pstmt.setInt(6, room.getWhoFirst());
+        pstmt.setBoolean(7, room.isObservable());
     }
 
     public int insert() throws SQLException {
@@ -56,7 +79,7 @@ public class RoomDAO {
         //        从连接中获取执行对象
         int id = room.getID();
         PreparedStatement pstmt;
-        if (id == 0){
+        if (id == 0) {
             String sql = "select * from room where  name = ?";
             pstmt = conn.prepareStatement(sql);
 
@@ -66,9 +89,9 @@ public class RoomDAO {
         }
 
 //        设置参数
-        if (id == 0){
+        if (id == 0) {
             pstmt.setString(1, room.getName());
-        }else{
+        } else {
             pstmt.setInt(1, id);
         }
 
@@ -76,7 +99,9 @@ public class RoomDAO {
         ResultSet resultSet = pstmt.executeQuery();
 
 //        获取User
-        if (!resultSet.next()){return null;}
+        if (!resultSet.next()) {
+            return null;
+        }
         Room serverRoom = get(resultSet);
 
 //        释放
@@ -103,6 +128,7 @@ public class RoomDAO {
         pstmt.close();
         return i;
     }
+
     private int queryRoomNumber() throws SQLException {
         String sql = "select count(*) from room";
         PreparedStatement pstmt = conn.prepareStatement(sql);
@@ -110,7 +136,8 @@ public class RoomDAO {
         resultSet.next();
         return resultSet.getInt(1);
     }
-    public Room[] getAll() throws SQLException{
+
+    public Room[] getAll() throws SQLException {
         Room[] rooms = new Room[queryRoomNumber()];
         String sql = "select * from room";
         PreparedStatement pstmt = conn.prepareStatement(sql);
@@ -118,33 +145,10 @@ public class RoomDAO {
         ResultSet resultSet = pstmt.executeQuery();
 
         int i = 0;
-        while (resultSet.next()){
+        while (resultSet.next()) {
             rooms[i] = get(resultSet);
             i++;
         }
         return rooms;
-    }
-
-    private static @NotNull Room get(@NotNull ResultSet resultSet) throws SQLException {
-        Room serverRoom = new Room();
-        serverRoom.setID(resultSet.getInt("id"));
-        serverRoom.setName(resultSet.getString("name"));
-        serverRoom.setIntroductory(resultSet.getString("introductory"));
-        serverRoom.setUserL(resultSet.getInt("user_l"));
-        serverRoom.setUserR(resultSet.getInt("user_r"));
-        serverRoom.setGameType(resultSet.getInt("game_type"));
-        serverRoom.setWhoFirst(resultSet.getInt("who_first"));
-        serverRoom.setObservable(resultSet.getBoolean("observable"));
-        return serverRoom;
-    }
-
-    private static void set(@NotNull Room room, @NotNull PreparedStatement pstmt) throws SQLException {
-        pstmt.setString(1, room.getName());
-        pstmt.setString(2,room.getIntroductory());
-        pstmt.setInt(3, room.getUserL());
-        pstmt.setInt(4, room.getUserR());
-        pstmt.setInt(5, room.getGameType());
-        pstmt.setInt(6,room.getWhoFirst());
-        pstmt.setBoolean(7,room.isObservable());
     }
 }

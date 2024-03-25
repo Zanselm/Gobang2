@@ -10,34 +10,9 @@ import java.util.Iterator;
  */
 public class Chessboard implements GameConstant {
     public static final int CHESSBOARD_SIZE = 15;
-    private int pieceNumber;
     private final int[][] pieceLocation; //一个15*15二维数组充当棋盘
     private final ArrayList<Piece> pieceArrayList;
-
-    public static class Piece {
-        public int x;
-        public int y;
-        public int chessPieceType;
-
-        private Piece() {
-
-        }
-
-        public Piece(int x, int y, int chessPieceType) {
-            this.x = x;
-            this.y = y;
-            this.chessPieceType = chessPieceType;
-        }
-
-        @Override
-        public String toString() {
-            return "Piece{" +
-                    "x=" + x +
-                    ", y=" + y +
-                    ", chessPieceType=" + chessPieceType +
-                    '}';
-        }
-    }
+    private int pieceNumber;
 
     public Chessboard() {
         pieceNumber = 0;
@@ -69,9 +44,9 @@ public class Chessboard implements GameConstant {
             pieceLocation[y][x] = NO_CHESS_PIECE;
             Iterator<Piece> iterator = pieceArrayList.iterator();
             Piece piece;
-            while (iterator.hasNext()){
+            while (iterator.hasNext()) {
                 piece = iterator.next();
-                if (piece.x==x && piece.y == y){
+                if (piece.x == x && piece.y == y) {
                     pieceArrayList.remove(piece);
                 }
             }
@@ -81,7 +56,7 @@ public class Chessboard implements GameConstant {
         return false;
     }
 
-    public boolean removeLastPiece(){
+    public boolean removeLastPiece() {
         if (!pieceArrayList.isEmpty()) {
             Piece piece = pieceArrayList.remove(pieceNumber - 1);
             int x = piece.x;
@@ -100,6 +75,7 @@ public class Chessboard implements GameConstant {
     public boolean isHavePiece(int x, int y) {
         return !(pieceLocation[y][x] == NO_CHESS_PIECE);
     }
+
     public void removeAll() {
         for (int i = 0; i < CHESSBOARD_SIZE; i++) {
             for (int j = 0; j < CHESSBOARD_SIZE; j++) {
@@ -125,11 +101,36 @@ public class Chessboard implements GameConstant {
             if (piece.chessPieceType == WHITE) {
                 System.out.print("(" + piece.x + "," + piece.y + "):" + "白" + " ");
             }
-            if(piece.chessPieceType == BLACK) {
+            if (piece.chessPieceType == BLACK) {
                 System.out.print("(" + piece.x + "," + piece.y + "):" + "黑" + " ");
             }
         }
         System.out.println();
+    }
+
+    public static class Piece {
+        public int x;
+        public int y;
+        public int chessPieceType;
+
+        private Piece() {
+
+        }
+
+        public Piece(int x, int y, int chessPieceType) {
+            this.x = x;
+            this.y = y;
+            this.chessPieceType = chessPieceType;
+        }
+
+        @Override
+        public String toString() {
+            return "Piece{" +
+                    "x=" + x +
+                    ", y=" + y +
+                    ", chessPieceType=" + chessPieceType +
+                    '}';
+        }
     }
 
 }

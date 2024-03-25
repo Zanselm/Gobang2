@@ -6,7 +6,8 @@ import utils.FontLoader;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.*;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.LinkedList;
 import java.util.Objects;
 
@@ -19,33 +20,37 @@ import java.util.Objects;
 
 public class RoomListPanel extends JPanel {
     static Font font;
+
+    static {
+        font = FontLoader.getFont();
+    }
+
     int top;
     RoomInformationPanel selectedRIP;
     LinkedList<RoomInformationPanel> roomInformationPanels;
     RoomListPanel roomListPanel = this;
-    static {
-        font = FontLoader.getFont();
-    }
-    public RoomListPanel(int x,int y,int width,int height,int rows){
+
+    public RoomListPanel(int x, int y, int width, int height, int rows) {
         init(x, y, width, height, rows);
     }
 
     private void init(int x, int y, int width, int height, int rows) {
         setBounds(x, y, width, height);
-        setBackground(new Color(0,0,0,0));
+        setBackground(new Color(0, 0, 0, 0));
         setLayout(new GridLayout(rows, 1));
         roomInformationPanels = new LinkedList<>();
         addListener();
     }
-    public void addRoom(Room room){
+
+    public void addRoom(Room room) {
         RoomInformationPanel newPanel = new RoomInformationPanel(room, this);
         int index = getIndex(room);
-        if (index==-1){
+        if (index == -1) {
             roomInformationPanels.add(newPanel);
-        }else{
+        } else {
             selectedRIP = null;
             roomInformationPanels.remove(index);
-            roomInformationPanels.add(index,newPanel);
+            roomInformationPanels.add(index, newPanel);
         }
         add2Panel();
         flush();
@@ -54,35 +59,37 @@ public class RoomListPanel extends JPanel {
     private int getIndex(Room room) {
         int i;
         for (i = 0; i < roomInformationPanels.size(); i++) {
-            if (roomInformationPanels.get(i).getRoom().getID() == room.getID()){
+            if (roomInformationPanels.get(i).getRoom().getID() == room.getID()) {
                 return i;
             }
         }
         return -1;
     }
 
-    public void addRoomList(Room @NotNull [] rooms){
+    public void addRoomList(Room @NotNull [] rooms) {
         for (Room room : rooms) {
-            roomInformationPanels.add(new RoomInformationPanel(room,this));
+            roomInformationPanels.add(new RoomInformationPanel(room, this));
         }
         add2Panel();
         flush();
     }
-    public void removeRoom(Room room){
+
+    public void removeRoom(Room room) {
         int index = getIndex(room);
-        if (index != -1){
+        if (index != -1) {
             roomInformationPanels.remove(index);
             add2Panel();
             flush();
         }
 
     }
-    private void add2Panel(){
+
+    private void add2Panel() {
         removeAll();
         int sign;
-        if (roomInformationPanels.size()-top>10){
+        if (roomInformationPanels.size() - top > 10) {
             sign = top + 10;
-        }else {
+        } else {
             sign = roomInformationPanels.size();
         }
         for (int i = top; i < sign; i++) {
@@ -90,27 +97,28 @@ public class RoomListPanel extends JPanel {
 
         }
     }
-    public void flush(){
+
+    public void flush() {
         setVisible(false);
         setVisible(true);
     }
 
-    private void addListener(){
+    private void addListener() {
         addMouseWheelListener(e -> {
-            if (roomInformationPanels.size() - top > 10){
+            if (roomInformationPanels.size() - top > 10) {
                 removeAll();
-                if (e.getWheelRotation()>0){
+                if (e.getWheelRotation() > 0) {
                     top++;
-                }else {
-                    if (top!=0){
+                } else {
+                    if (top != 0) {
                         top--;
                     }
                 }
                 add2Panel();
                 flush();
-            }else {
-                if (e.getWheelRotation()<0){
-                    if (top!=0){
+            } else {
+                if (e.getWheelRotation() < 0) {
+                    if (top != 0) {
                         top--;
                         removeAll();
                         add2Panel();
@@ -125,35 +133,37 @@ public class RoomListPanel extends JPanel {
         return selectedRIP;
     }
 
-    public static class RoomInformationPanel extends JPanel{
+    public static class RoomInformationPanel extends JPanel {
         static Font font = RoomListPanel.font.deriveFont(20.0F);
         static int id;
+
+        static {
+            UIManager.put("Label.font", font);
+        }
+
         boolean clicked;
         Room room;
         RoomListPanel roomListPanel;
         RoomInformationPanel roomInformationPanel = this;
 
-        static {
-            UIManager.put("Label.font",font);
-        }
-        public RoomInformationPanel(@NotNull Room room, RoomListPanel roomListPanel){
+        public RoomInformationPanel(@NotNull Room room, RoomListPanel roomListPanel) {
             id = room.getID();
             this.roomListPanel = roomListPanel;
             this.room = room;
             setFont(font);
-            setLayout(new GridLayout(1,4));
-            setBackground(new Color(0,0,0,0));
+            setLayout(new GridLayout(1, 4));
+            setBackground(new Color(0, 0, 0, 0));
 
-            JLabel id = new JLabel("ID:"+String.valueOf(String.format("%07d", room.getID())),JLabel.CENTER);
-            JLabel introduction = new JLabel("房间名： "+room.getName(),JLabel.CENTER);
+            JLabel id = new JLabel("ID:" + String.valueOf(String.format("%07d", room.getID())), JLabel.CENTER);
+            JLabel introduction = new JLabel("房间名： " + room.getName(), JLabel.CENTER);
             JLabel gameType;
-            if (room.getUserR() == 0){
-                gameType = new JLabel("人数： "+"缺",JLabel.CENTER);
-            }else {
-                gameType = new JLabel("人数： "+"满",JLabel.CENTER);
+            if (room.getUserR() == 0) {
+                gameType = new JLabel("人数： " + "缺", JLabel.CENTER);
+            } else {
+                gameType = new JLabel("人数： " + "满", JLabel.CENTER);
             }
 
-            JLabel first = new JLabel("先着： "+String.valueOf(room.getWhoFirst()),JLabel.CENTER);
+            JLabel first = new JLabel("先着： " + String.valueOf(room.getWhoFirst()), JLabel.CENTER);
             add(id);
             add(introduction);
             add(gameType);
@@ -164,25 +174,26 @@ public class RoomListPanel extends JPanel {
         public Room getRoom() {
             return room;
         }
+
         private void addListener() {
             addMouseListener(new MouseAdapter() {
                 @Override
                 public void mouseClicked(MouseEvent e) {
                     super.mouseClicked(e);
-                    if (roomListPanel.selectedRIP == null){
+                    if (roomListPanel.selectedRIP == null) {
                         roomListPanel.selectedRIP = roomInformationPanel;
-                        setBackground(new Color(0,0,0,100));
+                        setBackground(new Color(0, 0, 0, 100));
                         clicked = true;
-                    }else {
-                        if (clicked){
-                            setBackground(new Color(0,0,0,0));
+                    } else {
+                        if (clicked) {
+                            setBackground(new Color(0, 0, 0, 0));
                             roomListPanel.selectedRIP = null;
                             clicked = false;
-                        }else {
+                        } else {
                             roomListPanel.selectedRIP.clicked = false;
-                            roomListPanel.selectedRIP.setBackground(new Color(0,0,0,0));
+                            roomListPanel.selectedRIP.setBackground(new Color(0, 0, 0, 0));
                             roomListPanel.selectedRIP = roomInformationPanel;
-                            setBackground(new Color(0,0,0,100));
+                            setBackground(new Color(0, 0, 0, 100));
                             clicked = true;
                         }
                     }
@@ -193,7 +204,7 @@ public class RoomListPanel extends JPanel {
                 public void mouseEntered(MouseEvent e) {
                     super.mouseEntered(e);
                     if (!clicked) {
-                        setBackground(new Color(0,0,0,50));
+                        setBackground(new Color(0, 0, 0, 50));
                         roomListPanel.flush();
                     }
                 }
@@ -201,8 +212,8 @@ public class RoomListPanel extends JPanel {
                 @Override
                 public void mouseExited(MouseEvent e) {
                     super.mouseExited(e);
-                    if (!clicked){
-                        setBackground(new Color(0,0,0,0));
+                    if (!clicked) {
+                        setBackground(new Color(0, 0, 0, 0));
                         roomListPanel.flush();
                     }
 

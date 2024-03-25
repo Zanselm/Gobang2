@@ -9,7 +9,7 @@ import constant.MessageConstant;
  */
 
 public class CreateRoomResponse extends Message implements MessageConstant {
-    public CreateRoomResponse(int state,String text){
-        super(INFORM,"CreateRoomResponse",state, SERVER,0,"Room",UNKNOWN,text);
+    public CreateRoomResponse(int state, String text) {
+        super(INFORM, "CreateRoomResponse", state, SERVER, 0, "Room", UNKNOWN, text);
     }
 }

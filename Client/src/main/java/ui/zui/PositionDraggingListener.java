@@ -15,7 +15,7 @@ import java.awt.event.MouseMotionAdapter;
  */
 
 public class PositionDraggingListener {
-    public static void addPositionDraggingListener(@NotNull JFrame frame){
+    public static void addPositionDraggingListener(@NotNull JFrame frame) {
         Point origin = new Point();
         frame.addMouseListener(new MouseAdapter() {
             @Override

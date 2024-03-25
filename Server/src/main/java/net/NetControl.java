@@ -12,21 +12,23 @@ import net.message.Message;
  */
 
 public class NetControl {
-    private ConnectThread connectThread;
     private static final Gson gson = new Gson();
     private static final int ERROR = -1;
     private static final int HELLO = 0;
     private static final int BYE = 1;
     private static final int FORWARD = 2;
+    private ConnectThread connectThread;
+
     private NetControl() {
     }
 
     public NetControl(ConnectThread connectThread) {
         this.connectThread = connectThread;
     }
-    public void acceptMessage(Message message){
+
+    public void acceptMessage(Message message) {
         int type = analyse(message);
-        switch (type){
+        switch (type) {
             case HELLO -> hello(message);
             case BYE -> shutdown();
             case FORWARD -> forward(message);
@@ -38,18 +40,26 @@ public class NetControl {
         connectThread.addMessage(gson.toJson(new HelloResponse()));
     }
 
-    private void shutdown(){
+    private void shutdown() {
         connectThread.shutdown();
         Transmitter.offline(connectThread);
     }
-    private void forward(Message message){
+
+    private void forward(Message message) {
         Transmitter.forward(message);
     }
+
     private int analyse(Message message) {
         String messageName = message.getMessageName();
-        if("HelloMessage".equals(messageName)){return HELLO;}
-        if("ByeMessage".equals(messageName)){return BYE;}
-        if("ForwardMessage".equals(messageName)){return FORWARD;}
+        if ("HelloMessage".equals(messageName)) {
+            return HELLO;
+        }
+        if ("ByeMessage".equals(messageName)) {
+            return BYE;
+        }
+        if ("ForwardMessage".equals(messageName)) {
+            return FORWARD;
+        }
         return ERROR;
     }
 }

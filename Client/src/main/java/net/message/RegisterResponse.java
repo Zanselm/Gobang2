@@ -11,10 +11,12 @@ import constant.MessageConstant;
 public class RegisterResponse extends Message implements MessageConstant {
     public RegisterResponse() {
     }
+
     public RegisterResponse(int state, String message) {
-        super(INFORM,"RegisterResponse", state, "String", message);
+        super(INFORM, "RegisterResponse", state, "String", message);
     }
+
     public RegisterResponse(int state) {
-        super(INFORM,"RegisterResponse", state, "String", "NULL");
+        super(INFORM, "RegisterResponse", state, "String", "NULL");
     }
 }

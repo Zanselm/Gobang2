@@ -3,7 +3,6 @@ package ui.zui;
 import utils.ImageResizer;
 
 import javax.swing.*;
-import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.net.URL;
@@ -18,8 +17,6 @@ import java.util.Objects;
 public class ExitButton extends JButton {
     static ImageIcon blackExit;
     static ImageIcon redExit;
-    ImageIcon redFinalIcon;
-    ImageIcon blackFinalIcon;
 
     static {
         URL blackURL = Objects.requireNonNull(ExitButton.class.getClassLoader().getResource("images/exit_black.png"));
@@ -27,6 +24,9 @@ public class ExitButton extends JButton {
         blackExit = new ImageIcon(blackURL);
         redExit = new ImageIcon(redURL);
     }
+
+    ImageIcon redFinalIcon;
+    ImageIcon blackFinalIcon;
 
     public ExitButton(int x, int y, int width, int height) {
         init(x, y, width, height);
@@ -47,12 +47,12 @@ public class ExitButton extends JButton {
 //        Image redExitImage = redExit.getImage();
 //        redExitImage = redExitImage.getScaledInstance(getWidth(), getHeight(), Image.SCALE_FAST);
 //        redFinalIcon = new ImageIcon(redExitImage);
-        redFinalIcon = ImageResizer.resize(redExit,getWidth(),getHeight());
+        redFinalIcon = ImageResizer.resize(redExit, getWidth(), getHeight());
 
 //        Image blackExitImage = blackExit.getImage();
 //        blackExitImage = blackExitImage.getScaledInstance(getWidth(), getHeight(), Image.SCALE_FAST);
 //        blackFinalIcon = new ImageIcon(blackExitImage);
-        blackFinalIcon = ImageResizer.resize(blackExit,getWidth(),getHeight());
+        blackFinalIcon = ImageResizer.resize(blackExit, getWidth(), getHeight());
     }
 
     private void addListener() {

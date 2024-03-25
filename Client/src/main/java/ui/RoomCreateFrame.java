@@ -28,16 +28,8 @@ import java.util.Objects;
 
 public class RoomCreateFrame extends JFrame implements GameConstant {
     private static final Font font;
-    private static RoomCreateFrame roomCreateFrame;
-    private ExitButton exitButton;
-    private ZMainButton createButton;
-    private final boolean isClientExist = Client.isSocketExist();
-    ZTextField nameField;
-    ZTextField instructionField;
-    ButtonGroup gameType;
-    ButtonGroup whoFirst;
-    ButtonGroup observable;
     static HashMap<String, Integer> roomMap;
+    private static RoomCreateFrame roomCreateFrame;
 
     static {
         font = FontLoader.getFont();
@@ -53,16 +45,14 @@ public class RoomCreateFrame extends JFrame implements GameConstant {
 
     }
 
-    public static void main(String[] args) {
-        RoomCreateFrame.getRoomCreateFrame();
-    }
-
-    public static RoomCreateFrame getRoomCreateFrame() {
-        if (roomCreateFrame == null) {
-            roomCreateFrame = new RoomCreateFrame();
-        }
-        return roomCreateFrame;
-    }
+    private final boolean isClientExist = Client.isSocketExist();
+    ZTextField nameField;
+    ZTextField instructionField;
+    ButtonGroup gameType;
+    ButtonGroup whoFirst;
+    ButtonGroup observable;
+    private ExitButton exitButton;
+    private ZMainButton createButton;
 
     private RoomCreateFrame() throws HeadlessException {
         init();
@@ -74,6 +64,17 @@ public class RoomCreateFrame extends JFrame implements GameConstant {
 
         addBackground();
         setVisible(true);
+    }
+
+    public static void main(String[] args) {
+        RoomCreateFrame.getRoomCreateFrame();
+    }
+
+    public static RoomCreateFrame getRoomCreateFrame() {
+        if (roomCreateFrame == null) {
+            roomCreateFrame = new RoomCreateFrame();
+        }
+        return roomCreateFrame;
     }
 
     private void addText() {
@@ -152,16 +153,16 @@ public class RoomCreateFrame extends JFrame implements GameConstant {
                 get result = getResult();
                 Room room = new Room(0, nameField.getText(), instructionField.getText(), LocalUser.getUserID()
                         , 0, result.gameTypeNum(), result.whoFirstNum(), result.observableBoolean());
-                if (isClientExist){
-                    if (room.getGameType() == ONLINE_GAME_TWO_PLAYER){
+                if (isClientExist) {
+                    if (room.getGameType() == ONLINE_GAME_TWO_PLAYER) {
                         Client.addMessage(MyGson.toJson(new CreateRoomMessage(MyGson.toJson(room))));
-                    }else {
-                        new GameFrame(room.getGameType(),room.getWhoFirst());
+                    } else {
+                        new GameFrame(room.getGameType(), room.getWhoFirst());
                         dispose();
                     }
-                }else {
-                    new GameFrame(room.getGameType(),room.getWhoFirst());
-                    System.out.println("本地游戏房间消息："+MyGson.toJson(room));
+                } else {
+                    new GameFrame(room.getGameType(), room.getWhoFirst());
+                    System.out.println("本地游戏房间消息：" + MyGson.toJson(room));
                     dispose();
                 }
             }
@@ -181,18 +182,15 @@ public class RoomCreateFrame extends JFrame implements GameConstant {
                 }
                 Integer observableNum = null;
                 boolean observableBoolean;
-                if (isClientExist){
+                if (isClientExist) {
                     if (observableButton != null) {
                         observableNum = roomMap.get(observableButton.getName());
                     }
                     observableBoolean = observableNum == CAN;
-                }else {
+                } else {
                     observableBoolean = false;
                 }
                 return new get(gameTypeNum, whoFirstNum, observableBoolean);
-            }
-
-            private record get(Integer gameTypeNum, Integer whoFirstNum, boolean observableBoolean) {
             }
 
             private @Nullable ZRadioButton getSelectedButton(@NotNull ButtonGroup buttonGroup) {
@@ -204,6 +202,9 @@ public class RoomCreateFrame extends JFrame implements GameConstant {
                     }
                 }
                 return null;
+            }
+
+            private record get(Integer gameTypeNum, Integer whoFirstNum, boolean observableBoolean) {
             }
         });
         add(createButton);

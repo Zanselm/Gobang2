@@ -22,11 +22,8 @@ import java.util.Objects;
  */
 
 public class RegisterFrame extends JFrame {
-    public static void main(String[] args) {
-        getRegisterFrame();
-    }
-
     private static RegisterFrame registerFrame;
+    HeadshotPanel headshotPanel;
     private Font font;
     private ZMainButton registerButton;
     private ExitButton exitButton;
@@ -39,8 +36,6 @@ public class RegisterFrame extends JFrame {
     private CheckLabel sexCheck;
     private CheckLabel passwordCheck;
     private CheckLabel repeatCheck;
-    HeadshotPanel headshotPanel;
-
     private RegisterFrame() {
         init();
 
@@ -55,11 +50,23 @@ public class RegisterFrame extends JFrame {
         setVisible(true);
     }
 
+    public static void main(String[] args) {
+        getRegisterFrame();
+    }
+
+    public static RegisterFrame getRegisterFrame() {
+        if (registerFrame == null) {
+            registerFrame = new RegisterFrame();
+            registerFrame.setVisible(false);
+        }
+        return registerFrame;
+    }
+
     private void addLogin() {
         ZButton register = new ZButton(200, 100, 30, ZButton.LOGIN);
         add(register);
         JLabel jLabel = new JLabel();
-        jLabel.setBounds(200,130,40,20);
+        jLabel.setBounds(200, 130, 40, 20);
         add(jLabel);
         register.addMouseListener(new MouseAdapter() {
             @Override
@@ -88,14 +95,6 @@ public class RegisterFrame extends JFrame {
         setVisible(false);
 
 
-    }
-
-    public static RegisterFrame getRegisterFrame() {
-        if (registerFrame == null) {
-            registerFrame = new RegisterFrame();
-            registerFrame.setVisible(false);
-        }
-        return registerFrame;
     }
 
     private void addHeadshotPanel() {

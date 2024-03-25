@@ -11,8 +11,8 @@ import entity.user.User;
  */
 
 public class EnterGameUserMessage extends Message implements MessageConstant {
-        public EnterGameUserMessage(int userId,User user){
-            super(FORWARD,"EnterGameUserMessage",NO,SERVER ,userId,"User",1,new Gson().toJson(user));
+    public EnterGameUserMessage(int userId, User user) {
+        super(FORWARD, "EnterGameUserMessage", NO, SERVER, userId, "User", 1, new Gson().toJson(user));
 
     }
 }

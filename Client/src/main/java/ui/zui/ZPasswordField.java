@@ -15,15 +15,16 @@ import java.awt.event.MouseEvent;
 
 public class ZPasswordField extends JPasswordField {
     static Font font;
+
+    static {
+        font = FontLoader.getFont();
+    }
+
     String text;
     int width = 0;
     int height = 0;
     int x = 0;
     int y = 0;
-
-    static {
-        font = FontLoader.getFont();
-    }
 
     public ZPasswordField() {
         this.text = "";
@@ -82,7 +83,8 @@ public class ZPasswordField extends JPasswordField {
     public void showPassword() {
         setEchoChar((char) 0);
     }
-    public String getContent(){
+
+    public String getContent() {
         return new String(getPassword());
     }
 

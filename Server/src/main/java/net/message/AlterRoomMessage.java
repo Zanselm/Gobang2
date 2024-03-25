@@ -11,10 +11,11 @@ import entity.room.Room;
  */
 
 public class AlterRoomMessage extends Message implements MessageConstant {
-    public AlterRoomMessage(String text){
-        super(FORWARD,"AlterRoomMessage",NO, SERVER,ALL_USER,"Room",1,text);
+    public AlterRoomMessage(String text) {
+        super(FORWARD, "AlterRoomMessage", NO, SERVER, ALL_USER, "Room", 1, text);
     }
-    public AlterRoomMessage(Room room){
-        super(FORWARD,"AlterRoomMessage",NO, SERVER,ALL_USER,"Room",1,new Gson().toJson(room));
+
+    public AlterRoomMessage(Room room) {
+        super(FORWARD, "AlterRoomMessage", NO, SERVER, ALL_USER, "Room", 1, new Gson().toJson(room));
     }
 }

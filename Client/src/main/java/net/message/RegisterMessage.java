@@ -16,6 +16,6 @@ public class RegisterMessage extends Message implements MessageConstant {
     }
 
     public RegisterMessage(User user) {
-        super(GET,"RegisterMessage", NO, "User", new Gson().toJson(user));
+        super(GET, "RegisterMessage", NO, "User", new Gson().toJson(user));
     }
 }

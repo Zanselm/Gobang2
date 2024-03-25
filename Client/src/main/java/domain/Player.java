@@ -9,10 +9,11 @@ public class Player extends User implements GameConstant {
     public Player() {
     }
 
-    public Player(User user,int pieceType) {
-        super(user.getId(),user.getName(),user.getSex(),"",user.getWin(), user.getLose(), user.getAvatar());
+    public Player(User user, int pieceType) {
+        super(user.getId(), user.getName(), user.getSex(), "", user.getWin(), user.getLose(), user.getAvatar());
         this.pieceType = pieceType;
     }
+
     public int getPieceType() {
         return pieceType;
     }

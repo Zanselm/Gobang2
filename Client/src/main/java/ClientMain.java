@@ -1,16 +1,7 @@
-
-import entity.Room;
-import entity.User;
 import net.Client;
-import net.message.*;
-import ui.GameLobbyFrame;
 import ui.LoginFrame;
-import ui.RegisterFrame;
-import utils.MyGson;
 
 import java.io.IOException;
-import java.util.Objects;
-import java.util.Scanner;
 
 /**
  * @author Anselm

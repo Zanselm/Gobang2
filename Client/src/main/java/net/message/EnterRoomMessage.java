@@ -12,10 +12,11 @@ import utils.MyGson;
  */
 
 public class EnterRoomMessage extends Message implements MessageConstant {
-    public EnterRoomMessage(Room room){
-        super(GET,"EnterRoomMessage",NO, LocalUser.getUserID(),SERVER,"Room",1, MyGson.toJson(room));
+    public EnterRoomMessage(Room room) {
+        super(GET, "EnterRoomMessage", NO, LocalUser.getUserID(), SERVER, "Room", 1, MyGson.toJson(room));
     }
-    public EnterRoomMessage(String room){
-        super(GET,"EnterRoomMessage",NO, LocalUser.getUserID(),SERVER,"Room",1, room);
+
+    public EnterRoomMessage(String room) {
+        super(GET, "EnterRoomMessage", NO, LocalUser.getUserID(), SERVER, "Room", 1, room);
     }
 }

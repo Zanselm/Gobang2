@@ -7,7 +7,10 @@ import utils.FontLoader;
 import javax.swing.*;
 import javax.swing.text.DefaultCaret;
 import java.awt.*;
-import java.awt.event.*;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 
 public class ZTextField extends JTextField {
     private Font font = FontLoader.getFont();
@@ -98,7 +101,7 @@ public class ZTextField extends JTextField {
                     }
                 }
             }
-            if (frame == null){
+            if (frame == null) {
                 Thread.currentThread().interrupt();
             }
         };

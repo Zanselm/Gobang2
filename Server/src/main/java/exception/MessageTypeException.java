@@ -6,7 +6,7 @@ package exception;
  * description
  */
 
-public class MessageTypeException extends RuntimeException{
+public class MessageTypeException extends RuntimeException {
     public MessageTypeException() {
     }
 

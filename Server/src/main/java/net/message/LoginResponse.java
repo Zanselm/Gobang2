@@ -17,7 +17,8 @@ public class LoginResponse extends Message implements MessageConstant {
     public LoginResponse(int state, User user) {
         super(INFORM, "LoginResponse", state, "String", new Gson().toJson(user));
     }
-    public LoginResponse(int state,String text) {
+
+    public LoginResponse(int state, String text) {
         super(INFORM, "LoginResponse", state, "String", text);
     }
 }

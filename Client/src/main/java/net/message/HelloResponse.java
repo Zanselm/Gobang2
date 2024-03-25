@@ -1,7 +1,6 @@
 package net.message;
 
 import constant.MessageConstant;
-import net.message.Message;
 
 /**
  * @author Anselm

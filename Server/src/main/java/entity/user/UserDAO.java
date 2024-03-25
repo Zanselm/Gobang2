@@ -2,7 +2,10 @@ package entity.user;
 
 import org.jetbrains.annotations.NotNull;
 
-import java.sql.*;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 /**
  * @author Anselm
@@ -14,9 +17,18 @@ public class UserDAO {
     Connection conn;
     User user;
 
-    public UserDAO(Connection conn,User user) {
+    public UserDAO(Connection conn, User user) {
         this.conn = conn;
         this.user = user;
+    }
+
+    private static void set(User user, @NotNull PreparedStatement pstmt) throws SQLException {
+        pstmt.setString(1, user.getName());
+        pstmt.setString(2, user.getSex());
+        pstmt.setInt(3, user.getWin());
+        pstmt.setInt(4, user.getLose());
+        pstmt.setString(5, user.getPassword());
+        pstmt.setInt(6, user.getAvatar());
     }
 
     public int insert() throws SQLException {
@@ -53,7 +65,7 @@ public class UserDAO {
 //        从连接中获取执行对象
         int id = user.getId();
         PreparedStatement pstmt;
-        if (id == 0){
+        if (id == 0) {
             String sql = "select * from user where  name = ?";
             pstmt = conn.prepareStatement(sql);
 
@@ -63,9 +75,9 @@ public class UserDAO {
         }
 
 //        设置参数
-        if (id == 0){
+        if (id == 0) {
             pstmt.setString(1, user.getName());
-        }else{
+        } else {
             pstmt.setInt(1, id);
         }
 
@@ -73,7 +85,9 @@ public class UserDAO {
         ResultSet resultSet = pstmt.executeQuery();
 
 //        获取User
-        if (!resultSet.next()){return null;}
+        if (!resultSet.next()) {
+            return null;
+        }
         User severUser = new User();
         severUser.setId(resultSet.getInt("id"));
         severUser.setName(resultSet.getNString("name"));
@@ -105,15 +119,6 @@ public class UserDAO {
 //        释放
         pstmt.close();
         return i;
-    }
-
-    private static void set(User user, @NotNull PreparedStatement pstmt) throws SQLException {
-        pstmt.setString(1, user.getName());
-        pstmt.setString(2, user.getSex());
-        pstmt.setInt(3, user.getWin());
-        pstmt.setInt(4, user.getLose());
-        pstmt.setString(5, user.getPassword());
-        pstmt.setInt(6, user.getAvatar());
     }
 
 }

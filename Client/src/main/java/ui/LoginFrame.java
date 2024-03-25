@@ -4,7 +4,9 @@ import com.google.gson.Gson;
 import entity.User;
 import net.Client;
 import net.LocalUser;
-import net.message.*;
+import net.message.ByeMessage;
+import net.message.LoginMessage;
+import net.message.Message;
 import org.jetbrains.annotations.NotNull;
 import ui.zui.*;
 import utils.FontLoader;
@@ -30,23 +32,12 @@ public class LoginFrame extends JFrame {
     private ExitButton exitButton;
     private CheckLabel accountCheck;
 
-    public static void main(String[] args) {
-        LoginFrame.getLoginFrame();
-    }
-
-    public static LoginFrame getLoginFrame(){
-        if (loginFrame == null){
-            loginFrame = new LoginFrame();
-        }
-        return loginFrame;
-    }
     private LoginFrame() throws HeadlessException {
         init();
         addTextField();
         addLoginButton();
         addExitButton();
         addRegister();
-
 
 
 //        ZButton button = new ZButton(100, 100, 50, ZButton.LOGIN);
@@ -63,7 +54,18 @@ public class LoginFrame extends JFrame {
         setVisible(true);
     }
 
-    public static void successRegister(){
+    public static void main(String[] args) {
+        LoginFrame.getLoginFrame();
+    }
+
+    public static LoginFrame getLoginFrame() {
+        if (loginFrame == null) {
+            loginFrame = new LoginFrame();
+        }
+        return loginFrame;
+    }
+
+    public static void successRegister() {
         RegisterFrame registerFrame = RegisterFrame.getRegisterFrame();
         registerFrame.setVisible(false);
         loginFrame.setLocation(registerFrame.getLocation());
@@ -76,7 +78,7 @@ public class LoginFrame extends JFrame {
         ZButton register = new ZButton(200, 100, 30, ZButton.REGISTER);
         add(register);
         JLabel jLabel = new JLabel();
-        jLabel.setBounds(200,130,40,20);
+        jLabel.setBounds(200, 130, 40, 20);
         add(jLabel);
         register.addMouseListener(new MouseAdapter() {
             @Override
@@ -110,7 +112,7 @@ public class LoginFrame extends JFrame {
                 LoginFrame.class.getClassLoader().getResource("images/loginBackground.png"));
         ImageIcon loginBackgroundIcon = new ImageIcon(loginBackground);
         JLabel label = new JLabel(loginBackgroundIcon);
-        label.setBounds(0,0,getWidth(),getHeight());
+        label.setBounds(0, 0, getWidth(), getHeight());
         add(label);
     }
 
@@ -126,16 +128,16 @@ public class LoginFrame extends JFrame {
             @Override
             public void mouseClicked(MouseEvent e) {
                 super.mouseClicked(e);
-                if (!examine()){
+                if (!examine()) {
                     accountCheck.setText("请检查您的输入");
                     java.awt.Toolkit.getDefaultToolkit().beep();
                     return;
                 }
-                if (Client.isSocketExist()){
+                if (Client.isSocketExist()) {
                     accountCheck.clean();
-                    User loginUser = new User(0, new String(accountField.getPassword()),null,new String(passwordField.getPassword()),0,0,0);
+                    User loginUser = new User(0, new String(accountField.getPassword()), null, new String(passwordField.getPassword()), 0, 0, 0);
                     Client.addMessage(new LoginMessage(loginUser));
-                }else {
+                } else {
                     accountCheck.clean();
                     System.out.println("未连接服务器");
                     java.awt.Toolkit.getDefaultToolkit().beep();
@@ -147,7 +149,7 @@ public class LoginFrame extends JFrame {
                     case "", "请输入您的账号" -> false;
                     default -> true;
                 };
-                if (accountField.getContent().isEmpty()){
+                if (accountField.getContent().isEmpty()) {
                     sign = false;
                 }
                 return sign;
@@ -155,10 +157,11 @@ public class LoginFrame extends JFrame {
         });
     }
 
-    public void LoginFailed(String text){
+    public void LoginFailed(String text) {
         accountCheck.setText(text);
     }
-    public void LoginSuccessful(@NotNull Message message){
+
+    public void LoginSuccessful(@NotNull Message message) {
         Gson gson = new Gson();
         LocalUser.online(gson.fromJson(message.getMessage(), User.class));
         GameLobbyFrame.getGameLobbyFrame().setVisible(true);
@@ -169,7 +172,7 @@ public class LoginFrame extends JFrame {
     }
 
     private void addExitButton() {
-        exitButton = new ExitButton(830,60,50,50);
+        exitButton = new ExitButton(830, 60, 50, 50);
         addExitListener();
         add(exitButton);
     }
@@ -191,19 +194,19 @@ public class LoginFrame extends JFrame {
         accountField = new ZPasswordField("请输入您的账号", 350, 200, 300, 50);
         accountField.showPassword();
         passwordField = new ZPasswordField("", 350, 290, 300, 50);
-        accountCheck = new CheckLabel(650,220,200,20);
+        accountCheck = new CheckLabel(650, 220, 200, 20);
         add(accountField);
         add(passwordField);
         add(accountCheck);
 
-        EyeButton eyeButton = new EyeButton(passwordField,670,310,40);
+        EyeButton eyeButton = new EyeButton(passwordField, 670, 310, 40);
         add(eyeButton);
     }
 
     private void init() {
         loadFont();
         setLayout(null);
-        setBounds(500,500,995,522);
+        setBounds(500, 500, 995, 522);
         this.setUndecorated(true);
         this.setBackground(new Color(0, 0, 0, 0));
         setResizable(false);

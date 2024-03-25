@@ -28,28 +28,17 @@ import java.util.Objects;
 public class GameLobbyFrame extends JFrame {
     private static final Font font;
     private static GameLobbyFrame gameLobbyFrame;
+
+    static {
+        font = FontLoader.getFont();
+    }
+
     private ExitButton exitButton;
     private ZButton settingButton;
     private RoomListPanel roomListPanel;
     private ZMainButton createRoomButton;
     private ZMainButton enterRoomButton;
     private ZTextField textField;
-
-
-    static {
-        font = FontLoader.getFont();
-    }
-
-    public static void main(String[] args) {
-        GameLobbyFrame.getGameLobbyFrame();
-    }
-
-    public static GameLobbyFrame getGameLobbyFrame() {
-        if (gameLobbyFrame == null) {
-            gameLobbyFrame = new GameLobbyFrame();
-        }
-        return gameLobbyFrame;
-    }
 
     private GameLobbyFrame() throws HeadlessException {
         init();
@@ -68,16 +57,27 @@ public class GameLobbyFrame extends JFrame {
         Client.addMessage(new GetRoomsMessage());
     }
 
+    public static void main(String[] args) {
+        GameLobbyFrame.getGameLobbyFrame();
+    }
+
+    public static GameLobbyFrame getGameLobbyFrame() {
+        if (gameLobbyFrame == null) {
+            gameLobbyFrame = new GameLobbyFrame();
+        }
+        return gameLobbyFrame;
+    }
+
     private void addEnterRoomButton() {
-        enterRoomButton = new ZMainButton(750,450,300,120,"进入房间");
+        enterRoomButton = new ZMainButton(750, 450, 300, 120, "进入房间");
         enterRoomButton.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
                 super.mouseClicked(e);
                 RoomListPanel.RoomInformationPanel selectedRIP = roomListPanel.getSelectedRIP();
-                if (selectedRIP == null){
+                if (selectedRIP == null) {
                     System.out.println("Room = NULL");
-                }else {
+                } else {
                     Room room = selectedRIP.getRoom();
                     room.setUserR(LocalUser.getUserID());
                     System.out.println(MyGson.toJson(room));
@@ -90,7 +90,7 @@ public class GameLobbyFrame extends JFrame {
     }
 
     private void addCreateRoomButton() {
-        createRoomButton = new ZMainButton(750,250,300,120,"创建房间");
+        createRoomButton = new ZMainButton(750, 250, 300, 120, "创建房间");
         createRoomButton.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
@@ -129,9 +129,9 @@ public class GameLobbyFrame extends JFrame {
     }
 
     private void addUserInformation() {
-        if (LocalUser.localUser == null){
-            add(new UserPanel(new User(0,"本地用户","男","",0,0,0), 200, 150, 700, 100));
-        }else {
+        if (LocalUser.localUser == null) {
+            add(new UserPanel(new User(0, "本地用户", "男", "", 0, 0, 0), 200, 150, 700, 100));
+        } else {
             add(new UserPanel(LocalUser.getLocalUser(), 200, 150, 700, 100));
         }
     }
@@ -162,10 +162,12 @@ public class GameLobbyFrame extends JFrame {
             }
         });
     }
-    public void addRoom(Message message){
+
+    public void addRoom(Message message) {
         roomListPanel.addRoom(MyGson.fromJson(message.getMessage(), Room.class));
     }
-    public void addRooms(Message message){
+
+    public void addRooms(Message message) {
         Room[] rooms = MyGson.fromJson(message.getMessage(), Room[].class);
         roomListPanel.addRoomList(rooms);
     }

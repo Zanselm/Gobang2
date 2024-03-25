@@ -13,11 +13,11 @@ import java.util.Random;
 public class AI extends Player implements GameConstant {
 
     private Chessboard chessboard;
-    private HashMap<String,Integer> weights;
+    private HashMap<String, Integer> weights;
     private int[][] weightBoardWhite;
     private int[][] weightBoardBlack;
 
-    public AI( int pieceType, Chessboard chessboard) {
+    public AI(int pieceType, Chessboard chessboard) {
         this.setName("AI");
         if (pieceType == WHITE || pieceType == BLACK) {
             this.setPieceType(pieceType);
@@ -140,7 +140,7 @@ public class AI extends Player implements GameConstant {
         weights.put("0111110", 10000);  //活五
     }
 
-    public void scan(){
+    public void scan() {
 //        清理权值版
         clearWightBoard(weightBoardBlack);
         clearWightBoard(weightBoardWhite);
@@ -148,9 +148,9 @@ public class AI extends Player implements GameConstant {
         for (int i = 0; i < 15; i++) {
             for (int j = 0; j < Chessboard.CHESSBOARD_SIZE; j++) {
 //                判断落点是否有子，有子的话跳过。
-                if (chessboard.isHavePiece(j,i))continue;
-                scanPiece(i,j, BLACK);
-                scanPiece(i,j, WHITE);
+                if (chessboard.isHavePiece(j, i)) continue;
+                scanPiece(i, j, BLACK);
+                scanPiece(i, j, WHITE);
 
             }
 
@@ -167,61 +167,61 @@ public class AI extends Player implements GameConstant {
 
     private void scanPiece(int i, int j, int pieceType) {
         StringBuilder count;
-        if (pieceType == WHITE){
+        if (pieceType == WHITE) {
             count = new StringBuilder("2");
-        } else{
+        } else {
             count = new StringBuilder("1");
         }
 //                左右
         for (int k = 1; k < 5; k++) {
-            if (j != 0){
-                if (chessboard.getPieceLocation()[i][j -k]==WHITE){
+            if (j != 0) {
+                if (chessboard.getPieceLocation()[i][j - k] == WHITE) {
                     if (pieceType == WHITE) {
                         count.insert(0, "2");
-                        if (j-k-1<=0) break;
+                        if (j - k - 1 <= 0) break;
                     }
-                    if (pieceType == BLACK){
-                        count.insert(0,"2");
+                    if (pieceType == BLACK) {
+                        count.insert(0, "2");
                         break;
                     }
-                }else if (chessboard.getPieceLocation()[i][j -k]==BLACK){
+                } else if (chessboard.getPieceLocation()[i][j - k] == BLACK) {
                     if (pieceType == WHITE) {
-                        count.insert(0,"1");
+                        count.insert(0, "1");
                         break;
                     }
-                    if (pieceType == BLACK){
+                    if (pieceType == BLACK) {
                         count.insert(0, "1");
-                        if (j-k-1<=0) break;
+                        if (j - k - 1 <= 0) break;
                     }
 
-                }else if (chessboard.getPieceLocation()[i][j -k]==NO_CHESS_PIECE){
-                    count.insert(0,"0");
+                } else if (chessboard.getPieceLocation()[i][j - k] == NO_CHESS_PIECE) {
+                    count.insert(0, "0");
                     break;
                 }
             }
 
         }
         for (int k = 1; k < 5; k++) {
-            if (j != 14){
-                if (chessboard.getPieceLocation()[i][j +k]==WHITE){
+            if (j != 14) {
+                if (chessboard.getPieceLocation()[i][j + k] == WHITE) {
                     if (pieceType == WHITE) {
                         count.append("2");
-                        if (j+k+1>=14) break;
+                        if (j + k + 1 >= 14) break;
                     }
-                    if (pieceType == BLACK){
+                    if (pieceType == BLACK) {
                         count.append("2");
                         break;
                     }
-                }else if (chessboard.getPieceLocation()[i][j +k]==BLACK){
+                } else if (chessboard.getPieceLocation()[i][j + k] == BLACK) {
                     if (pieceType == WHITE) {
                         count.append("1");
                         break;
                     }
-                    if (pieceType == BLACK){
+                    if (pieceType == BLACK) {
                         count.append("1");
-                        if (j+k+1>=14) break;
+                        if (j + k + 1 >= 14) break;
                     }
-                }else {
+                } else {
                     count.append("0");
                     break;
                 }
@@ -232,56 +232,56 @@ public class AI extends Player implements GameConstant {
 
 //                上下
         for (int k = 1; k < 5; k++) {
-            if (i!=0){
-                if (chessboard.getPieceLocation()[i-k][j]==WHITE){
+            if (i != 0) {
+                if (chessboard.getPieceLocation()[i - k][j] == WHITE) {
                     if (pieceType == WHITE) {
-                        count.insert(0,"2");
-                        if (i-k-1<=0) break;
+                        count.insert(0, "2");
+                        if (i - k - 1 <= 0) break;
                     }
-                    if (pieceType == BLACK){
-                        count.insert(0,"2");
+                    if (pieceType == BLACK) {
+                        count.insert(0, "2");
                         break;
                     }
                 }
-                if (chessboard.getPieceLocation()[i-k][j]==BLACK){
+                if (chessboard.getPieceLocation()[i - k][j] == BLACK) {
                     if (pieceType == WHITE) {
-                        count.insert(0,"1");
+                        count.insert(0, "1");
                         break;
                     }
-                    if (pieceType == BLACK){
-                        count.insert(0,"1");
-                        if (i-k-1<=0) break;
+                    if (pieceType == BLACK) {
+                        count.insert(0, "1");
+                        if (i - k - 1 <= 0) break;
                     }
                 }
-                if (chessboard.getPieceLocation()[i-k][j]==NO_CHESS_PIECE){
-                    count.insert(0,"0");
+                if (chessboard.getPieceLocation()[i - k][j] == NO_CHESS_PIECE) {
+                    count.insert(0, "0");
                     break;
                 }
             }
         }
         for (int k = 1; k < 5; k++) {
-            if (i!=14){
-                if (chessboard.getPieceLocation()[i+k][j]==WHITE){
+            if (i != 14) {
+                if (chessboard.getPieceLocation()[i + k][j] == WHITE) {
                     if (pieceType == WHITE) {
                         count.append("2");
-                        if (i+k+1>=14) break;
+                        if (i + k + 1 >= 14) break;
                     }
-                    if (pieceType == BLACK){
+                    if (pieceType == BLACK) {
                         count.append("2");
                         break;
                     }
                 }
-                if (chessboard.getPieceLocation()[i+k][j]==BLACK){
+                if (chessboard.getPieceLocation()[i + k][j] == BLACK) {
                     if (pieceType == WHITE) {
                         count.append("1");
                         break;
                     }
-                    if (pieceType == BLACK){
+                    if (pieceType == BLACK) {
                         count.append("1");
-                        if (i+k+1>=14) break;
+                        if (i + k + 1 >= 14) break;
                     }
                 }
-                if (chessboard.getPieceLocation()[i+k][j]==NO_CHESS_PIECE){
+                if (chessboard.getPieceLocation()[i + k][j] == NO_CHESS_PIECE) {
                     count.append("0");
                     break;
                 }
@@ -291,56 +291,56 @@ public class AI extends Player implements GameConstant {
 
 //                左上右下
         for (int k = 1; k < 5; k++) {
-            if (i!=0&&j!=0){
-                if (chessboard.getPieceLocation()[i-k][j-k]==WHITE){
+            if (i != 0 && j != 0) {
+                if (chessboard.getPieceLocation()[i - k][j - k] == WHITE) {
                     if (pieceType == WHITE) {
-                        count.insert(0,"2");
-                        if (i-k-1<=0||j-k-1<=0) break;
+                        count.insert(0, "2");
+                        if (i - k - 1 <= 0 || j - k - 1 <= 0) break;
                     }
-                    if (pieceType == BLACK){
-                        count.insert(0,"2");
+                    if (pieceType == BLACK) {
+                        count.insert(0, "2");
                         break;
                     }
                 }
-                if (chessboard.getPieceLocation()[i-k][j-k]==BLACK){
+                if (chessboard.getPieceLocation()[i - k][j - k] == BLACK) {
                     if (pieceType == WHITE) {
-                        count.insert(0,"1");
+                        count.insert(0, "1");
                         break;
                     }
-                    if (pieceType == BLACK){
-                        count.insert(0,"1");
-                        if (i-k-1<=0||j-k-1<=0) break;
+                    if (pieceType == BLACK) {
+                        count.insert(0, "1");
+                        if (i - k - 1 <= 0 || j - k - 1 <= 0) break;
                     }
                 }
-                if (chessboard.getPieceLocation()[i-k][j-k]==NO_CHESS_PIECE){
-                    count.insert(0,"0");
+                if (chessboard.getPieceLocation()[i - k][j - k] == NO_CHESS_PIECE) {
+                    count.insert(0, "0");
                     break;
                 }
             }
         }
         for (int k = 1; k < 5; k++) {
-            if (i!=14&&j!=14){
-                if (chessboard.getPieceLocation()[i+k][j+k]==WHITE){
+            if (i != 14 && j != 14) {
+                if (chessboard.getPieceLocation()[i + k][j + k] == WHITE) {
                     if (pieceType == WHITE) {
                         count.append("2");
-                        if (i+k+1>=14||j+k+1>=14) break;
+                        if (i + k + 1 >= 14 || j + k + 1 >= 14) break;
                     }
-                    if (pieceType == BLACK){
+                    if (pieceType == BLACK) {
                         count.append("2");
                         break;
                     }
                 }
-                if (chessboard.getPieceLocation()[i+k][j+k]==BLACK){
+                if (chessboard.getPieceLocation()[i + k][j + k] == BLACK) {
                     if (pieceType == WHITE) {
                         count.append("1");
                         break;
                     }
-                    if (pieceType == BLACK){
+                    if (pieceType == BLACK) {
                         count.append("1");
-                        if (i+k+1>=14||j+k+1>=14) break;
+                        if (i + k + 1 >= 14 || j + k + 1 >= 14) break;
                     }
                 }
-                if (chessboard.getPieceLocation()[i+k][j+k]==NO_CHESS_PIECE){
+                if (chessboard.getPieceLocation()[i + k][j + k] == NO_CHESS_PIECE) {
                     count.append("0");
                     break;
                 }
@@ -350,56 +350,56 @@ public class AI extends Player implements GameConstant {
 
 //                左下右上
         for (int k = 1; k < 5; k++) {
-            if (i!=0&&j!=14){
-                if (chessboard.getPieceLocation()[i-k][j+k]==WHITE){
+            if (i != 0 && j != 14) {
+                if (chessboard.getPieceLocation()[i - k][j + k] == WHITE) {
                     if (pieceType == WHITE) {
-                        count.insert(0,"2");
-                        if (i-k-1<=0||j+k+1>=14) break;
+                        count.insert(0, "2");
+                        if (i - k - 1 <= 0 || j + k + 1 >= 14) break;
                     }
-                    if (pieceType == BLACK){
-                        count.insert(0,"2");
+                    if (pieceType == BLACK) {
+                        count.insert(0, "2");
                         break;
                     }
                 }
-                if (chessboard.getPieceLocation()[i-k][j+k]==BLACK){
+                if (chessboard.getPieceLocation()[i - k][j + k] == BLACK) {
                     if (pieceType == WHITE) {
-                        count.insert(0,"1");
+                        count.insert(0, "1");
                         break;
                     }
-                    if (pieceType == BLACK){
-                        count.insert(0,"1");
-                        if (i-k-1<=0||j+k+1>=14) break;
+                    if (pieceType == BLACK) {
+                        count.insert(0, "1");
+                        if (i - k - 1 <= 0 || j + k + 1 >= 14) break;
                     }
                 }
-                if (chessboard.getPieceLocation()[i-k][j+k]==NO_CHESS_PIECE){
-                    count.insert(0,"0");
+                if (chessboard.getPieceLocation()[i - k][j + k] == NO_CHESS_PIECE) {
+                    count.insert(0, "0");
                     break;
                 }
             }
         }
         for (int k = 1; k < 5; k++) {
-            if (i!=14&&j!=0){
-                if (chessboard.getPieceLocation()[i+k][j-k]==WHITE){
+            if (i != 14 && j != 0) {
+                if (chessboard.getPieceLocation()[i + k][j - k] == WHITE) {
                     if (pieceType == WHITE) {
                         count.append("2");
-                        if (i+k+1>=14||j-k-1<=0) break;
+                        if (i + k + 1 >= 14 || j - k - 1 <= 0) break;
                     }
-                    if (pieceType == BLACK){
+                    if (pieceType == BLACK) {
                         count.append("2");
                         break;
                     }
                 }
-                if (chessboard.getPieceLocation()[i+k][j-k]==BLACK){
+                if (chessboard.getPieceLocation()[i + k][j - k] == BLACK) {
                     if (pieceType == WHITE) {
                         count.append("1");
                         break;
                     }
-                    if (pieceType == BLACK){
+                    if (pieceType == BLACK) {
                         count.append("1");
-                        if (i+k+1>=14||j-k-1<=0) break;
+                        if (i + k + 1 >= 14 || j - k - 1 <= 0) break;
                     }
                 }
-                if (chessboard.getPieceLocation()[i+k][j-k]==NO_CHESS_PIECE){
+                if (chessboard.getPieceLocation()[i + k][j - k] == NO_CHESS_PIECE) {
                     count.append("0");
                     break;
                 }
@@ -410,38 +410,38 @@ public class AI extends Player implements GameConstant {
 
     private void assignValue(int i, int j, @NotNull StringBuilder count, int pieceType) {
         //        查表赋值，如果大于7就不查表直接赋值
-            if (count.length()>=7){
-                if (pieceType == WHITE){
-                    weightBoardWhite[i][j] = 10000;
-                }
-                if (pieceType == BLACK){
-                    weightBoardBlack[i][j] = 10000;
-                }
-            }else {
-                try {
-                    if (pieceType == WHITE){
-                        weightBoardWhite[i][j] += weights.get(count.toString());
-                    }
-                    if (pieceType == BLACK){
-                        weightBoardBlack[i][j] += weights.get(count.toString());
-                    }
-                } catch (Exception e) {
-                    System.out.println("exceptionPiece:("+i+","+j+":"+ count +","+pieceType+")");
-                }
+        if (count.length() >= 7) {
+            if (pieceType == WHITE) {
+                weightBoardWhite[i][j] = 10000;
             }
+            if (pieceType == BLACK) {
+                weightBoardBlack[i][j] = 10000;
+            }
+        } else {
+            try {
+                if (pieceType == WHITE) {
+                    weightBoardWhite[i][j] += weights.get(count.toString());
+                }
+                if (pieceType == BLACK) {
+                    weightBoardBlack[i][j] += weights.get(count.toString());
+                }
+            } catch (Exception e) {
+                System.out.println("exceptionPiece:(" + i + "," + j + ":" + count + "," + pieceType + ")");
+            }
+        }
 //        清空全部，初始化
-        if (pieceType == WHITE){
+        if (pieceType == WHITE) {
             count.setLength(0);
             count.append("2");
         }
-        if (pieceType == BLACK){
+        if (pieceType == BLACK) {
             count.setLength(0);
             count.append("1");
         }
 
     }
 
-    private void clearWightBoard(int[][] weightBoard){
+    private void clearWightBoard(int[][] weightBoard) {
         for (int i = 0; i < Chessboard.CHESSBOARD_SIZE; i++) {
             for (int j = 0; j < Chessboard.CHESSBOARD_SIZE; j++) {
                 weightBoard[i][j] = 0;
@@ -449,7 +449,7 @@ public class AI extends Player implements GameConstant {
         }
     }
 
-    private int getSumWights(int[][] weightBoard){
+    private int getSumWights(int[][] weightBoard) {
         int sum = 0;
         for (int i = 0; i < Chessboard.CHESSBOARD_SIZE; i++) {
             for (int j = 0; j < Chessboard.CHESSBOARD_SIZE; j++) {
@@ -459,18 +459,18 @@ public class AI extends Player implements GameConstant {
         return sum;
     }
 
-    private Piece getMaxPiece(int[][] weightBoard){
+    private Piece getMaxPiece(int[][] weightBoard) {
         int max = 0;
         ArrayList<Piece> pieces = new ArrayList<>();
         for (int i = 0; i < Chessboard.CHESSBOARD_SIZE; i++) {
             for (int j = 0; j < Chessboard.CHESSBOARD_SIZE; j++) {
-                if (weightBoard[i][j]>max)max = weightBoard[i][j];
+                if (weightBoard[i][j] > max) max = weightBoard[i][j];
             }
         }
         for (int i = 0; i < Chessboard.CHESSBOARD_SIZE; i++) {
             for (int j = 0; j < Chessboard.CHESSBOARD_SIZE; j++) {
-                if (weightBoard[i][j]==max){
-                    pieces.add(new Piece(j,i));
+                if (weightBoard[i][j] == max) {
+                    pieces.add(new Piece(j, i));
                 }
             }
         }
@@ -485,35 +485,35 @@ public class AI extends Player implements GameConstant {
         this.chessboard = chessboard;
     }
 
-    public void printWightBoard(int[][] weightBoard){
+    public void printWightBoard(int[][] weightBoard) {
         for (int i = 0; i < Chessboard.CHESSBOARD_SIZE; i++) {
             for (int j = 0; j < Chessboard.CHESSBOARD_SIZE; j++) {
-                System.out.print(weightBoard[i][j]+"  ");
+                System.out.print(weightBoard[i][j] + "  ");
             }
             System.out.println();
         }
-        System.out.println("score:"+getSumWights(weightBoard));
+        System.out.println("score:" + getSumWights(weightBoard));
         System.out.println("-------------------------------");
 
     }
 
-    public void randomDropPiece(){
+    public void randomDropPiece() {
         Random random = new Random();
         while (true) {
             int i = random.nextInt(Chessboard.CHESSBOARD_SIZE);
             int j = random.nextInt(Chessboard.CHESSBOARD_SIZE);
-            if (chessboard.addPiece(j,i,getPieceType())) break;
+            if (chessboard.addPiece(j, i, getPieceType())) break;
         }
     }
 
-    public void dropPiece(){
+    public void dropPiece() {
         try {
-            if (getSumWights(weightBoardBlack)>getSumWights(weightBoardWhite)){
+            if (getSumWights(weightBoardBlack) > getSumWights(weightBoardWhite)) {
                 Piece piece = getMaxPiece(weightBoardBlack);
-                chessboard.addPiece(piece.getX(),piece.getY(),getPieceType());
+                chessboard.addPiece(piece.getX(), piece.getY(), getPieceType());
             } else {
                 Piece piece = getMaxPiece(weightBoardWhite);
-                chessboard.addPiece(piece.getX(),piece.getY(),getPieceType());
+                chessboard.addPiece(piece.getX(), piece.getY(), getPieceType());
             }
 
 //            printWightBoard(weightBoardBlack);
@@ -522,34 +522,35 @@ public class AI extends Player implements GameConstant {
             throw new RuntimeException(e);
         }
     }
+
     private class Piece {
         private int x;
         private int y;
 
-    public Piece(int x, int y) {
-        this.x = x;
-        this.y = y;
-    }
+        public Piece(int x, int y) {
+            this.x = x;
+            this.y = y;
+        }
 
-    public int getX() {
-        return x;
-    }
+        public int getX() {
+            return x;
+        }
 
-    public int getY() {
-        return y;
-    }
+        public void setX(int x) {
+            this.x = x;
+        }
 
-    public void setX(int x) {
-        this.x = x;
-    }
+        public int getY() {
+            return y;
+        }
 
-    public void setY(int y) {
-        this.y = y;
-    }
+        public void setY(int y) {
+            this.y = y;
+        }
 
-    @Override
-    public String toString() {
-        return "("+x+","+y+") ";
+        @Override
+        public String toString() {
+            return "(" + x + "," + y + ") ";
+        }
     }
-}
 }

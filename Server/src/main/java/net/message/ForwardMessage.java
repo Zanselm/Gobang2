@@ -9,7 +9,7 @@ import constant.MessageConstant;
  */
 
 public class ForwardMessage extends Message implements MessageConstant {
-    public ForwardMessage(String text){
-        super(FORWARD,"ForwardMessage",OK,"String",text);
+    public ForwardMessage(String text) {
+        super(FORWARD, "ForwardMessage", OK, "String", text);
     }
 }

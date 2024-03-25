@@ -2,9 +2,11 @@ package net;
 
 import com.google.gson.Gson;
 import net.message.Message;
-import utils.MessagePrinter;
 
-import java.io.*;
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.PrintWriter;
 import java.net.Socket;
 import java.util.concurrent.ArrayBlockingQueue;
 
@@ -15,12 +17,12 @@ import java.util.concurrent.ArrayBlockingQueue;
  */
 
 public class Client {
+    private static final ArrayBlockingQueue<String> queue = new ArrayBlockingQueue<>(5);
+    private static final Gson gson = new Gson();
     private static Socket socket = null;
     private static boolean sign = true;
     private static BufferedReader br;
     private static PrintWriter pw;
-    private static final ArrayBlockingQueue<String> queue = new ArrayBlockingQueue<>(5);
-    private static final Gson gson = new Gson();
 
     private Client() {
     }
@@ -68,6 +70,7 @@ public class Client {
     public static void addMessage(String message) {
         queue.add(message);
     }
+
     public static void addMessage(Message message) {
         String m = gson.toJson(message);
         queue.add(m);
@@ -116,7 +119,8 @@ public class Client {
             }
         };
     }
-    public static boolean isSocketExist(){
+
+    public static boolean isSocketExist() {
         return socket != null;
     }
 

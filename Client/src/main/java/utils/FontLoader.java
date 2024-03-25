@@ -12,14 +12,16 @@ import java.util.Objects;
  */
 public class FontLoader {
     static Font font;
+
     static {
         try {
             InputStream inputStream = Objects.requireNonNull(FontLoader.class.getClassLoader().getResourceAsStream("font/fei_mo_shou_shu.ttf"));
-            Font f = Font.createFont(Font.TRUETYPE_FONT,inputStream);
+            Font f = Font.createFont(Font.TRUETYPE_FONT, inputStream);
             font = f.deriveFont(30f);
         } catch (FontFormatException | IOException e) {
             throw new RuntimeException(e);
-        };
+        }
+        ;
     }
 
     /**
@@ -33,7 +35,7 @@ public class FontLoader {
      * @param size 字体大小
      * @return 返回指定大小的字体
      */
-    public static Font getFont(float size){
+    public static Font getFont(float size) {
         return font.deriveFont(size);
     }
 }
