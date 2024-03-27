@@ -158,6 +158,7 @@ public class RoomCreateFrame extends JFrame implements GameConstant {
                         Client.addMessage(MyGson.toJson(new CreateRoomMessage(MyGson.toJson(room))));
                     } else {
                         new GameFrame(room.getGameType(), room.getWhoFirst());
+                        GameLobbyFrame.getGameLobbyFrame().setVisible(false);
                         dispose();
                     }
                 } else {

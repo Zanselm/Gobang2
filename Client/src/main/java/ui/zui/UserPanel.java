@@ -1,6 +1,9 @@
 package ui.zui;
 
+import constant.GameConstant;
+import constant.MessageConstant;
 import entity.User;
+import net.LocalUser;
 import utils.FontLoader;
 import utils.ImageLoader;
 import utils.ImageResizer;
@@ -28,6 +31,10 @@ public class UserPanel extends JPanel {
     User user;
     HeadshotPanel headshotPanel;
     JPanel userInformationPanel;
+    JLabel name;
+    JLabel id;
+    JLabel win;
+    JLabel lose;
     JLabel pieceType;
     JLabel prompt;
     boolean isGameFrame;
@@ -68,7 +75,6 @@ public class UserPanel extends JPanel {
             userInformationPanel.setBounds(0, getWidth()/2, getWidth(), getHeight() - getWidth() - getHeight() / 4);
             addInfo();
             pieceType = new JLabel("",SwingConstants.CENTER);
-            setPieceType("白");
             prompt = new JLabel("提示",SwingConstants.CENTER);
             pieceType.setFont(font);
             prompt.setFont(font);
@@ -86,10 +92,10 @@ public class UserPanel extends JPanel {
     private void addInfo() {
         userInformationPanel.setBackground(new Color(0, 0, 0, 0));
 
-        JLabel name = new JLabel(user.getName(),SwingConstants.CENTER);
-        JLabel id = new JLabel("ID: " + user.getId(),SwingConstants.CENTER);
-        JLabel win = new JLabel("胜场：" + user.getWin(),SwingConstants.CENTER);
-        JLabel lose = new JLabel("败场：" + user.getLose(),SwingConstants.CENTER);
+        name = new JLabel(user.getName(),SwingConstants.CENTER);
+        id = new JLabel("ID: " + user.getId(),SwingConstants.CENTER);
+        win = new JLabel("胜场： " + user.getWin(),SwingConstants.CENTER);
+        lose = new JLabel("败场： " + user.getLose(),SwingConstants.CENTER);
 
         name.setFont(font);
         id.setFont(font);
@@ -116,6 +122,7 @@ public class UserPanel extends JPanel {
         }
         if (s.equals("随机")) {
             pieceType.setText(s);
+            pieceType.setIcon(null);
             flush();
         }
     }
@@ -129,10 +136,27 @@ public class UserPanel extends JPanel {
         setVisible(false);
         setVisible(true);
     }
+    public void userEnter(User user){
+        if (user.getSex().equals("男")){
+            headshotPanel.setImage(user.getAvatar(),HeadshotPanel.BOY);
+        }else {
+            headshotPanel.setImage(user.getAvatar(),HeadshotPanel.GIRL);
+        }
+        name.setText(user.getName());
+        id.setText("ID: " + user.getId());
+        win.setText("胜场: " + user.getWin());
+        lose.setText("败场: " + user.getLose());
+        flush();
+    }
 
     private void init(int x, int y, int width, int height) {
         setBackground(new Color(0, 0, 0, 0));
         setLayout(null);
         setBounds(x, y, width, height);
+//        setBorder(BorderFactory.createLineBorder(Color.BLACK, 3));
+    }
+
+    public void updateUser() {
+        userEnter(LocalUser.getLocalUser());
     }
 }

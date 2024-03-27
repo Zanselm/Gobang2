@@ -10,10 +10,7 @@ import net.LocalUser;
 import net.message.CompareNumMessage;
 import net.message.GiveUpMessage;
 import net.message.Message;
-import ui.zui.ExitButton;
-import ui.zui.GamePanel;
-import ui.zui.PositionDraggingListener;
-import ui.zui.UserPanel;
+import ui.zui.*;
 import utils.FontLoader;
 import utils.MusicPlayer;
 import utils.MyGson;
@@ -31,8 +28,9 @@ import java.util.Random;
 public class GameFrame extends JFrame implements GameConstant {
     static Font font = FontLoader.getFont();
     static GameFrame gameFrame;
-    public Player playerLLocal;
+    public Room room;
     public Player playerR;
+    public Player playerL;
     int gameType;
     int whoFirst;
     JLabel waiting;
@@ -84,28 +82,29 @@ public class GameFrame extends JFrame implements GameConstant {
 
     public GameFrame(Room room) {
         gameFrame = this;
+        this.room = room;
         this.gameType = room.getGameType();
         int whoFirst = room.getWhoFirst();
 
         if (room.getUserL() == LocalUser.getUserID()) {
             if (whoFirst == OUR) {
-                playerLLocal = new Player(LocalUser.getLocalUser(), BLACK);
+                playerR = new Player(LocalUser.getLocalUser(), BLACK);
             } else if (whoFirst == OTHER_SIDE) {
-                playerLLocal = new Player(LocalUser.getLocalUser(), WHITE);
+                playerR = new Player(LocalUser.getLocalUser(), WHITE);
             } else {
-                playerLLocal = new Player(LocalUser.getLocalUser(), RANDOM);
+                playerR = new Player(LocalUser.getLocalUser(), RANDOM);
             }
         } else {
             if (whoFirst == OUR) {
-                playerLLocal = new Player(LocalUser.getLocalUser(), WHITE);
+                playerR = new Player(LocalUser.getLocalUser(), WHITE);
             } else if (whoFirst == OTHER_SIDE) {
-                playerLLocal = new Player(LocalUser.getLocalUser(), BLACK);
+                playerR = new Player(LocalUser.getLocalUser(), BLACK);
             } else {
-                playerLLocal = new Player(LocalUser.getLocalUser(), RANDOM);
+                playerR = new Player(LocalUser.getLocalUser(), RANDOM);
             }
         }
         number = new Random().nextInt();
-        System.out.println(MyGson.toJson(playerLLocal));
+        System.out.println(MyGson.toJson(playerR));
         initFrame();
         addMusic();
         if (gameType == ONLINE_GAME_TWO_PLAYER) {
@@ -142,19 +141,44 @@ public class GameFrame extends JFrame implements GameConstant {
         } else if (gameType == CONSOLE_GAME_AI) {
             user = new User(-1, "AI", "AI", "AI", -1, -1, 0);
         } else if (gameType == CONSOLE_GAME_TWO_PLAYER) {
-            user = new User(0, "本地玩家", "女", "0", 0, 0, 0);
+            user = new User(0, "本地玩家2", "女", "0", 0, 0, 0);
         }
         userPanelL = new UserPanel(user, 150, 300, 250, 850, true);
         userPanelR = new UserPanel(LocalUser.getLocalUser(), 1150, 300, 250, 850, true);
+        add(new LineBorderPanel(userPanelL.getX()-5,userPanelL.getY()-10,260,540));
+        add(new LineBorderPanel(userPanelR.getX()-5,userPanelR.getY()-10,260,540));
+        if (whoFirst == WHITE){
+            userPanelR.setPieceType("白");
+            userPanelL.setPieceType("黑");
+        }else if(whoFirst == BLACK){
+            userPanelR.setPieceType("黑");
+            userPanelL.setPieceType("白");
+        }else {
+            userPanelR.setPieceType("随机");
+            userPanelL.setPieceType("随机");
+        }
+
+        if (gameType != ONLINE_GAME_TWO_PLAYER){
+            userPanelR.setPrompt("本地游戏");
+            userPanelL.setPrompt("本地游戏");
+        }else {
+            userPanelL.setPrompt("等待比较");
+            userPanelR.setPrompt("等待比较");
+        }
         add(userPanelL);
         add(userPanelR);
+    }
+    public void haveAdd(){
+        userPanelR.setPrompt("请等待");
+        userPanelL.setPrompt("在思考");
     }
 
     private void addPlayer() {
         if (LocalUser.getLocalUser() != null) {
-            playerLLocal = new Player(LocalUser.getLocalUser(), GameConstant.WHITE);
+            playerR = new Player(LocalUser.getLocalUser(), GameConstant.WHITE);
         }
     }
+
 
     private void addExitButton() {
         exitButton = new ExitButton(1300, 200, 80, 80);
@@ -164,7 +188,7 @@ public class GameFrame extends JFrame implements GameConstant {
                 super.mouseClicked(e);
                 if (Client.isSocketExist()) {
                     gamePanel.lose();
-                    Client.addMessage(new GiveUpMessage(playerR.getId()));
+                    Client.addMessage(new GiveUpMessage(playerL.getId()));
                 } else {
                     dispose();
                 }
@@ -188,6 +212,10 @@ public class GameFrame extends JFrame implements GameConstant {
                 try {
                     musicPlayer.close();
                     gamePanel.getMusicPlayer().close();
+                    if (GameLobbyFrame.getGameLobbyFrame() != null){
+                        GameLobbyFrame.getGameLobbyFrame().UpdateUserPanel();
+                        GameLobbyFrame.getGameLobbyFrame().setVisible(true);
+                    }
                 } catch (Exception ex) {
                     dispose();
                 }
@@ -233,21 +261,27 @@ public class GameFrame extends JFrame implements GameConstant {
 
     public void playerEnterRoom(Message message) {
         User user = MyGson.fromJson(message.getMessage(), User.class);
+        room.setUserR(user.getId());
+        if (room.getUserL() == room.getUserR()){
+            room.setUserR(LocalUser.getUserID());
+        }
+        System.out.println(MyGson.toJson(room));
         int pieceType;
-        if (playerLLocal.getPieceType() == WHITE) {
+        if (playerR.getPieceType() == WHITE) {
             pieceType = BLACK;
-        } else if (playerLLocal.getPieceType() == BLACK) {
+        } else if (playerR.getPieceType() == BLACK) {
             pieceType = WHITE;
         } else {
             pieceType = RANDOM;
         }
-        playerR = new Player(user, pieceType);
-        System.out.println(MyGson.toJson(playerR));
+        playerL = new Player(user, pieceType);
+        System.out.println(MyGson.toJson(playerL));
         gamePanel.setVisible(true);
         waiting.setVisible(false);
+        userPanelL.userEnter(user);
         if (pieceType == RANDOM) {
             System.out.println("发送数字" + number);
-            Client.addMessage(new CompareNumMessage(number, playerR.getId()));
+            Client.addMessage(new CompareNumMessage(number, playerL.getId()));
         }
     }
 
@@ -255,31 +289,46 @@ public class GameFrame extends JFrame implements GameConstant {
         int otherSideNum = Integer.parseInt(message.getMessage());
         System.out.println("收到数字" + otherSideNum + "本地数字" + number);
         if (otherSideNum < number) {
-            playerLLocal.setPieceType(GameConstant.BLACK);
+            playerR.setPieceType(GameConstant.BLACK);
             System.out.println("黑");
             gamePanel.setWhoSign(GameConstant.BLACK);
+            userPanelR.setPieceType("黑");
+            userPanelL.setPieceType("白");
+            userPanelR.setPrompt("请下棋");
+            userPanelL.setPrompt("等待中");
         }
         if (otherSideNum > number) {
-            playerLLocal.setPieceType(GameConstant.WHITE);
+            playerR.setPieceType(GameConstant.WHITE);
             System.out.println("白");
             gamePanel.setWhoSign(GameConstant.WHITE);
+            userPanelL.setPieceType("黑");
+            userPanelR.setPieceType("白");
+            userPanelR.setPrompt("请等待");
+            userPanelL.setPrompt("思考中");
         }
         if (otherSideNum == number) {
             number = new Random().nextInt();
-            Client.addMessage(new CompareNumMessage(number, playerR.getId()));
+            Client.addMessage(new CompareNumMessage(number, playerL.getId()));
         }
     }
 
-    public void addPiece(Message message) {
+    public void addUserLPiece(Message message) {
         Chessboard.Piece piece = MyGson.fromJson(message.getMessage(), Chessboard.Piece.class);
         gamePanel.addPiece(piece);
+        userPanelR.setPrompt("请下棋");
+        userPanelL.setPrompt("等待中");
     }
 
     public void lose() {
         gamePanel.lose();
+        LocalUser.lose();
+        GameLobbyFrame.getGameLobbyFrame().setVisible(true);
     }
 
     public void victory() {
         gamePanel.victory();
+        LocalUser.win();
+        GameLobbyFrame.getGameLobbyFrame().setVisible(true);
     }
+
 }

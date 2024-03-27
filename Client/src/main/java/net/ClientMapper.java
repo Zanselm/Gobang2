@@ -62,7 +62,7 @@ public class ClientMapper implements MessageConstant {
             GameFrame.getGameFrame().compareNum(message);
         }
         if (message.getMessageName().equals("AddPieceMessage")) {
-            GameFrame.getGameFrame().addPiece(message);
+            GameFrame.getGameFrame().addUserLPiece(message);
         }
         if (message.getMessageName().equals("VictoryMessage")) {
             GameFrame.getGameFrame().lose();
@@ -83,12 +83,16 @@ public class ClientMapper implements MessageConstant {
         if (message.getMessageName().equals("CreateRoomResponse")) {
             if (message.getState() == MessageConstant.OK) {
                 RoomCreateFrame.getRoomCreateFrame().dispose();
+                GameLobbyFrame.getGameLobbyFrame().setVisible(false);
                 Room room = MyGson.fromJson(message.getMessage(), Room.class);
 //                new GameFrame(room.getGameType(),room.getWhoFirst());
                 new GameFrame(room);
             } else {
                 System.out.println("房间名重复");
             }
+        }
+        if (message.getMessageName().equals("DeleteLobbyRoomMessage")) {
+            GameLobbyFrame.getGameLobbyFrame().deleteRoom(message);
         }
     }
 

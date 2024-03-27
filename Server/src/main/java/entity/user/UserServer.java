@@ -72,10 +72,10 @@ public class UserServer {
 
     @Test
     public void test5() throws Exception {
-        System.out.println(getUser(new User(30, "", "", "", 0, 0, 0)).getName());
+        System.out.println(getUserNoPassword(new User(30, "", "", "", 0, 0, 0)).getName());
     }
 
-    public User getUser(User user) throws SQLException {
+    public User getUserNoPassword(User user) throws SQLException {
         Connection conn = getConnection();
 
         try (conn) {
@@ -86,6 +86,19 @@ public class UserServer {
                 return null;
             }
             serverUser.setPassword("");
+            return serverUser;
+        }
+    }
+    public User getUserWithPassword(User user) throws SQLException {
+        Connection conn = getConnection();
+
+        try (conn) {
+            UserDAO userDAO = new UserDAO(conn, user);
+            User serverUser;
+            System.out.println(1);
+            if ((serverUser = userDAO.query()) == null) {
+                return null;
+            }
             return serverUser;
         }
     }

@@ -31,14 +31,15 @@ public class GameLobbyFrame extends JFrame {
 
     static {
         font = FontLoader.getFont();
+        UIManager.put("Label.font",font);
     }
 
     private ExitButton exitButton;
     private ZButton settingButton;
     private RoomListPanel roomListPanel;
+    private UserPanel userPanel;
     private ZMainButton createRoomButton;
     private ZMainButton enterRoomButton;
-    private ZTextField textField;
 
     private GameLobbyFrame() throws HeadlessException {
         init();
@@ -69,7 +70,7 @@ public class GameLobbyFrame extends JFrame {
     }
 
     private void addEnterRoomButton() {
-        enterRoomButton = new ZMainButton(750, 450, 300, 120, "进入房间");
+        enterRoomButton = new ZMainButton(750, 480, 300, 120, "进入房间");
         enterRoomButton.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
@@ -83,6 +84,7 @@ public class GameLobbyFrame extends JFrame {
                     System.out.println(MyGson.toJson(room));
                     Client.addMessage(new EnterRoomMessage(room));
                     new GameFrame(room);
+                    GameLobbyFrame.getGameLobbyFrame().setVisible(false);
                 }
             }
         });
@@ -90,7 +92,7 @@ public class GameLobbyFrame extends JFrame {
     }
 
     private void addCreateRoomButton() {
-        createRoomButton = new ZMainButton(750, 250, 300, 120, "创建房间");
+        createRoomButton = new ZMainButton(750, 280, 300, 120, "创建房间");
         createRoomButton.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseClicked(MouseEvent e) {
@@ -102,7 +104,15 @@ public class GameLobbyFrame extends JFrame {
     }
 
     private void addRoomInformation() {
-        roomListPanel = new RoomListPanel(150, 250, 600, 400, 10);
+        JPanel roomTitle = new JPanel(new GridLayout(1, 4));
+        roomTitle.add(new JLabel("ID",SwingConstants.CENTER));
+        roomTitle.add(new JLabel("房名",SwingConstants.CENTER));
+        roomTitle.add(new JLabel("人数",SwingConstants.CENTER));
+        roomTitle.add(new JLabel("先着",SwingConstants.CENTER));
+        roomTitle.setBounds(150, 260, 600, 40);
+        roomTitle.setBackground(new Color(0,0,0,0));
+        roomListPanel = new RoomListPanel(150,roomTitle.getY()+roomTitle.getHeight(), 600, 380, 10);
+        add(roomTitle);
         add(roomListPanel);
     }
 
@@ -130,10 +140,14 @@ public class GameLobbyFrame extends JFrame {
 
     private void addUserInformation() {
         if (LocalUser.localUser == null) {
-            add(new UserPanel(new User(0, "本地用户", "男", "", 0, 0, 0), 200, 150, 700, 100));
+            userPanel = new UserPanel(new User(0, "本地用户", "男", "", 0, 0, 0)
+                    , 230, 150, 700, 100);
+            add(userPanel);
         } else {
-            add(new UserPanel(LocalUser.getLocalUser(), 200, 150, 700, 100));
+            userPanel = new UserPanel(LocalUser.getLocalUser(), 230, 150, 700, 100);
+            add(userPanel);
         }
+        add(new LineBorderPanel(userPanel.getX()-5,userPanel.getY()-5,700,110));
     }
 
     private void addBackground() {
@@ -180,5 +194,14 @@ public class GameLobbyFrame extends JFrame {
         setResizable(false);
         setLocationRelativeTo(null);
         PositionDraggingListener.addPositionDraggingListener(this);
+    }
+
+    public void deleteRoom(Message message) {
+        Room room = MyGson.fromJson(message.getMessage(), Room.class);
+        roomListPanel.removeRoom(room);
+    }
+
+    public void UpdateUserPanel() {
+        userPanel.updateUser();
     }
 }

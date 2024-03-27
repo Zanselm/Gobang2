@@ -1,6 +1,7 @@
 package ui;
 
 import entity.User;
+import lombok.Getter;
 import net.Client;
 import net.message.ByeMessage;
 import net.message.RegisterMessage;
@@ -27,7 +28,9 @@ public class RegisterFrame extends JFrame {
     private Font font;
     private ZMainButton registerButton;
     private ExitButton exitButton;
-    private ZPasswordField nameField;
+    @Getter
+    private ZTextField nameField;
+    @Getter
     private ZPasswordField passwordField;
     private ZPasswordField repeatField;
     private ZRadioButton man;
@@ -131,7 +134,7 @@ public class RegisterFrame extends JFrame {
         repeat.setBounds(200, 300, 300, 50);
         headshot.setBounds(650, 150, 300, 50);
 
-        nameField = new ZPasswordField("", 270, 150, 180, 50);
+        nameField = new ZTextField(this, 270, 150, 180, 50);
         passwordField = new ZPasswordField("", 270, 250, 180, 50);
         repeatField = new ZPasswordField("", 330, 300, 120, 50);
 
@@ -149,7 +152,6 @@ public class RegisterFrame extends JFrame {
         nameField.setFont(font);
         passwordField.setFont(font);
         repeatField.setFont(font);
-        nameField.showPassword();
 
         add(title);
         add(name);
@@ -227,7 +229,7 @@ public class RegisterFrame extends JFrame {
     }
 
     private boolean nameCheck() {
-        String name = new String(nameField.getPassword());
+        String name = nameField.getText();
         if (name.length() < 3 || name.length() > 10) {
             nameCheck.setText("姓名长度需在3-10之间");
             return false;
@@ -258,7 +260,7 @@ public class RegisterFrame extends JFrame {
 
             @NotNull
             private User getUser() {
-                String name = new String(nameField.getPassword());
+                String name = nameField.getText();
                 String sex;
                 String password = new String(passwordField.getPassword());
                 if (man.isSelected()) {
@@ -297,14 +299,6 @@ public class RegisterFrame extends JFrame {
     public void success() {
         nameCheck.clean();
         LoginFrame.successRegister();
-    }
-
-    public ZPasswordField getNameField() {
-        return nameField;
-    }
-
-    public ZPasswordField getPasswordField() {
-        return passwordField;
     }
 
 

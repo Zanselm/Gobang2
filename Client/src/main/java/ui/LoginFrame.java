@@ -26,7 +26,7 @@ import java.util.Objects;
 
 public class LoginFrame extends JFrame {
     private static LoginFrame loginFrame;
-    private ZPasswordField accountField;
+    private ZTextField accountField;
     private ZPasswordField passwordField;
     private ZMainButton loginButton;
     private ExitButton exitButton;
@@ -70,7 +70,7 @@ public class LoginFrame extends JFrame {
         registerFrame.setVisible(false);
         loginFrame.setLocation(registerFrame.getLocation());
         loginFrame.setVisible(true);
-        loginFrame.accountField.setText(registerFrame.getNameField().getContent());
+        loginFrame.accountField.setText(registerFrame.getNameField().getText());
         loginFrame.passwordField.setText(registerFrame.getPasswordField().getContent());
     }
 
@@ -135,7 +135,7 @@ public class LoginFrame extends JFrame {
                 }
                 if (Client.isSocketExist()) {
                     accountCheck.clean();
-                    User loginUser = new User(0, new String(accountField.getPassword()), null, new String(passwordField.getPassword()), 0, 0, 0);
+                    User loginUser = new User(0, accountField.getText(), null, new String(passwordField.getPassword()), 0, 0, 0);
                     Client.addMessage(new LoginMessage(loginUser));
                 } else {
                     accountCheck.clean();
@@ -145,11 +145,11 @@ public class LoginFrame extends JFrame {
             }
 
             private boolean examine() {
-                boolean sign = switch (accountField.getContent()) {
+                boolean sign = switch (accountField.getText()) {
                     case "", "请输入您的账号" -> false;
                     default -> true;
                 };
-                if (accountField.getContent().isEmpty()) {
+                if (accountField.getText().isEmpty()) {
                     sign = false;
                 }
                 return sign;
@@ -191,8 +191,7 @@ public class LoginFrame extends JFrame {
     }
 
     private void addTextField() {
-        accountField = new ZPasswordField("请输入您的账号", 350, 200, 300, 50);
-        accountField.showPassword();
+        accountField = new ZTextField( this,350, 195, 300, 50,"请输入您的账号");
         passwordField = new ZPasswordField("", 350, 290, 300, 50);
         accountCheck = new CheckLabel(650, 220, 200, 20);
         add(accountField);

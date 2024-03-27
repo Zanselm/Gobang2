@@ -4,10 +4,13 @@ import constant.GameConstant;
 import domain.AI;
 import domain.Chessboard;
 import net.Client;
+import net.LocalUser;
 import net.message.AddPieceMessage;
+import net.message.GameOverMessage;
 import net.message.VictoryMessage;
 import org.jetbrains.annotations.NotNull;
 import ui.GameFrame;
+import ui.GameLobbyFrame;
 import utils.MusicPlayer;
 
 import javax.swing.*;
@@ -124,12 +127,15 @@ public class GamePanel extends JPanel implements GameConstant {
             chessboard.addPiece(abscissa, ordinate, whoSign);
             musicPlayer.play();
             isCanDrop = false;
+            gameFrame.haveAdd();
             Chessboard.Piece piece = new Chessboard.Piece(abscissa, ordinate, whoSign);
-            Client.addMessage(new AddPieceMessage(piece, gameFrame.playerR.getId()));
+            Client.addMessage(new AddPieceMessage(piece, gameFrame.playerL.getId()));
             if (isVictory()) {
                 JOptionPane.showConfirmDialog(null, "你胜利了！", "胜利", JOptionPane.DEFAULT_OPTION);
                 gameFrame.dispose();
-                Client.addMessage(new VictoryMessage(gameFrame.playerR.getId()));
+                Client.addMessage(new VictoryMessage(gameFrame.playerL.getId()));
+                Client.addMessage(new GameOverMessage(GameFrame.getGameFrame().room));
+                LocalUser.win();
             }
         }
     }
@@ -150,6 +156,7 @@ public class GamePanel extends JPanel implements GameConstant {
                 if (isVictory()) {
                     JOptionPane.showConfirmDialog(null, "AI胜利！", "失败", JOptionPane.DEFAULT_OPTION);
                     gameFrame.dispose();
+
                 }
             }
         }
@@ -181,7 +188,8 @@ public class GamePanel extends JPanel implements GameConstant {
                 JOptionPane.showConfirmDialog(null, "黑方胜利！", "胜利", JOptionPane.DEFAULT_OPTION);
             }
             //消息对话框
-//            gameFrame.dispose();
+            gameFrame.dispose();
+
         }
     }
 

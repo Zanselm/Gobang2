@@ -21,7 +21,9 @@ public class RoomControl implements MessageConstant {
     private static final Gson gson = new Gson();
     private static final int CREATE = 0;
     private static final int GET_ROOMS = 1;
+
     private static final int ENTER_ROOM = 2;
+    private static final int GAME_OVER = 3;
     private ConnectThread connectThread;
     private RoomSever roomSever;
 
@@ -41,9 +43,11 @@ public class RoomControl implements MessageConstant {
             case CREATE -> create(room);
             case GET_ROOMS -> getRooms();
             case ENTER_ROOM -> enterRoom(room);
+            case GAME_OVER -> gameOver(room,message.getSender());
             case -1 -> throw new MessageTypeException();
         }
     }
+
 
 
     private int analyse(@NotNull Message message) {
@@ -56,6 +60,9 @@ public class RoomControl implements MessageConstant {
         }
         if ("EnterRoomMessage".equals(messageName)) {
             return ENTER_ROOM;
+        }
+        if ("GameOverMessage".equals(messageName)) {
+            return GAME_OVER;
         }
         return -1;
     }
@@ -90,11 +97,32 @@ public class RoomControl implements MessageConstant {
             roomSever.update(room);
             Transmitter.forward(new AlterRoomMessage(room));
 //            返回创建房间者的用户信息
-            User userL = connectThread.getNetMapper().userControl.getUser(room.getUserL());
+            User userL = connectThread.getNetMapper().userControl.getUserNoPassword(room.getUserL());
             connectThread.addMessage(new EnterRoomResponse(userL));
 //            告诉创建房间者进入房间者
-            User userR = connectThread.getNetMapper().userControl.getUser(room.getUserR());
+            User userR = connectThread.getNetMapper().userControl.getUserNoPassword(room.getUserR());
             Transmitter.forward(new EnterGameUserMessage(room.getUserL(), userR));
+        } catch (SQLException e) {
+            throw new RuntimeException(e);
+        }
+    }
+    private void gameOver(Room room,int sender){
+        try {
+            User userL = connectThread.getNetMapper().userControl.getUserWithPassword(room.getUserL());
+            User userR = connectThread.getNetMapper().userControl.getUserWithPassword(room.getUserR());
+            if (sender == room.getUserL()){
+                userL.setWin(userL.getWin()+1);
+                userR.setLose(userR.getLose()+1);
+            }else {
+                userR.setWin(userR.getWin()+1);
+                userL.setLose(userL.getLose()+1);
+            }
+            connectThread.getNetMapper().userControl.acceptMessage(new UpdateMessage(userL));
+            connectThread.getNetMapper().userControl.acceptMessage(new UpdateMessage(userR));
+//            更新房间信息并通知全部客户端
+            roomSever.deleteRoom(room);
+            Transmitter.forward(new DeleteLobbyRoomMessage(room));
+
         } catch (SQLException e) {
             throw new RuntimeException(e);
         }

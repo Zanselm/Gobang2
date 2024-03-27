@@ -1,5 +1,6 @@
 package ui.zui;
 
+import constant.GameConstant;
 import entity.Room;
 import org.jetbrains.annotations.NotNull;
 import utils.FontLoader;
@@ -18,7 +19,7 @@ import java.util.Objects;
  * description
  */
 
-public class RoomListPanel extends JPanel {
+public class RoomListPanel extends JPanel implements GameConstant {
     static Font font;
 
     static {
@@ -94,7 +95,6 @@ public class RoomListPanel extends JPanel {
         }
         for (int i = top; i < sign; i++) {
             add(roomInformationPanels.get(i));
-
         }
     }
 
@@ -154,16 +154,23 @@ public class RoomListPanel extends JPanel {
             setLayout(new GridLayout(1, 4));
             setBackground(new Color(0, 0, 0, 0));
 
-            JLabel id = new JLabel("ID:" + String.valueOf(String.format("%07d", room.getID())), JLabel.CENTER);
-            JLabel introduction = new JLabel("房间名： " + room.getName(), JLabel.CENTER);
+            JLabel id = new JLabel(String.valueOf(String.format("%07d", room.getID())), JLabel.CENTER);
+            JLabel introduction = new JLabel(room.getName(), JLabel.CENTER);
             JLabel gameType;
             if (room.getUserR() == 0) {
-                gameType = new JLabel("人数： " + "缺", JLabel.CENTER);
+                gameType = new JLabel("缺", JLabel.CENTER);
             } else {
-                gameType = new JLabel("人数： " + "满", JLabel.CENTER);
+                gameType = new JLabel("满", JLabel.CENTER);
             }
 
-            JLabel first = new JLabel("先着： " + String.valueOf(room.getWhoFirst()), JLabel.CENTER);
+            JLabel first;
+            if (room.getWhoFirst() == OUR){
+                first = new JLabel("建房方", JLabel.CENTER);
+            }else if (room.getWhoFirst()  ==OTHER_SIDE){
+                first = new JLabel("加入方", JLabel.CENTER);
+            }else {
+                first = new JLabel("随机", JLabel.CENTER);
+            }
             add(id);
             add(introduction);
             add(gameType);

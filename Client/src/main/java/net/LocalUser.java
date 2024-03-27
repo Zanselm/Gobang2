@@ -40,4 +40,10 @@ public class LocalUser extends User {
         }
         return localUser.getId();
     }
+    public static void win(){
+        localUser.setWin(localUser.getWin()+1);
+    }
+    public static void lose(){
+        localUser.setLose(localUser.getLose()+1);
+    }
 }

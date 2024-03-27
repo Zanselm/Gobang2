@@ -50,6 +50,7 @@ public class NetMapper implements MessageConstant {
         controlMap.put("CreateRoomMessage", ROOM_CONTROL);
         controlMap.put("GetRoomsMessage", ROOM_CONTROL);
         controlMap.put("EnterRoomMessage", ROOM_CONTROL);
+        controlMap.put("GameOverMessage", ROOM_CONTROL);
 
         controlMap.put("HelloMessage", SERVER_CONTROL);
         controlMap.put("ByeMessage", SERVER_CONTROL);

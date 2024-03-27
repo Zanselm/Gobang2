@@ -37,7 +37,7 @@ public class UserControl implements MessageConstant {
     }
 
     public static void main(String[] args) {
-        User user = new UserControl().getUser(30);
+        User user = new UserControl().getUserNoPassword(30);
         System.out.println(user.getName());
     }
 
@@ -117,9 +117,16 @@ public class UserControl implements MessageConstant {
         }
     }
 
-    public User getUser(int userID) {
+    public User getUserNoPassword(int userID) {
         try {
-            return userServer.getUser(new User(userID, "", "", "", 0, 0, 0));
+            return userServer.getUserNoPassword(new User(userID, "", "", "", 0, 0, 0));
+        } catch (SQLException sqlException) {
+            throw new RuntimeException(sqlException);
+        }
+    }
+    public User getUserWithPassword(int userID) {
+        try {
+            return userServer.getUserWithPassword(new User(userID, "", "", "", 0, 0, 0));
         } catch (SQLException sqlException) {
             throw new RuntimeException(sqlException);
         }

@@ -66,9 +66,11 @@ public class HeadshotPanel extends JPanel {
         setOpaque(true);
         setBackground(new Color(0, 0, 0, 0));
         setLayout(null);
+//        setBorder(BorderFactory.createLineBorder(Color.BLACK, 3));
         addArrowButton();
         headshot = new JLabel();
         headshot.setBounds((int) (width * 0.4), 0, width, width);
+        add(new LineBorderPanel(headshot.getX(),headshot.getY(),width,width));
         add(headshot);
         setImage();
         setVisible(true);
