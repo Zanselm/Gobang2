@@ -8,6 +8,7 @@ import entity.User;
 import net.Client;
 import net.LocalUser;
 import net.message.CompareNumMessage;
+import net.message.GameOverMessage;
 import net.message.GiveUpMessage;
 import net.message.Message;
 import ui.zui.*;
@@ -188,7 +189,11 @@ public class GameFrame extends JFrame implements GameConstant {
                 super.mouseClicked(e);
                 if (Client.isSocketExist()) {
                     gamePanel.lose();
-                    Client.addMessage(new GiveUpMessage(playerL.getId()));
+                    if (playerL == null){
+                        Client.addMessage(new GameOverMessage(room));
+                    }else {
+                        Client.addMessage(new GiveUpMessage(playerL.getId()));
+                    }
                 } else {
                     dispose();
                 }

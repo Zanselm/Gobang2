@@ -108,6 +108,11 @@ public class RoomControl implements MessageConstant {
     }
     private void gameOver(Room room,int sender){
         try {
+            if (room.getUserL() == 0 || room.getUserR() == 0) {
+                roomSever.deleteRoom(room);
+                Transmitter.forward(new DeleteLobbyRoomMessage(room));
+                return;
+            }
             User userL = connectThread.getNetMapper().userControl.getUserWithPassword(room.getUserL());
             User userR = connectThread.getNetMapper().userControl.getUserWithPassword(room.getUserR());
             if (sender == room.getUserL()){
